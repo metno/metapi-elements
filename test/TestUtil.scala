@@ -22,22 +22,24 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
     MA 02110-1301, USA
 */
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.inject.bind
+import play.api.test.FakeApplication
+import controllers._
+import services._
+import modules.elements._
 
-package controllers.template
+object TestUtil {
 
-/**
- * TODO:
- *
- * Rename package name, class name and file name to something matching your plugin
- */
-
-import play.api._
-import play.api.mvc._
-
-object ElementsController extends Controller {
-
-  def template: Action[AnyContent] = Action {
-    Ok("template plugin")
+  private def defaultConfig = {
+    Map(("play.http.router" -> "elements.Routes"),
+        ("play.application.loader" -> "modules.ElementsApplicationLoader"),
+        ("auth.active" -> "false"))
   }
+
+  lazy val app = new GuiceApplicationBuilder()
+    .configure(defaultConfig)
+    .bindings(new ElementsDevModule)
+    .build
 
 }

@@ -2,14 +2,8 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
+# MET API
+GET     /v0.:format                 controllers.ElementsController.getElements(id: Option[String], code: Option[String], format: String)
+GET     /:id/v0.:format             controllers.ElementsController.getElementById(id: String, format: String)
 
-# TODO:
-#
-# Rename this file, to match the name od your plugin
-
-
-# Home page
-GET     /                           controllers.template.ElementsController.template
-
-# Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.at(path="/public", file)
+GET     /api-docs                   pl.matisoft.swagger.ApiHelpController.getResource(path = "/elements")

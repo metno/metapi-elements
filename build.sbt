@@ -2,14 +2,26 @@ name := """elements"""
 
 organization := "no.met.data"
 
-version := "0.1-SNAPSHOT"
+version := "0.2-SNAPSHOT"
+
+publishTo := {
+  val nexus = "http://maven.met.no/"
+  if (isSnapshot.value)
+    Some("snapshots" at nexus + "content/repositories/snapshots")
+  else
+    Some("releases"  at nexus + "service/local/staging/deploy/maven2")
+}
+
+credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
 scalaVersion := "2.11.6"
 
-scalacOptions += "-feature"
+PlayKeys.devSettings += ("play.http.router", "elements.Routes")
 
+
+// Test Settings
 javaOptions += "-Djunit.outdir=target/test-report"
 
 ScoverageSbtPlugin.ScoverageKeys.coverageHighlighting := true
@@ -20,22 +32,33 @@ ScoverageSbtPlugin.ScoverageKeys.coverageFailOnMinimum := true
 
 ScoverageSbtPlugin.ScoverageKeys.coverageExcludedPackages := """
   <empty>;
-  util.HttpStatus;views.html.swaggerUi.*;
   value.ApiResponse;
   ReverseApplication;
   ReverseAssets;
-  Routes;
+  elements.*;
 """
 
-scalacOptions += "-feature"
 
-scalacOptions += "-language:postfixOps"
-
+// Dependencies
 libraryDependencies ++= Seq(
   jdbc,
-  anorm,
   cache,
-  ws
+  evolutions,
+  ws,
+ "com.typesafe.play" %% "anorm" % "2.4.0",
+ "pl.matisoft" %% "swagger-play24" % "1.4",
+ "com.github.nscala-time" %% "nscala-time" % "2.0.0",
+ "jp.sf.amateras.solr.scala" %% "solr-scala-client" % "0.0.12",
+ "com.oracle" % "ojdbc14" % "10.2.0.1.0",
+ "no.met.data" %% "util" % "0.2-SNAPSHOT",
+ "no.met.data" %% "auth" % "0.2-SNAPSHOT",
+  specs2 % Test
 )
 
-PlayKeys.devSettings += ("application.router", "elements.Routes")
+resolvers ++= Seq( "metno repo" at "http://maven.met.no/content/groups/public",
+                   "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases",
+                   "amateras-repo" at "http://amateras.sourceforge.jp/mvn/" )
+
+// Play provides two styles of routers, one expects its actions to be injected, the
+// other, legacy style, accesses its actions statically.
+routesGenerator := InjectedRoutesGenerator

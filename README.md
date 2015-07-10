@@ -1,31 +1,21 @@
-# Template for new metapi submodules
+Elements access service for MET API
+=======================================
 
-This is meant to be used as a starting point when creating new modules
-for metapi.
+This module implements a service for reading metadata about elements.
 
-A script. `renameto` is provided, renaming files and classes here to what 
-you decide. you may run it like this:
+Setup
+-----
 
-`./renameto foo`
+This application uses a Solr/Lucene server to read and write elements
+metadata. In order for this to work, you will need to specify the
+Solr server to use. This is given with the configuration key
+`solr.elements`.
 
-It will rename some files and classes, making them have foo-like names. 
-Remember not to commit the results back to metapi-template, but on a 
-new remote. 
+By default, this is set to localhost:
 
+  met.solr.elements="http://localhost:8983/solr/elements"
 
-## Global dependencies
-
-Also, for publishing to metno, make sure the file ~/.sbt/0.13/global.sbt 
-exists, with the following contents:
-
-```Scala
-publishTo := {
-  val nexus = "http://maven.met.no/"
-  if (isSnapshot.value)
-    Some("snapshots" at nexus + "content/repositories/snapshots")
-  else
-    Some("releases"  at nexus + "service/local/staging/deploy/maven2")
-}
-
-credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
-```
+If you want to test the application, you can set up a local Solr server,
+with the Solr config specced in `/test/resources/solr`. Sample
+documents are available in `/test/resources/elements.json` (insert
+each json object individually).

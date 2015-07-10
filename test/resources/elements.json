@@ -1,0 +1,41 @@
+[
+    {
+        "id": "air_temperature",
+        "siUnit": "K",
+        "name": "Air temperature",
+        "description": "Air temperature at time of observation",
+        "cfName": "air_temperature",
+        "cfUnit": "K",
+        "kdvhCode": "TA",
+        "kdvhUnit": "degree_celsius"
+    },
+    {
+        "id": "max(air_temperature T1H)",
+        "siUnit": "K",
+        "name": "Maximum air temperature",
+        "description": "Highest noted temperature this hour/day",
+        "cfName": "air_temperature",
+        "cfUnit": "K",
+        "cfCellMethods": "time: maximum over days",
+        "kdvhCode": "TAX",
+        "kdvhUnit": "degree_celsius"
+    },
+    {
+        "id": "max(air_temperature T12H)",
+        "siUnit": "K",
+        "description": "Highest observed temperature last 12 hours",
+        "kdvhCode": "TAX_12",
+        "kdvhUnit": "degree_celsius"
+    },
+    {
+        "id": "precipitation_amount",
+        "siUnit": "K",
+        "name": "Maximum air temperature",
+        "description": "Highest noted temperature this hour/day",
+        "cfName": "air_temperature",
+        "cfUnit": "K",
+        "cfCellMethods": "time: maximum over days",
+        "kdvhCode": "TAX",
+        "kdvhUnit": "degree_celsius"
+    }
+]
