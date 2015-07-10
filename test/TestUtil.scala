@@ -24,6 +24,7 @@
 */
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.inject.bind
+import play.api.Application
 import play.api.test.FakeApplication
 import controllers._
 import services._
@@ -37,7 +38,7 @@ object TestUtil {
         ("auth.active" -> "false"))
   }
 
-  lazy val app = new GuiceApplicationBuilder()
+  def app : Application = new GuiceApplicationBuilder()
     .configure(defaultConfig)
     .bindings(new ElementsDevModule)
     .build
