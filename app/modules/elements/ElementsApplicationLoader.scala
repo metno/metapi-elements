@@ -38,6 +38,7 @@ import services.MockElementAccess
  * Configurations for Production Mode
  */
 // $COVERAGE-OFF$ Can't test the production binding in Test mode
+/*
 class ElementsProdModule extends AbstractModule {
 
   def configure() {
@@ -45,6 +46,8 @@ class ElementsProdModule extends AbstractModule {
   }
 
 }
+*
+*/
 // $COVERAGE-ON$
 
 /**
@@ -73,7 +76,7 @@ class ElementsApplicationLoader extends GuiceApplicationLoader() {
     context.environment.mode match {
       case Mode.Prod =>
         // start mode
-        builder.bindings(new ElementsProdModule)
+        builder.bindings(new ElementsDevModule)
       case _ =>
         // run mode
         builder.bindings(new ElementsDevModule)

@@ -58,10 +58,6 @@ class SolrElementAccessSpec extends Specification {
     }
 
     "convert element id list to a list of solr parameters" in {
-      SolrElement.parseId(Some("air_temperature")) must equalTo("(air_temperature)")
-    }
-
-    "convert element id list to a list of solr parameters" in {
       SolrElement.parseId(Some("air_temperature,max(air_temperature t1h),precipitation_amount")) must
         equalTo("(air_temperature max(air_temperature t1h) precipitation_amount)")
     }
@@ -73,6 +69,39 @@ class SolrElementAccessSpec extends Specification {
 
   }
 
+  "Parsing of code" should {
+
+    "convert no code to retrieve all in solr" in {
+      SolrElement.parseCode(None) must equalTo("(*:*)")
+    }
+
+    "convert white space to retrieve all in solr" in {
+      SolrElement.parseCode(Some("  ")) must equalTo("(*:*)")
+    }
+
+    "convert single element code to correct solr parameter" in {
+      SolrElement.parseCode(Some("TAM")) must equalTo("(TAM)")
+    }
+
+    "trim whitespace for single element code" in {
+      SolrElement.parseCode(Some("  TAM ")) must equalTo("(TAM)")
+    }
+
+    "normalize case to make elements case-insensitive" in {
+      SolrElement.parseCode(Some("tAM ")) must equalTo("(TAM)")
+    }
+
+    "convert element code list to a list of solr parameters" in {
+      SolrElement.parseCode(Some("ta,tam,rr")) must
+        equalTo("(TA TAM RR)")
+    }
+
+    "trim whitespace in an element code list" in {
+      SolrElement.parseCode(Some(" ta,   TAM, RR")) must
+        equalTo("(TA TAM RR)")
+    }
+
+  }
 }
 
 // scalastyle:on
