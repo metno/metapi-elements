@@ -38,8 +38,8 @@ class MockElementAccess extends ElementAccess("") {
       "mm",
       "Monthly total of precipitation (precipitation day 06-06 utc)",
       Some("precipitation_amount"),
-      Some("kg/m2"),
       Some("sum"),
+      Some("kg/m2"),
       Some("RR"),
       Some("mm"),
       Some("T_MONTH")),
@@ -48,8 +48,8 @@ class MockElementAccess extends ElementAccess("") {
       "mm",
       "Snow depth, total from ground up; normally measured in the morning. Code = -1 means no snow, -3 = not possible to measure.",
       Some("surface_snow_thickness"),
-      Some("kg/m2"),
       None,
+      Some("kg/m2"),
       Some("RR"),
       Some("cm"),
       Some("T_ADATA,T_NDATA,T_VDATA,T_10MINUTE_DATA")),
@@ -58,8 +58,8 @@ class MockElementAccess extends ElementAccess("") {
       "mm",
       "Amount of precipitation last 24 hours",
       Some("precipitation_amount"),
-      Some("kg/m2"),
       Some("sum"),
+      Some("kg/m2"),
       Some("RR_24"),
       Some("mm"),
       Some("T_DIURNAL,T_NDATA,T_ADATA,T_VDATA")),
@@ -68,8 +68,8 @@ class MockElementAccess extends ElementAccess("") {
       "cm",
       "Monthly value: Maximum measured observed snow depth.",
       Some("surface_snow_thickness"),
-      Some("kg/m2"),
       Some("maximum"),
+      Some("kg/m2"),
       Some("SAX"),
       Some("cm"),
       Some("T_MONTH")),
@@ -78,8 +78,8 @@ class MockElementAccess extends ElementAccess("") {
       "cm",
       "Monthly value: Maximum measured observed snow depth.",
       Some("surface_snow_thickness"),
-      Some("kg/m2"),
       Some("percent_coverage, maximum"),
+      Some("kg/m2"),
       Some("SAX"),
       Some("cm"),
       Some("T_COVER")),
@@ -88,8 +88,8 @@ class MockElementAccess extends ElementAccess("") {
       "degC",
       "Air temperature at time of observation",
       Some("air_temperature"),
-      Some("K"),
       None,
+      Some("K"),
       Some("TA"),
       Some("degree_celsius"),
       Some("T_MDATA,T_VDATA,T_ADATA,T_10MINUTE_DATA")),
@@ -98,8 +98,8 @@ class MockElementAccess extends ElementAccess("") {
       "degC",
       "Highest noted temperature this hour/day",
       Some("air_temperature"),
-      Some("K"),
       Some("time: maximum over days"),
+      Some("K"),
       Some("TAX"),
       Some("degree_celsius"),
       Some("T_MONTH")),
@@ -118,8 +118,8 @@ class MockElementAccess extends ElementAccess("") {
       "m/s",
       "Wind speed (10 meters above ground) - standard value: mean value for last 10 minutes before time of observation",
       Some("wind_speed"),
-      Some("m/s"),
       None,
+      Some("m/s"),
       Some("FF"),
       Some("m/s"),
       Some("T_VDATA,T_10MINUTE_DATA,T_MDATA,T_ADATA")),
@@ -128,8 +128,8 @@ class MockElementAccess extends ElementAccess("") {
       "percent",
       "Relative humidity of the air at hour of observation",
       Some("relative_humidity"),
-      Some("m/s"),
       None,
+      Some("m/s"),
       Some("FF"),
       Some("percent"),
       Some("T_VDATA,T_MDATA")),
@@ -138,14 +138,14 @@ class MockElementAccess extends ElementAccess("") {
       "angle",
       "The general wind direction last 10 minutes, defined as the direction the wind comes from, e.g north = 360deg, east = 90deg. -3 = variable direction.",
       Some("wind_from_direction"),
-      Some("m/s"),
       None,
+      Some("m/s"),
       Some("DD"),
       Some("angle"),
       Some("T_MDATA,T_ADATA,T_10MINUTE_DATA"))
   )
 
-  def getElements(id: Option[String], code: Option[String]): List[Element] = {
+  def getElements(id: Option[String], code: Option[String], lang: Option[String]): List[Element] = {
 
     val idList : Array[String] = id match {
       case Some(id) => id.toLowerCase.split(",")
@@ -167,7 +167,7 @@ class MockElementAccess extends ElementAccess("") {
   }
 
 
-  def getElementById(id: String): List[Element] = {
+  def getElementById(id: String, lang: Option[String]): List[Element] = {
     elements filter(element => element.id.toLowerCase == id.toLowerCase)
   }
 

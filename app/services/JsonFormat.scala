@@ -50,8 +50,8 @@ object JsonFormat extends BasicJsonFormat {
         case Some(theValue) => {
           val js = Json.obj(
             "standard_name" -> element.cfName,
-            "unit" -> element.cfUnit,
-            "cell_methods" -> element.cfCellMethods)
+            "cell_methods" -> element.cfCellMethods,
+            "unit" -> element.cfUnit)
           Some(JsObject(js.fields.filterNot(t => withoutValue(t._2))))
         }
         case None => None
@@ -64,7 +64,7 @@ object JsonFormat extends BasicJsonFormat {
           val js = Json.obj(
             "code" -> element.kdvhCode,
             "unit" -> element.kdvhUnit,
-            "ref"  -> element.kdvhRef)
+            "ref" -> element.kdvhUnit)
           Some(JsObject(js.fields.filterNot(t => withoutValue(t._2))))
         }
         case None => None
@@ -75,7 +75,7 @@ object JsonFormat extends BasicJsonFormat {
       val js = Json.obj(
         "@type" -> "Element",
         "id" -> element.id,
-        "siUnit" -> element.siUnit,
+        "unit" -> element.siUnit,
         "description" -> element.description,
         "cfConvention" -> writesCf(element),
         "kdvhConvention" -> writesKdvh(element))

@@ -1,4 +1,5 @@
 {
+    "project.name" : "metapi-elements",
     "phabricator.uri": "https://phab.met.no",
-    "unit.engine": "SBTTestEngine"
+    "unit.engine": "PlayTestEngine"
 }

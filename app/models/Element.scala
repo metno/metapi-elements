@@ -31,9 +31,17 @@ package models
  * cf and kdvh elements are used for cross-referencing, however it is not
  * required for there to be a mapping to either of those two standards.
  */
-case class Element(id: String, siUnit: String, description: String,
-    cfName: Option[String], cfUnit: Option[String], cfCellMethods: Option[String],
-    kdvhCode: Option[String], kdvhUnit: Option[String], kdvhRef: Option[String])
+case class Element(
+    id: String,
+    siUnit: String,
+    description: String,
+    cfName: Option[String],
+    cfCellMethods: Option[String],
+    cfUnit: Option[String],
+    kdvhCode: Option[String],
+    kdvhUnit: Option[String],
+    kdvhRef: Option[String]
+)
 
 /**
  * Complete response data set to send to clients

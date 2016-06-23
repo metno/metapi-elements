@@ -3,7 +3,7 @@
 # ~~~~
 
 # MET API
-GET     /v0.:format                 controllers.ElementsController.getElements(id: Option[String], code: Option[String], format: String)
-GET     /:id/v0.:format             controllers.ElementsController.getElementById(id: String, format: String)
+GET     /v0.:format                 controllers.ElementsController.getElements(id: Option[String], code: Option[String], lang: Option[String], format: String)
+GET     /:id/v0.:format             controllers.ElementsController.getElementById(id: String, lang: Option[String], format: String)
 
 GET     /api-docs                   pl.matisoft.swagger.ApiHelpController.getResource(path = "/elements")

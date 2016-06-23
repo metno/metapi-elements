@@ -31,23 +31,20 @@ import services._
 import play.api.inject.guice.GuiceableModule.fromGuiceModule
 import play.api.inject.guice._
 import services.ElementAccess
-import services.KdvhElementAccess
+import services.DbElementAccess
 import services.MockElementAccess
 
 /**
  * Configurations for Production Mode
  */
 // $COVERAGE-OFF$ Can't test the production binding in Test mode
-/*
 class ElementsProdModule extends AbstractModule {
 
   def configure() {
-    bind(classOf[ElementAccess]).to(classOf[KdvhElementAccess])
+    bind(classOf[ElementAccess]).to(classOf[DbElementAccess])
   }
 
 }
-*
-*/
 // $COVERAGE-ON$
 
 /**

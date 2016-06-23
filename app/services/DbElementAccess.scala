@@ -34,59 +34,51 @@ import java.sql.Connection
 import javax.inject.Singleton
 import models.Element
 
-/*
- * KDVH Mapping Table Schema
- * ELEM_CODE
- * TABLE_NAME
- * STANDARD_NAME
- * CALCULATION_METHOD
- * TIMESPAN
- * REFTIME
- * SENSOR_NR
- * SENSOR_LEVEL
- * AUDIT_DATO
- * NUM_STATIONS
- * ELEMENT_ID
- * TS_ELEM_TABLE_NAME
- * LEVEL_UNIT
- * FLAG_TABLE_NAME
- */
-
 //$COVERAGE-OFF$Not testing database queries
 @Singleton
-class KdvhElementAccess extends ElementAccess("") {
+class DbElementAccess extends ElementAccess("") {
 
   val parser: RowParser[Element] = {
-    get[String]("element_id") ~
-    get[String]("standard_name") ~
-    get[String]("elem_code") map {
-      case id~cfName~kdvhCode => Element(id.toLowerCase, "-", "Missing description", Some(cfName), Some("-"), Some("-"), Some(kdvhCode), Some("-"), Some("-"))
+    get[String]("element_name") ~
+    get[String]("element_unit") ~
+    get[String]("element_description") ~
+    get[Option[String]]("cf_standard_name") ~
+    get[Option[String]]("cf_cell_method") ~
+    get[Option[String]]("cf_unit") ~
+    get[Option[String]]("kdvh_code") ~
+    get[Option[String]]("kdvh_unit") ~
+    get[Option[String]]("kdvh_ref") map {
+      case id~unit~desc~cfName~cfMethod~cfUnit~kdvhCode~kdvhUnit~kdvhRef => Element(id.toLowerCase, unit, desc, cfName, cfMethod, cfUnit, kdvhCode, kdvhUnit, kdvhRef)
     }
   }
 
-  def getElements(id: Option[String], code: Option[String]): List[Element] = {
+  def getElements(id: Option[String], code: Option[String], lang: Option[String]): List[Element] = {
     val idList = id map { _.toUpperCase } map { _.replaceAll("\\s+", " ") } map { _.trim } filter { _.length != 0 }
     val elemQ = idList map (idStr => {
       val ids = idStr.split(",").map(_.trim)
       val qIdList = ids.mkString("','")
-      s"UPPER(element_id) IN ('$qIdList')"
-    } ) getOrElse "element_id IS NOT NULL"
+      s"UPPER(element_name) IN ('$qIdList')"
+    } ) getOrElse "element_name IS NOT NULL"
     val codeList = code map { _.toUpperCase } map { _.replaceAll("\\s+", " ") } map { _.trim } filter { _.length != 0 }
     val kdvhQ = codeList map (codeStr => {
       val codes = codeStr.split(",").map(_.trim)
       val qCodeList = codes.mkString("','")
-      s"UPPER(elem_code) IN ('$qCodeList')"
-    } ) getOrElse "elem_code IS NOT NULL"
+      s"UPPER(kdvh_code) IN ('$qCodeList')"
+    } ) getOrElse "kdvh_code IS NOT NULL"
+    val localeQ = "element_description_locale = '" + lang.getOrElse("en") + "'";
     val query = s"""
       |SELECT
-        |element_id, standard_name, elem_code
+        |element_name, element_unit, element_description, cf_standard_name, cf_cell_method, cf_unit, string_agg(distinct kdvh_code, ',') as kdvh_code,  string_agg(distinct kdvh_unit, ',') as kdvh_unit, string_agg(distinct kdvh_table, ',') as kdvh_ref
       |FROM
-        |kportal.t_elem_map_cfnames
+        |element_kdvh_xref_v
       |WHERE
         |$elemQ AND
-        |$kdvhQ
+        |$kdvhQ AND
+        |$localeQ
+      |GROUP BY
+        |element_name, element_unit, element_description, cf_standard_name, cf_cell_method, cf_unit
       |ORDER BY
-        |standard_name desc""".stripMargin
+        |cf_standard_name desc""".stripMargin
 
     Logger.debug(query)
 
@@ -95,17 +87,21 @@ class KdvhElementAccess extends ElementAccess("") {
     }
   }
 
-  def getElementById(id: String): List[Element] = {
+  def getElementById(id: String, lang: Option[String]): List[Element] = {
     val idQ = id.toUpperCase.replaceAll("\\s+", " ").trim
+    val localeQ = "element_description_locale = '" + lang.getOrElse("en") + "'";
     val query = s"""
       |SELECT
-        |element_id, standard_name, elem_code
+        |element_name, element_unit, element_description, cf_standard_name, cf_cell_method, cf_unit, string_agg(distinct kdvh_code, ',') as kdvh_code,  string_agg(distinct kdvh_unit, ',') as kdvh_unit, string_agg(distinct kdvh_table, ',') as kdvh_ref
       |FROM
-        |kportal.t_elem_map_cfnames
+        |element_kdvh_xref_v
       |WHERE
-        |UPPER(element_id) = '$idQ'
+        |UPPER(element_name) = '$idQ' AND
+        |$localeQ
+      |GROUP BY
+        |element_name, element_unit, element_description, cf_standard_name, cf_cell_method, cf_unit
       |ORDER BY
-        |standard_name desc""".stripMargin
+        |cf_standard_name desc""".stripMargin
 
     Logger.debug(query)
 

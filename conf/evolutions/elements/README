@@ -1,0 +1,52 @@
+Extraction of Metadata From KDVH
+
+
+ELEMENT
+
+select
+  distinct b.ELEMENT_ID AS name,
+  ('P' || COALESCE(OBSERVATION_TIMESPAN, 'T0H0M0S')) AS timespan,
+  c.CANONICAL_UNITS AS unit,
+  c.STANDARD_NAME AS standard_name,
+  CELL_METHOD AS cf_cell_method
+from
+  kportal.T_ELEM_MAP_CFNAMES b
+   LEFT OUTER JOIN KPORTAL.t_cfnames c ON b.standard_name = c.standard_name
+WHERE
+  name IS NOT NULL
+ORDER BY name asc;
+
+
+ELEMENT DESCRIPTION
+Carries over illegal characters + string concats. Note also the use of ';' needs to
+be escaped.
+
+select
+  b.ELEMENT_ID AS element_name,
+  WM_CONCAT(a.DESCRIPTION) AS description,
+  a.LANGUAGE AS description_locale
+from
+  kportal.T_ELEM_MAP_CFNAMES b
+   LEFT OUTER JOIN T_ELEM a ON (a.ELEM_CODE = b.ELEM_CODE)
+WHERE
+  b.ELEMENT_ID IS NOT NULL AND
+  b.TABLE_NAME IS NOT NULL
+GROUP BY b.element_id, a.language
+ORDER BY b.element_ID asc;
+
+
+KDVH_ELEMENT
+
+select
+  distinct b.ELEM_CODE as code,
+  coalesce(a.UNIT, 'N/A') as unit,
+  b.TABLE_NAME as table_name,
+  b.ELEMENT_ID AS element_name  
+from
+  (kportal.T_ELEM_MAP_CFNAMES b
+   LEFT OUTER JOIN KPORTAL.t_cfnames c ON b.standard_name = c.standard_name)
+   LEFT OUTER JOIN T_ELEM a ON (a.ELEM_CODE = b.ELEM_CODE AND LANGUAGE = 'no')
+WHERE
+  b.ELEMENT_ID IS NOT NULL AND
+  b.TABLE_NAME IS NOT NULL
+ORDER BY element_name asc;

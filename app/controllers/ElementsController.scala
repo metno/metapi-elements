@@ -56,13 +56,14 @@ class ElementsController @Inject()(elementService: ElementAccess) extends Contro
   def getElements( // scalastyle:ignore public.methods.have.type
     @ApiParam(value = "If specified, select the element ids listed.", required = false)@QueryParam("id") id: Option[String],
     @ApiParam(value = "If specified, select the element matching the KDVH code.", required = false)@QueryParam("code") code: Option[String],
+    @ApiParam(value = "Language of return values. Valid languages are en (English), no (Norwegian bokmål) and es (Norwegian nynorsk). English is the default", required = false)@QueryParam("lang") lang: Option[String],
     @ApiParam(value = "output format", required = true, allowableValues = "jsonld",
       defaultValue = "jsonld")@PathParam("format") format: String) = no.met.security.AuthorizedAction {
     implicit request =>
     // Start the clock
     val start = DateTime.now(DateTimeZone.UTC)
     Try  {
-      elementService.getElements(id, code)
+      elementService.getElements(id, code, lang)
     } match {
       case Success(data) =>
         if (data isEmpty) {
@@ -94,13 +95,14 @@ class ElementsController @Inject()(elementService: ElementAccess) extends Contro
     new ApiResponse(code = 500, message = "The service encountered an unexpected server-side condition which prevented it from fulfilling the request")))
   def getElementById( // scalastyle:ignore public.methods.have.type
     @ApiParam(value = "Id of the element to retrieve metadata for", required = false)@PathParam("id") id: String,
+    @ApiParam(value = "Language of return values. Valid languages are en (English), no (Norwegian bokmål) and es (Norwegian nynorsk). English is the default", required = false)@QueryParam("lang") lang: Option[String],
     @ApiParam(value = "output format", required = true, allowableValues = "jsonld",
       defaultValue = "jsonld")@PathParam("format") format: String) = no.met.security.AuthorizedAction {
     implicit request =>
     // Start the clock
     val start = DateTime.now(DateTimeZone.UTC)
     Try {
-      elementService.getElementById(id)
+      elementService.getElementById(id, lang)
     } match {
       case Success(data) =>
         if (data isEmpty) {

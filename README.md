@@ -19,3 +19,8 @@ If you want to test the application, you can set up a local Solr server,
 with the Solr config specced in `/test/resources/solr`. Sample
 documents are available in `/test/resources/elements.json` (insert
 each json object individually).
+
+
+
+Queries:
+
