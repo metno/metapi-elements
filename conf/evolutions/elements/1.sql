@@ -3,7 +3,7 @@
 CREATE TABLE element (
   name TEXT NOT NULL,
   timespan INTERVAL NOT NULL,
-  unit TEXT, 
+  unit TEXT NOT NULL, 
   cf_standard_name TEXT,
   cf_cell_method TEXT
 );

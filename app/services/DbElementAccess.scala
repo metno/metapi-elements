@@ -68,7 +68,7 @@ class DbElementAccess extends ElementAccess("") {
     val localeQ = "element_description_locale = '" + lang.getOrElse("en") + "'";
     val query = s"""
       |SELECT
-        |element_name, coalesce(element_unit,""), element_description, cf_standard_name, cf_cell_method, cf_unit, string_agg(distinct kdvh_code, ',') as kdvh_code,  string_agg(distinct kdvh_unit, ',') as kdvh_unit, string_agg(distinct kdvh_table, ',') as kdvh_ref
+        |element_name, element_unit, element_description, cf_standard_name, cf_cell_method, cf_unit, string_agg(distinct kdvh_code, ',') as kdvh_code,  string_agg(distinct kdvh_unit, ',') as kdvh_unit, string_agg(distinct kdvh_table, ',') as kdvh_ref
       |FROM
         |element_kdvh_xref_v
       |WHERE
@@ -92,7 +92,7 @@ class DbElementAccess extends ElementAccess("") {
     val localeQ = "element_description_locale = '" + lang.getOrElse("en") + "'";
     val query = s"""
       |SELECT
-        |element_name, coalesce(element_unit,""), element_description, cf_standard_name, cf_cell_method, cf_unit, string_agg(distinct kdvh_code, ',') as kdvh_code,  string_agg(distinct kdvh_unit, ',') as kdvh_unit, string_agg(distinct kdvh_table, ',') as kdvh_ref
+        |element_name, element_unit, element_description, cf_standard_name, cf_cell_method, cf_unit, string_agg(distinct kdvh_code, ',') as kdvh_code,  string_agg(distinct kdvh_unit, ',') as kdvh_unit, string_agg(distinct kdvh_table, ',') as kdvh_ref
       |FROM
         |element_kdvh_xref_v
       |WHERE
