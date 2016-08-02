@@ -26,10 +26,10 @@ package modules.elements
 
 import play.api._
 import play.api.inject.guice._
-import com.google.inject.AbstractModule
-import no.met.elements._
 import play.api.inject.guice.GuiceableModule.fromGuiceModule
 import play.api.inject.guice._
+import com.google.inject.AbstractModule
+import services.elements._
 
 /**
  * Configurations for Production Mode
