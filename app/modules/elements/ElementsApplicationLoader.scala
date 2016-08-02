@@ -27,12 +27,9 @@ package modules.elements
 import play.api._
 import play.api.inject.guice._
 import com.google.inject.AbstractModule
-import services._
+import no.met.elements._
 import play.api.inject.guice.GuiceableModule.fromGuiceModule
 import play.api.inject.guice._
-import services.ElementAccess
-import services.DbElementAccess
-import services.MockElementAccess
 
 /**
  * Configurations for Production Mode

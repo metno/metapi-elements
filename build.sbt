@@ -24,7 +24,6 @@ libraryDependencies ++= Seq(
   ws,
  "com.typesafe.play" %% "anorm" % "2.4.0",
  "org.postgresql" % "postgresql" % "9.4-1201-jdbc41",
- "jp.sf.amateras.solr.scala" %% "solr-scala-client" % "0.0.12",
  "com.github.nscala-time" %% "nscala-time" % "2.0.0",
  "pl.matisoft" %% "swagger-play24" % "1.4",
  "no.met.data" %% "util" % "0.2-SNAPSHOT",

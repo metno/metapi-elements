@@ -23,7 +23,7 @@
     MA 02110-1301, USA
 */
 
-package services
+package no.met.elements
 
 import play.api._
 import models.Element

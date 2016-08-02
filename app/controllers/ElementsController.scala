@@ -34,7 +34,7 @@ import javax.ws.rs.{ QueryParam, PathParam }
 import com.github.nscala_time.time.Imports._
 import com.wordnik.swagger.annotations._
 import models.Element
-import services.{ ElementAccess, JsonFormat }
+import no.met.elements.{ ElementAccess, JsonFormat }
 
 // scalastyle:off magic.number
 
