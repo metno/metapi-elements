@@ -28,11 +28,11 @@ package controllers
 import play.api._
 import play.api.mvc._
 import play.api.http.Status._
-import javax.inject.Inject
-import util._
-import javax.ws.rs.{ QueryParam, PathParam }
 import com.github.nscala_time.time.Imports._
-import com.wordnik.swagger.annotations._
+import javax.inject.Inject
+import io.swagger.annotations._
+import scala.language.postfixOps
+import util._
 import models.Element
 import services.elements.{ ElementAccess, JsonFormat }
 
@@ -54,11 +54,11 @@ class ElementsController @Inject()(elementService: ElementAccess) extends Contro
     new ApiResponse(code = 400, message = "An error in the request"),
     new ApiResponse(code = 404, message = "No data was found")))
   def getElements( // scalastyle:ignore public.methods.have.type
-    @ApiParam(value = "If specified, select the element ids listed.", required = false)@QueryParam("id") id: Option[String],
-    @ApiParam(value = "If specified, select the element matching the KDVH code.", required = false)@QueryParam("code") code: Option[String],
-    @ApiParam(value = "Language of return values. Valid languages are en (English), no (Norwegian bokmål) and es (Norwegian nynorsk). English is the default", required = false)@QueryParam("lang") lang: Option[String],
+    @ApiParam(value = "If specified, select the element ids listed.", required = false) id: Option[String],
+    @ApiParam(value = "If specified, select the element matching the KDVH code.", required = false) code: Option[String],
+    @ApiParam(value = "Language of return values. Valid languages are en (English), no (Norwegian bokmål) and es (Norwegian nynorsk). English is the default", required = false) lang: Option[String],
     @ApiParam(value = "output format", required = true, allowableValues = "jsonld",
-      defaultValue = "jsonld")@PathParam("format") format: String) = no.met.security.AuthorizedAction {
+      defaultValue = "jsonld") format: String) = no.met.security.AuthorizedAction {
     implicit request =>
     // Start the clock
     val start = DateTime.now(DateTimeZone.UTC)
@@ -94,10 +94,10 @@ class ElementsController @Inject()(elementService: ElementAccess) extends Contro
     new ApiResponse(code = 404, message = "No data was found for the specified ID"),
     new ApiResponse(code = 500, message = "The service encountered an unexpected server-side condition which prevented it from fulfilling the request")))
   def getElementById( // scalastyle:ignore public.methods.have.type
-    @ApiParam(value = "Id of the element to retrieve metadata for", required = false)@PathParam("id") id: String,
-    @ApiParam(value = "Language of return values. Valid languages are en (English), no (Norwegian bokmål) and es (Norwegian nynorsk). English is the default", required = false)@QueryParam("lang") lang: Option[String],
+    @ApiParam(value = "Id of the element to retrieve metadata for", required = false) id: String,
+    @ApiParam(value = "Language of return values. Valid languages are en (English), no (Norwegian bokmål) and es (Norwegian nynorsk). English is the default", required = false) lang: Option[String],
     @ApiParam(value = "output format", required = true, allowableValues = "jsonld",
-      defaultValue = "jsonld")@PathParam("format") format: String) = no.met.security.AuthorizedAction {
+      defaultValue = "jsonld") format: String) = no.met.security.AuthorizedAction {
     implicit request =>
     // Start the clock
     val start = DateTime.now(DateTimeZone.UTC)

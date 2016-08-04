@@ -32,6 +32,7 @@ import anorm._
 import anorm.SqlParser._
 import java.sql.Connection
 import javax.inject.Singleton
+import scala.language.postfixOps
 import models.Element
 
 //$COVERAGE-OFF$Not testing database queries
