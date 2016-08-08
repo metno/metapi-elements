@@ -38,32 +38,47 @@ import services.elements.{ ElementAccess, JsonFormat }
 
 // scalastyle:off magic.number
 
-@Api(value = "/elements", description = "Descriptions of MET API elements")
+@Api(value = "elements")
 class ElementsController @Inject()(elementService: ElementAccess) extends Controller {
 
   /**
-   * GET elements data from solr/elements
-   * @param ids list of ids to retrieve, comma-separated
+   * GET element metadata data from elements-db
    */
   @ApiOperation(
-    nickname = "getElements",
-    value = "Returns information about the elements of the API",
+    value = "Get metadata about MET API elements.",
+    notes = "Get metadata about the weather and climate elements that are defined for use in the MET API, as filtered by the query parameters.",
     response = classOf[String],
     httpMethod = "GET")
   @ApiResponses(Array(
-    new ApiResponse(code = 400, message = "An error in the request"),
-    new ApiResponse(code = 404, message = "No data was found")))
+    new ApiResponse(code = 200, message = "OK"),
+    new ApiResponse(code = 400, message = "Invalid parameter value or malformed request."),
+    new ApiResponse(code = 401, message = "Unauthorized client ID."),
+    new ApiResponse(code = 404, message = "No data was found for the list of query Ids."),
+    new ApiResponse(code = 500, message = "Internal server error.")))
   def getElements( // scalastyle:ignore public.methods.have.type
-    @ApiParam(value = "If specified, select the element ids listed.", required = false) id: Option[String],
-    @ApiParam(value = "If specified, select the element matching the KDVH code.", required = false) code: Option[String],
-    @ApiParam(value = "Language of return values. Valid languages are en (English), no (Norwegian bokmål) and es (Norwegian nynorsk). English is the default", required = false) lang: Option[String],
-    @ApiParam(value = "output format", required = true, allowableValues = "jsonld",
-      defaultValue = "jsonld") format: String) = no.met.security.AuthorizedAction {
+    @ApiParam(value = "The MET API element ID(s) that you want metadata for as a comma-separated list.",
+              allowMultiple = true,
+              example="air_temperature",
+              required = false)
+              id: Option[String],
+    @ApiParam(value = "The legacy MET Norway element code that you want metadata for as a comma separated list.",
+              example = "TA",
+              required = false)
+              legacyElemCode: Option[String],
+    @ApiParam(value = "ISO language/locale of return values.",
+              allowableValues = "en-US,nb-NO,nn-NO",
+              defaultValue = "en-US",
+              required = false) lang: Option[String],
+    @ApiParam(value = "output format",
+              allowableValues = "jsonld",
+              defaultValue = "jsonld",
+              required = true)
+              format: String) = no.met.security.AuthorizedAction {
     implicit request =>
     // Start the clock
     val start = DateTime.now(DateTimeZone.UTC)
     Try  {
-      elementService.getElements(id, code, lang)
+      elementService.getElements(id, legacyElemCode, lang)
     } match {
       case Success(data) =>
         if (data isEmpty) {
@@ -79,28 +94,37 @@ class ElementsController @Inject()(elementService: ElementAccess) extends Contro
   }
 
   /**
-   * GET elements data from solr/elements
-   * @param id single elementId to retrieve
+   * GET element metadata data from elements-db
    */
   @ApiOperation(
-    nickname = "getElementById",
-    value = "Returns information about a single element from the API",
+    value = "Get metadata about a single MET API element.",
+    notes = "Get metadata for a single weather or climate element available in the MET API.",
     response = classOf[String],
     httpMethod = "GET")
   @ApiResponses(Array(
-    new ApiResponse(code = 200, message = "The request was successfully completed"),
-    new ApiResponse(code = 400, message = "An error in the request"),
-    new ApiResponse(code = 401, message = "The authentication credentials included with this request are missing or invalid"),
-    new ApiResponse(code = 404, message = "No data was found for the specified ID"),
-    new ApiResponse(code = 500, message = "The service encountered an unexpected server-side condition which prevented it from fulfilling the request")))
+    new ApiResponse(code = 200, message = "OK"),
+    new ApiResponse(code = 400, message = "Invalid parameter value or malformed request."),
+    new ApiResponse(code = 401, message = "Unauthorized client ID."),
+    new ApiResponse(code = 404, message = "No data was found for the list of query Ids."),
+    new ApiResponse(code = 500, message = "Internal server error.")))
   def getElementById( // scalastyle:ignore public.methods.have.type
-    @ApiParam(value = "Id of the element to retrieve metadata for", required = false) id: String,
-    @ApiParam(value = "Language of return values. Valid languages are en (English), no (Norwegian bokmål) and es (Norwegian nynorsk). English is the default", required = false) lang: Option[String],
-    @ApiParam(value = "output format", required = true, allowableValues = "jsonld",
-      defaultValue = "jsonld") format: String) = no.met.security.AuthorizedAction {
+    @ApiParam(value = "The MET API element ID that you want to retrieve metadata for.",
+              example="air_temperature",
+              required = true)
+              id: String,
+    @ApiParam(value = "ISO language/locale of return values.",
+              allowableValues="en-US,nb-NO,nn-NO",
+              defaultValue="en-US",
+              required = false) lang: Option[String],
+    @ApiParam(value = "output format",
+              allowableValues = "jsonld",
+              defaultValue = "jsonld",
+              required = true)
+              format: String) = no.met.security.AuthorizedAction {
     implicit request =>
     // Start the clock
     val start = DateTime.now(DateTimeZone.UTC)
+    
     Try {
       elementService.getElementById(id, lang)
     } match {

@@ -1,5 +1,7 @@
 # --- !Ups
 
+CREATE TYPE locale AS ENUM ('en-US', 'nb-NO', 'nn-NO');
+
 CREATE TABLE element (
   name TEXT NOT NULL,
   timespan INTERVAL NOT NULL,
@@ -11,13 +13,13 @@ CREATE TABLE element (
 CREATE TABLE element_description (
   element_name TEXT NOT NULL,
   description TEXT NOT NULL,
-  description_locale TEXT NOT NULL
+  description_locale LOCALE NOT NULL
 );
 
 CREATE TABLE element_comment (
   element_name TEXT NOT NULL,
   comment TEXT NOT NULL,
-  comment_locale TEXT NOT NULL
+  comment_locale LOCALE NOT NULL
 );
 
 CREATE TABLE code_table (
@@ -29,7 +31,7 @@ CREATE TABLE code_table_entry (
   code_table_name TEXT NOT NULL,
   entry TEXT NOT NULL,
   meaning TEXT NOT NULL,
-  meaning_locale TEXT NOT NULL
+  meaning_locale LOCALE NOT NULL
 );
 
 CREATE TABLE kdvh_element (
@@ -71,4 +73,13 @@ FROM
 
 # --- !Downs
 
-SELECT 1;
+DROP VIEW IF EXISTS element_kdvh_xref_v;
+DROP TABLE IF EXISTS element_kdvh_xref_v;
+DROP TABLE IF EXISTS kdvh_element;
+DROP TABLE IF EXISTS code_table_entry;
+DROP TABLE IF EXISTS code_table;
+DROP TABLE IF EXISTS element_comment;
+DROP TABLE IF EXISTS element_description;
+DROP TABLE IF EXISTS element;
+DROP TYPE IF EXISTS locale;
+ 
