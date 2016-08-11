@@ -29,78 +29,26 @@ import io.swagger.annotations._
 import scala.annotation.meta.field
 import java.net.URL
 import com.github.nscala_time.time.Imports._
-
-/**
- * Representation of a MET API Element.
- *
- * cf and kdvh elements are used for cross-referencing, however it is not
- * required for there to be a mapping to either of those two standards.
- *
-case class Element(
-    id: String,
-    siUnit: String,
-    description: String,
-    cfName: Option[String],
-    cfCellMethods: Option[String],
-    cfUnit: Option[String],
-    kdvhCode: Option[String],
-    kdvhUnit: Option[String],
-    kdvhRef: Option[String]
-)*/
-
-/**
- * Complete response data set to send to clients
- */
-case class ResponseData(header: no.met.data.BasicResponseData, data: Traversable[Element])
-
-object JsonConstants {
-  final val METAPI_CONTEXT="https://data.met.no/schema/"
-  final val CONTEXT_NAME="@context"
-  final val CONTEXT="The Json-LD context."
-  final val RESPONSE_TYPE_NAME="@type"
-  final val RESPONSE_TYPE="The response object type."
-  final val API_VERSION="The version of the API that generated this response."
-  final val API_VERSION_EXAMPLE="v0"
-  final val LICENSE="The license that applies to this content."
-  final val LICENSE_EXAMPLE="http://met.no/English/Data_Policy_and_Data_Services/"
-  final val CREATED_AT="The time at which this document was created (RFC 3339)."
-  final val CREATED_AT_EXAMPLE="2007-11-06T16:34:41.000Z"
-  final val QUERY_TIME="The time, in seconds, that this document took to generate."
-  final val QUERY_TIME_EXAMPLE="0.025"
-  final val CURRENT_ITEM_COUNT="The current number of items in this result set."
-  final val CURRENT_ITEM_COUNT_EXAMPLE="3456"
-  final val ITEMS_PER_PAGE="The maximum number of items in a result set."
-  final val ITEMS_PER_PAGE_EXAMPLE="1000"
-  final val OFFSET="The offset of the first item in the result set. The MET API uses a zero-base index."
-  final val OFFSET_EXAMPLE="2000"
-  final val TOTAL_ITEM_COUNT="The total number of items in this specific result set."
-  final val TOTAL_ITEM_COUNT_EXAMPLE="1000"
-  final val NEXT_LINK="The next link indicates how more data can be retrieved. It points to the URI to load the next set of data."
-  final val NEXT_LINK_EXAMPLE="https://data.met.no/resource/v0.jsonld?param=example_param&offset=3000"
-  final val PREVIOUS_LINK="The previous link indicates how more data can be retrieved. It points to the URI to load the previous set of data."
-  final val PREVIOUS_LINK_EXAMPLE="https://data.met.no/resource/v0.jsonld?param=example_param&offset=1000"
-  final val CURRENT_LINK="The current link indicates the URI that was used to generate the current API response"
-  final val CURRENT_LINK_EXAMPLE="https://data.met.no/resource/v0.jsonld?param=example_param&offset=2000"
-  final val DATA="Container for all the data from the response."
-}
+import no.met.data.{ApiConstants,BasicResponse}
 
 @ApiModel(description="Data response for element metadata.")
 case class ElementResponse(
-  @(ApiModelProperty @field)(name=JsonConstants.CONTEXT_NAME, value=JsonConstants.CONTEXT, example=JsonConstants.METAPI_CONTEXT) context: URL,
-  @(ApiModelProperty @field)(name=JsonConstants.RESPONSE_TYPE_NAME, value=JsonConstants.RESPONSE_TYPE, example="ElementResponse") responseType: String,
-  @(ApiModelProperty @field)(value=JsonConstants.API_VERSION, example=JsonConstants.API_VERSION_EXAMPLE) apiVersion: String,
-  @(ApiModelProperty @field)(value=JsonConstants.LICENSE, example=JsonConstants.LICENSE_EXAMPLE) license: URL,
-  @(ApiModelProperty @field)(value=JsonConstants.CREATED_AT, dataType="String", example=JsonConstants.CREATED_AT_EXAMPLE) createdAt: DateTime,
-  @(ApiModelProperty @field)(value=JsonConstants.QUERY_TIME, dataType="String", example=JsonConstants.QUERY_TIME_EXAMPLE) queryTime: Duration,
-  @(ApiModelProperty @field)(value=JsonConstants.CURRENT_ITEM_COUNT, example=JsonConstants.CURRENT_ITEM_COUNT_EXAMPLE) currentItemCount: Long,
-  @(ApiModelProperty @field)(value=JsonConstants.ITEMS_PER_PAGE, example=JsonConstants.ITEMS_PER_PAGE_EXAMPLE) itemsPerPage: Long,
-  @(ApiModelProperty @field)(value=JsonConstants.OFFSET, example=JsonConstants.OFFSET_EXAMPLE) offset: Long,
-  @(ApiModelProperty @field)(value=JsonConstants.TOTAL_ITEM_COUNT, example=JsonConstants.TOTAL_ITEM_COUNT_EXAMPLE) totalItemCount: Long,
-  @(ApiModelProperty @field)(value=JsonConstants.NEXT_LINK, example=JsonConstants.NEXT_LINK_EXAMPLE) nextLink: Option[URL],
-  @(ApiModelProperty @field)(value=JsonConstants.PREVIOUS_LINK, example=JsonConstants.PREVIOUS_LINK_EXAMPLE) previousLink: Option[URL],
-  @(ApiModelProperty @field)(value=JsonConstants.CURRENT_LINK, example=JsonConstants.CURRENT_LINK_EXAMPLE) currentLink: URL,
-  @(ApiModelProperty @field)(value=JsonConstants.DATA) data: List[Element]
+  @(ApiModelProperty @field)(name=ApiConstants.CONTEXT_NAME, value=ApiConstants.CONTEXT, example=ApiConstants.METAPI_CONTEXT) context: URL,
+  @(ApiModelProperty @field)(name=ApiConstants.OBJECT_TYPE_NAME, value=ApiConstants.OBJECT_TYPE, example="ElementResponse") responseType: String,
+  @(ApiModelProperty @field)(value=ApiConstants.API_VERSION, example=ApiConstants.API_VERSION_EXAMPLE) apiVersion: String,
+  @(ApiModelProperty @field)(value=ApiConstants.LICENSE, example=ApiConstants.METAPI_LICENSE) license: URL,
+  @(ApiModelProperty @field)(value=ApiConstants.CREATED_AT, dataType="String", example=ApiConstants.CREATED_AT_EXAMPLE) createdAt: DateTime,
+  @(ApiModelProperty @field)(value=ApiConstants.QUERY_TIME, dataType="String", example=ApiConstants.QUERY_TIME_EXAMPLE) queryTime: Duration,
+  @(ApiModelProperty @field)(value=ApiConstants.CURRENT_ITEM_COUNT, example=ApiConstants.CURRENT_ITEM_COUNT_EXAMPLE) currentItemCount: Long,
+  @(ApiModelProperty @field)(value=ApiConstants.ITEMS_PER_PAGE, example=ApiConstants.ITEMS_PER_PAGE_EXAMPLE) itemsPerPage: Long,
+  @(ApiModelProperty @field)(value=ApiConstants.OFFSET, example=ApiConstants.OFFSET_EXAMPLE) offset: Long,
+  @(ApiModelProperty @field)(value=ApiConstants.TOTAL_ITEM_COUNT, example=ApiConstants.TOTAL_ITEM_COUNT_EXAMPLE) totalItemCount: Long,
+  @(ApiModelProperty @field)(value=ApiConstants.NEXT_LINK, example=ApiConstants.NEXT_LINK_EXAMPLE) nextLink: Option[URL],
+  @(ApiModelProperty @field)(value=ApiConstants.PREVIOUS_LINK, example=ApiConstants.PREVIOUS_LINK_EXAMPLE) previousLink: Option[URL],
+  @(ApiModelProperty @field)(value=ApiConstants.CURRENT_LINK, example=ApiConstants.CURRENT_LINK_EXAMPLE) currentLink: URL,
+  @(ApiModelProperty @field)(value=ApiConstants.DATA) data: Seq[Element]
 ) 
+extends BasicResponse( context, responseType, apiVersion, license, createdAt, queryTime, currentItemCount, itemsPerPage, offset, totalItemCount, nextLink, previousLink, currentLink)
 
 @ApiModel(description="Metadata for a single element.")
 case class Element(
