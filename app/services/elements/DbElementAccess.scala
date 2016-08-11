@@ -100,7 +100,7 @@ class DbElementAccess extends ElementAccess("") {
       |FROM
         |element_kdvh_xref_v
       |WHERE
-        |UPPER(element_name) = '$idQ' AND
+        |UPPER(element_id) = '$idQ' AND
         |$localeQ
       |GROUP BY
         |element_id, element_name, element_description, element_unit, element_codetable, kdvh_unit, kdvh_category, cf_standard_name, cf_cell_method, cf_unit, cf_status
