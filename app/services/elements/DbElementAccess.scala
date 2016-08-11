@@ -72,7 +72,7 @@ class DbElementAccess extends ElementAccess("") {
     val localeQ = "element_description_locale = '" + lang.getOrElse("en") + "'";
     val query = s"""
       |SELECT
-        |element_id, element_name, element_description, element_unit, element_codetable, kdvh_code, kdvh_unit, kdvh_category, cf_standard_name, cf_cell_method, cf_unit, cf_status
+        |element_id, element_name, element_description, element_unit, element_codetable, min(kdvh_code) AS kdvh_code, kdvh_unit, kdvh_category, cf_standard_name, cf_cell_method, cf_unit, cf_status
       |FROM
         |element_kdvh_xref_v
       |WHERE
@@ -80,7 +80,7 @@ class DbElementAccess extends ElementAccess("") {
         |$kdvhQ AND
         |$localeQ
       |GROUP BY
-        |element_name, element_unit, element_description, cf_standard_name, cf_cell_method, cf_unit
+        |element_id, element_name, element_description, element_unit, element_codetable, kdvh_unit, kdvh_category, cf_standard_name, cf_cell_method, cf_unit, cf_status
       |ORDER BY
         |element_id desc""".stripMargin
 
@@ -96,14 +96,14 @@ class DbElementAccess extends ElementAccess("") {
     val localeQ = "element_description_locale = '" + lang.getOrElse("en") + "'";
     val query = s"""
       |SELECT
-        |element_id, element_name, element_description, element_unit, element_codetable, kdvh_code, kdvh_unit, kdvh_category, cf_standard_name, cf_cell_method, cf_unit, cf_status
+        |element_id, element_name, element_description, element_unit, element_codetable, min(kdvh_code) AS kdvh_code, kdvh_unit, kdvh_category, cf_standard_name, cf_cell_method, cf_unit, cf_status
       |FROM
         |element_kdvh_xref_v
       |WHERE
         |UPPER(element_name) = '$idQ' AND
         |$localeQ
       |GROUP BY
-        |element_name, element_unit, element_description, cf_standard_name, cf_cell_method, cf_unit
+        |element_id, element_name, element_description, element_unit, element_codetable, kdvh_unit, kdvh_category, cf_standard_name, cf_cell_method, cf_unit, cf_status
       |ORDER BY
         |element_id desc""".stripMargin
 
