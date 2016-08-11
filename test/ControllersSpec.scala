@@ -79,7 +79,7 @@ class ControllersSpec extends Specification {
     }
 
     "return a result with a kdvh code in the route" in new WithApplication(TestUtil.app) {
-      val response = route(FakeRequest(GET, "/v0.jsonld?code=TA")).get
+      val response = route(FakeRequest(GET, "/v0.jsonld?legacyElemCode=TA")).get
 
       status(response) must equalTo(OK)
 
@@ -88,7 +88,7 @@ class ControllersSpec extends Specification {
     }
 
     "return a result with a list of codes in the route" in new WithApplication(TestUtil.app) {
-      val response = route(FakeRequest(GET, "/v0.jsonld?code=TA,TAX")).get
+      val response = route(FakeRequest(GET, "/v0.jsonld?legacyElemCode=TA,TAX")).get
 
       status(response) must equalTo(OK)
 
@@ -97,7 +97,7 @@ class ControllersSpec extends Specification {
     }
 
     "return nothing for incorrect code" in new WithApplication(TestUtil.app) {
-      val response = route(FakeRequest(GET, "/v0.jsonld?code=dummy")).get
+      val response = route(FakeRequest(GET, "/v0.jsonld?legacyElemCode=dummy")).get
 
       status(response) must equalTo(NOT_FOUND)
     }

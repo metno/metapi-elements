@@ -46,29 +46,26 @@ class ElementsController @Inject()(elementService: ElementAccess) extends Contro
    */
   @ApiOperation(
     value = "Get metadata about MET API elements.",
-    notes = "Get metadata about the weather and climate elements that are defined for use in the MET API, as filtered by the query parameters.",
-    response = classOf[String],
+    notes = "Get metadata about the weather and climate elements that are defined for use in the MET API. Use the query parameters to filter the set of parameters returned. Leave the query parameters blank to select **all** elements.",
+    response = classOf[models.ElementResponse],
     httpMethod = "GET")
   @ApiResponses(Array(
-    new ApiResponse(code = 200, message = "OK"),
     new ApiResponse(code = 400, message = "Invalid parameter value or malformed request."),
     new ApiResponse(code = 401, message = "Unauthorized client ID."),
     new ApiResponse(code = 404, message = "No data was found for the list of query Ids."),
     new ApiResponse(code = 500, message = "Internal server error.")))
   def getElements( // scalastyle:ignore public.methods.have.type
-    @ApiParam(value = "The MET API element ID(s) that you want metadata for as a comma-separated list.",
-              allowMultiple = true,
-              example="air_temperature",
+    @ApiParam(value = "The MET API element ID(s) that you want metadata. Enter a comma-separated list to select multiple elements.",
               required = false)
               id: Option[String],
-    @ApiParam(value = "The legacy MET Norway element code that you want metadata for as a comma separated list.",
-              example = "TA",
+    @ApiParam(value = "The legacy MET Norway element code that you want metadata for. Enter a comma-separated list to select multiple elements.",
               required = false)
               legacyElemCode: Option[String],
     @ApiParam(value = "ISO language/locale of return values.",
               allowableValues = "en-US,nb-NO,nn-NO",
               defaultValue = "en-US",
-              required = false) lang: Option[String],
+              required = false)
+              lang: Option[String],
     @ApiParam(value = "output format",
               allowableValues = "jsonld",
               defaultValue = "jsonld",
@@ -93,16 +90,17 @@ class ElementsController @Inject()(elementService: ElementAccess) extends Contro
     }
   }
 
+  // Write something about filtering + empty = all.
+  
   /**
    * GET element metadata data from elements-db
    */
   @ApiOperation(
     value = "Get metadata about a single MET API element.",
     notes = "Get metadata for a single weather or climate element available in the MET API.",
-    response = classOf[String],
+    response = classOf[models.ElementResponse],
     httpMethod = "GET")
   @ApiResponses(Array(
-    new ApiResponse(code = 200, message = "OK"),
     new ApiResponse(code = 400, message = "Invalid parameter value or malformed request."),
     new ApiResponse(code = 401, message = "Unauthorized client ID."),
     new ApiResponse(code = 404, message = "No data was found for the list of query Ids."),

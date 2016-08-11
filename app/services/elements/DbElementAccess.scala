@@ -33,23 +33,26 @@ import anorm.SqlParser._
 import java.sql.Connection
 import javax.inject.Singleton
 import scala.language.postfixOps
-import models.Element
+import models.{Element, LegacyMetNoConvention, CfConvention}
 
 //$COVERAGE-OFF$Not testing database queries
 @Singleton
 class DbElementAccess extends ElementAccess("") {
 
   val parser: RowParser[Element] = {
+    get[String]("element_id") ~
     get[String]("element_name") ~
-    get[String]("element_unit") ~
     get[String]("element_description") ~
+    get[String]("element_unit") ~
+    get[Option[String]]("element_codeTable") ~
+    get[Option[String]]("kdvh_code") ~
+    get[Option[String]]("kdvh_category") ~
+    get[Option[String]]("kdvh_unit") ~
     get[Option[String]]("cf_standard_name") ~
     get[Option[String]]("cf_cell_method") ~
     get[Option[String]]("cf_unit") ~
-    get[Option[String]]("kdvh_code") ~
-    get[Option[String]]("kdvh_unit") ~
-    get[Option[String]]("kdvh_ref") map {
-      case id~unit~desc~cfName~cfMethod~cfUnit~kdvhCode~kdvhUnit~kdvhRef => Element(id.toLowerCase, unit, desc, cfName, cfMethod, cfUnit, kdvhCode, kdvhUnit, kdvhRef)
+    get[Option[String]]("cf_status") map {
+      case id~name~desc~unit~codeTable~kdvhCode~kdvhCategory~kdvhUnit~cfName~cfMethod~cfUnit~cfStatus => Element(id.toLowerCase, name, desc, unit, codeTable, LegacyMetNoConvention(kdvhCode, kdvhCategory, kdvhUnit), CfConvention(cfName, cfMethod, cfUnit, cfStatus))
     }
   }
 
@@ -58,8 +61,8 @@ class DbElementAccess extends ElementAccess("") {
     val elemQ = idList map (idStr => {
       val ids = idStr.split(",").map(_.trim)
       val qIdList = ids.mkString("','")
-      s"UPPER(element_name) IN ('$qIdList')"
-    } ) getOrElse "element_name IS NOT NULL"
+      s"UPPER(element_id) IN ('$qIdList')"
+    } ) getOrElse "element_id IS NOT NULL"
     val codeList = code map { _.toUpperCase } map { _.replaceAll("\\s+", " ") } map { _.trim } filter { _.length != 0 }
     val kdvhQ = codeList map (codeStr => {
       val codes = codeStr.split(",").map(_.trim)
@@ -69,7 +72,7 @@ class DbElementAccess extends ElementAccess("") {
     val localeQ = "element_description_locale = '" + lang.getOrElse("en") + "'";
     val query = s"""
       |SELECT
-        |element_name, element_unit, element_description, cf_standard_name, cf_cell_method, cf_unit, string_agg(distinct kdvh_code, ',') as kdvh_code,  string_agg(distinct kdvh_unit, ',') as kdvh_unit, string_agg(distinct kdvh_table, ',') as kdvh_ref
+        |element_id, element_name, element_description, element_unit, element_codetable, kdvh_code, kdvh_unit, kdvh_category, cf_standard_name, cf_cell_method, cf_unit, cf_status
       |FROM
         |element_kdvh_xref_v
       |WHERE
@@ -79,7 +82,7 @@ class DbElementAccess extends ElementAccess("") {
       |GROUP BY
         |element_name, element_unit, element_description, cf_standard_name, cf_cell_method, cf_unit
       |ORDER BY
-        |cf_standard_name desc""".stripMargin
+        |element_id desc""".stripMargin
 
     Logger.debug(query)
 
@@ -93,7 +96,7 @@ class DbElementAccess extends ElementAccess("") {
     val localeQ = "element_description_locale = '" + lang.getOrElse("en") + "'";
     val query = s"""
       |SELECT
-        |element_name, element_unit, element_description, cf_standard_name, cf_cell_method, cf_unit, string_agg(distinct kdvh_code, ',') as kdvh_code,  string_agg(distinct kdvh_unit, ',') as kdvh_unit, string_agg(distinct kdvh_table, ',') as kdvh_ref
+        |element_id, element_name, element_description, element_unit, element_codetable, kdvh_code, kdvh_unit, kdvh_category, cf_standard_name, cf_cell_method, cf_unit, cf_status
       |FROM
         |element_kdvh_xref_v
       |WHERE
@@ -102,7 +105,7 @@ class DbElementAccess extends ElementAccess("") {
       |GROUP BY
         |element_name, element_unit, element_description, cf_standard_name, cf_cell_method, cf_unit
       |ORDER BY
-        |cf_standard_name desc""".stripMargin
+        |element_id desc""".stripMargin
 
     Logger.debug(query)
 

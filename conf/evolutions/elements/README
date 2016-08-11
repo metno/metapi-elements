@@ -1,29 +1,37 @@
-Extraction of Metadata From KDVH
+# Extraction of Metadata From KDVH
 
-
-ELEMENT
+## ELEMENT
 
 select
-  distinct b.ELEMENT_ID AS name,
-  ('P' || COALESCE(OBSERVATION_TIMESPAN, 'T0H0M0S')) AS timespan,
-  COALESCE(c.CANONICAL_UNITS, 'n/a') AS unit,
-  c.STANDARD_NAME AS cf_standard_name,
-  CELL_METHOD AS cf_cell_method
+  ELEMENT_ID AS ID,
+  MAX(UNIT)
 from
   kportal.T_ELEM_MAP_CFNAMES b
-   LEFT OUTER JOIN KPORTAL.t_cfnames c ON b.standard_name = c.standard_name
+   LEFT OUTER JOIN T_ELEM a ON (a.ELEM_CODE = b.ELEM_CODE)
 WHERE
-  b.ELEMENT_ID IS NOT NULL
-ORDER BY name asc;
-
-
-ELEMENT DESCRIPTION
-Carries over illegal characters + string concats. Note also the use of ';' needs to
-be escaped.
+  b.ELEMENT_ID IS NOT NULL AND
+  b.TABLE_NAME IS NOT NULL AND
+  a.LANGUAGE = 'en'
+GROUP BY ELEMENT_ID
+ORDER BY ID;
 
 select
-  b.ELEMENT_ID AS element_name,
-  WM_CONCAT(a.DESCRIPTION) AS description,
+  ELEMENT_ID AS ELEMENT_ID,
+  MIN(NAME) AS NAME,
+  LANGUAGE AS NAME_LOCALE
+from
+  kportal.T_ELEM_MAP_CFNAMES b
+   LEFT OUTER JOIN T_ELEM a ON (a.ELEM_CODE = b.ELEM_CODE)
+WHERE
+  b.ELEMENT_ID IS NOT NULL AND
+  b.TABLE_NAME IS NOT NULL AND
+  NAME IS NOT NULL
+GROUP BY ELEMENT_ID, LANGUAGE
+ORDER BY ID;
+
+select
+  b.ELEMENT_ID AS element_id,
+  MIN(a.DESCRIPTION) AS description,
   a.LANGUAGE AS description_locale
 from
   kportal.T_ELEM_MAP_CFNAMES b
@@ -33,20 +41,62 @@ WHERE
   b.TABLE_NAME IS NOT NULL
 GROUP BY b.element_id, a.language
 ORDER BY b.element_ID asc;
+-- This statement requires some manipulation. Find/Replace all locales and move them to ISO locales.
+-- Also, all ';' inside statements are a problem. Escape them by replacing all ; with ;;. This is a problem with evolutions.
 
-
-KDVH_ELEMENT
 
 select
-  distinct b.ELEM_CODE as code,
+  ELEMENT_ID,
+  LOWER(REPLACE(MIN(CODE_TABLE_NAME),'T_CODE_','')) AS CODETABLE_NAME
+from
+  kportal.T_ELEM_MAP_CFNAMES b
+   LEFT OUTER JOIN T_ELEM a ON (a.ELEM_CODE = b.ELEM_CODE)
+WHERE
+  b.ELEMENT_ID IS NOT NULL AND
+  b.TABLE_NAME IS NOT NULL AND
+  CODE_TABLE_NAME IS NOT NULL AND
+  LANGUAGE = 'en'
+GROUP BY b.ELEMENT_ID
+ORDER BY b.element_ID asc;
+
+## CF
+
+select
+  DISTINCT b.ELEMENT_ID AS ELEMENT_ID,
+  c.STANDARD_NAME AS standard_name,
+  CELL_METHOD AS cell_method,
+  COALESCE(c.CANONICAL_UNITS, 'n/a') AS unit,
+  COALESCE(c.VERSION_NUMBER, 999) as status
+from
+  kportal.T_ELEM_MAP_CFNAMES b
+   LEFT OUTER JOIN KPORTAL.t_cfnames c ON b.standard_name = c.standard_name
+WHERE
+  b.ELEMENT_ID IS NOT NULL AND
+  c.STANDARD_NAME IS NOT NULL
+ORDER BY b.ELEMENT_ID asc;
+
+
+## KDVH
+
+select
+  distinct b.ELEM_CODE as elem_code,
+  coalesce(a.ELEM_GROUP, 'N/A') AS category, 
   coalesce(a.UNIT, 'N/A') as unit,
   b.TABLE_NAME as table_name,
   b.ELEMENT_ID AS element_name  
 from
   (kportal.T_ELEM_MAP_CFNAMES b
    LEFT OUTER JOIN KPORTAL.t_cfnames c ON b.standard_name = c.standard_name)
-   LEFT OUTER JOIN T_ELEM a ON (a.ELEM_CODE = b.ELEM_CODE AND LANGUAGE = 'no')
+   LEFT OUTER JOIN T_ELEM a ON (a.ELEM_CODE = b.ELEM_CODE AND LANGUAGE = 'en')
 WHERE
   b.ELEMENT_ID IS NOT NULL AND
   b.TABLE_NAME IS NOT NULL
 ORDER BY element_name asc;
+
+
+
+
+
+### MINOR QUERY_REPLACES
+'Beaufort' -> 'code'
+'*C' to 'degree_Celsius'

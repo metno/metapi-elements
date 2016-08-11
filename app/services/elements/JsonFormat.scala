@@ -28,7 +28,7 @@ package services.elements
 import play.api.mvc._
 import play.api.libs.json._
 import com.github.nscala_time.time.Imports._
-import models.{ Element, ResponseData }
+import models._
 import no.met.data.BasicResponseData
 import no.met.data.format.json.BasicJsonFormat
 
@@ -45,26 +45,27 @@ object JsonFormat extends BasicJsonFormat {
       case _ => false
     }
 
-    def writesCf(element: Element): Option[JsObject] = {
-      element.cfName match {
+    def writesCf(cfElement: CfConvention): Option[JsObject] = {
+      cfElement.standardName match {
         case Some(theValue) => {
           val js = Json.obj(
-            "standard_name" -> element.cfName,
-            "cell_methods" -> element.cfCellMethods,
-            "unit" -> element.cfUnit)
+            "standardName" -> cfElement.standardName,
+            "cellMethod" -> cfElement.cellMethod,
+            "unit" -> cfElement.unit,
+            "status" -> cfElement.status)
           Some(JsObject(js.fields.filterNot(t => withoutValue(t._2))))
         }
         case None => None
       }
     }
 
-    def writesKdvh(element: Element): Option[JsObject] = {
-      element.kdvhCode match {
+    def writesKdvh(kdvhElement: LegacyMetNoConvention): Option[JsObject] = {
+      kdvhElement.elemCode match {
         case Some(theValue) => {
           val js = Json.obj(
-            "code" -> element.kdvhCode,
-            "unit" -> element.kdvhUnit,
-            "ref" -> element.kdvhUnit)
+            "elemCode" -> kdvhElement.elemCode,
+            "category" -> kdvhElement.category,
+            "unit" -> kdvhElement.unit)
           Some(JsObject(js.fields.filterNot(t => withoutValue(t._2))))
         }
         case None => None
@@ -75,10 +76,12 @@ object JsonFormat extends BasicJsonFormat {
       val js = Json.obj(
         "@type" -> "Element",
         "id" -> element.id,
-        "unit" -> element.siUnit,
+        "name" -> element.name,
         "description" -> element.description,
-        "cfConvention" -> writesCf(element),
-        "kdvhConvention" -> writesKdvh(element))
+        "unit" -> element.unit,
+        "codeTable" -> element.codeTable,
+        "legacyMetNoConvention" -> writesKdvh(element.legacyMetNoConvention),
+        "cfConvention" -> writesCf(element.cfConvention))
       JsObject(js.fields.filterNot(t => withoutValue(t._2)))
     }
   }
