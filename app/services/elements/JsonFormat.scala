@@ -83,7 +83,6 @@ object JsonFormat extends BasicJsonFormat {
   
   /**
    * Create json representation of the given list
-   *
    * @param start Start time of the query processing.
    * @param elements The list to create a representation of.
    * @return json representation, as a string

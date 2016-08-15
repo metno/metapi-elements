@@ -69,7 +69,7 @@ class DbElementAccess extends ElementAccess("") {
       val qCodeList = codes.mkString("','")
       s"UPPER(kdvh_code) IN ('$qCodeList')"
     } ) getOrElse "kdvh_code IS NOT NULL"
-    val localeQ = "element_description_locale = '" + lang.getOrElse("en") + "'";
+    val localeQ = "element_description_locale = '" + lang.getOrElse("en-US") + "'";
     val query = s"""
       |SELECT
         |element_id, element_name, element_description, element_unit, element_codetable, min(kdvh_code) AS kdvh_code, kdvh_unit, kdvh_category, cf_standard_name, cf_cell_method, cf_unit, cf_status

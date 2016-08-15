@@ -66,7 +66,7 @@ class ElementsController @Inject()(elementService: ElementAccess) extends Contro
               defaultValue = "en-US",
               required = false)
               lang: Option[String],
-    @ApiParam(value = "output format",
+    @ApiParam(value = "The output format of the result.",
               allowableValues = "jsonld",
               defaultValue = "jsonld",
               required = true)
@@ -114,7 +114,7 @@ class ElementsController @Inject()(elementService: ElementAccess) extends Contro
               allowableValues="en-US,nb-NO,nn-NO",
               defaultValue="en-US",
               required = false) lang: Option[String],
-    @ApiParam(value = "output format",
+    @ApiParam(value = "The output format of the result.",
               allowableValues = "jsonld",
               defaultValue = "jsonld",
               required = true)
