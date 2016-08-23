@@ -54,7 +54,7 @@ class ControllersSpec extends Specification {
     }
 
     "return a result with an id in the route" in new WithApplication(TestUtil.app) {
-      val response = route(FakeRequest(GET, "/v0.jsonld?id=sum(precipitation_amount%201m)")).get
+      val response = route(FakeRequest(GET, "/v0.jsonld?ids=sum(precipitation_amount%201m)")).get
 
       status(response) must equalTo(OK)
 
@@ -64,7 +64,7 @@ class ControllersSpec extends Specification {
     }
 
     "return a result with a list of ids in the route" in new WithApplication(TestUtil.app) {
-      val response = route(FakeRequest(GET, "/v0.jsonld?id=air_temperature,sum(precipitation_amount%201M)")).get
+      val response = route(FakeRequest(GET, "/v0.jsonld?ids=air_temperature,sum(precipitation_amount%201M)")).get
 
       status(response) must equalTo(OK)
 
@@ -73,13 +73,13 @@ class ControllersSpec extends Specification {
     }
 
     "return nothing for incorrect id" in new WithApplication(TestUtil.app) {
-      val response = route(FakeRequest(GET, "/v0.jsonld?id=dummy")).get
+      val response = route(FakeRequest(GET, "/v0.jsonld?ids=dummy")).get
 
       status(response) must equalTo(NOT_FOUND)
     }
 
     "return a result with a kdvh code in the route" in new WithApplication(TestUtil.app) {
-      val response = route(FakeRequest(GET, "/v0.jsonld?legacyElemCode=TA")).get
+      val response = route(FakeRequest(GET, "/v0.jsonld?legacyElemCodes=TA")).get
 
       status(response) must equalTo(OK)
 
@@ -88,7 +88,7 @@ class ControllersSpec extends Specification {
     }
 
     "return a result with a list of codes in the route" in new WithApplication(TestUtil.app) {
-      val response = route(FakeRequest(GET, "/v0.jsonld?legacyElemCode=TA,TAX")).get
+      val response = route(FakeRequest(GET, "/v0.jsonld?legacyElemCodes=TA,TAX")).get
 
       status(response) must equalTo(OK)
 
@@ -97,20 +97,20 @@ class ControllersSpec extends Specification {
     }
 
     "return nothing for incorrect code" in new WithApplication(TestUtil.app) {
-      val response = route(FakeRequest(GET, "/v0.jsonld?legacyElemCode=dummy")).get
+      val response = route(FakeRequest(GET, "/v0.jsonld?legacyElemCodes=dummy")).get
 
       status(response) must equalTo(NOT_FOUND)
     }
 
     "returns correct contentType for getElements" in new WithApplication(TestUtil.app) {
-      val response = route(FakeRequest(GET, "/v0.jsonld?id=sum(precipitation_amount%201m)")).get
+      val response = route(FakeRequest(GET, "/v0.jsonld?ids=sum(precipitation_amount%201m)")).get
 
       status(response) must equalTo(OK)
       contentType(response) must beSome.which(_ == "application/vnd.no.met.data.elements-v0+json")
     }
 
     "returns error if format is incorrect" in new WithApplication(TestUtil.app) {
-      val response = route(FakeRequest(GET, "/v0.txt?id=sum(precipitation_amount%201m)")).get
+      val response = route(FakeRequest(GET, "/v0.txt?ids=sum(precipitation_amount%201m)")).get
 
       status(response) must equalTo(BAD_REQUEST)
     }
