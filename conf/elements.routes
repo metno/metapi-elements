@@ -3,5 +3,5 @@
 # ~~~~
 
 # MET API
-GET     /v0.:format                 controllers.ElementsController.getElements(id: Option[String], legacyElemCode: Option[String], lang: Option[String], format: String)
+GET     /v0.:format                 controllers.ElementsController.getElements(ids: Option[String], legacyElemCodes: Option[String], lang: Option[String], format: String)
 GET     /:id/v0.:format             controllers.ElementsController.getElementById(id: String, lang: Option[String], format: String)

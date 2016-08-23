@@ -57,10 +57,10 @@ class ElementsController @Inject()(elementService: ElementAccess) extends Contro
   def getElements( // scalastyle:ignore public.methods.have.type
     @ApiParam(value = "The MET API element ID(s) that you want metadata. Enter a comma-separated list to select multiple elements.",
               required = false)
-              id: Option[String],
+              ids: Option[String],
     @ApiParam(value = "The legacy MET Norway element code that you want metadata for. Enter a comma-separated list to select multiple elements.",
               required = false)
-              legacyElemCode: Option[String],
+              legacyElemCodes: Option[String],
     @ApiParam(value = "ISO language/locale of return values.",
               allowableValues = "en-US,nb-NO,nn-NO",
               defaultValue = "en-US",
@@ -75,11 +75,11 @@ class ElementsController @Inject()(elementService: ElementAccess) extends Contro
     // Start the clock
     val start = DateTime.now(DateTimeZone.UTC)
     Try  {
-      elementService.getElements(id, legacyElemCode, lang)
+      elementService.getElements(ids, legacyElemCodes, lang)
     } match {
       case Success(data) =>
         if (data isEmpty) {
-          NotFound("Could not find any data elements for id " + id)
+          NotFound("Could not find any data elements for id " + ids)
         } else {
           format.toLowerCase() match {
             case "jsonld" => Ok(JsonFormat.format(start, data)) as "application/vnd.no.met.data.elements-v0+json"
