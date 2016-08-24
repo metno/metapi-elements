@@ -82,7 +82,7 @@ class ElementsController @Inject()(elementService: ElementAccess) extends Contro
           NotFound("Could not find any data elements for id " + ids)
         } else {
           format.toLowerCase() match {
-            case "jsonld" => Ok(JsonFormat.format(start, data)) as "application/vnd.no.met.data.elements-v0+json"
+            case "jsonld" => Ok(new JsonFormat().format(start, data)) as "application/vnd.no.met.data.elements-v0+json"
             case x        => BadRequest(s"Invalid output format: $x")
           }
         }
@@ -131,7 +131,7 @@ class ElementsController @Inject()(elementService: ElementAccess) extends Contro
           NotFound("Could not find any data elements for id " + id)
         } else {
           format.toLowerCase() match {
-            case "jsonld" => Ok(JsonFormat.format(start, data)) as "application/vnd.no.met.data.elements-v0+json"
+            case "jsonld" => Ok(new JsonFormat().format(start, data)) as "application/vnd.no.met.data.elements-v0+json"
             case x        => BadRequest(s"Invalid output format: $x")
           }
         }

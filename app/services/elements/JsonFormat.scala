@@ -30,39 +30,20 @@ import play.api.libs.json._
 import play.api.libs.functional.syntax._
 import com.github.nscala_time.time.Imports._
 import java.net.URL
-import no.met.data.{ApiConstants,BasicResponseData,ConfigUtil}
-import no.met.data.format.json.BasicJsonFormat
+import no.met.data.{ApiConstants,ConfigUtil}
+import no.met.json.BasicJsonFormat
 import models._
 
 /**
  * Creating a json representation of elements data
  */
-object JsonFormat extends BasicJsonFormat {
-
-  /* JsValue Writers */
+class JsonFormat extends BasicJsonFormat {
   
-  implicit val cfWrites: Writes[CfConvention] = (
-    (JsPath \ "standardName").writeNullable[String] and 
-    (JsPath \ "cellMethod").writeNullable[String] and
-    (JsPath \ "unit").writeNullable[String] and
-    (JsPath \ "status").writeNullable[String]
-  )(unlift(CfConvention.unapply))
+  implicit val cfWrites = Json.writes[CfConvention]
   
-  implicit val legacyMetNoWrites: Writes[LegacyMetNoConvention] = (
-    (JsPath \ "elemCode").writeNullable[String] and 
-    (JsPath \ "category").writeNullable[String] and
-    (JsPath \ "unit").writeNullable[String]
-  )(unlift(LegacyMetNoConvention.unapply))
+  implicit val legacyMetNoWrites = Json.writes[LegacyMetNoConvention]
 
-  implicit val elementWrites: Writes[Element] = (
-    (JsPath \ "id").write[String] and 
-    (JsPath \ "name").write[String] and
-    (JsPath \ "description").write[String] and
-    (JsPath \ "unit").write[String] and
-    (JsPath \ "codeTable").writeNullable[String] and
-    (JsPath \ "legacyMetNoConvention").write[LegacyMetNoConvention] and
-    (JsPath \ "cfConvention").write[CfConvention]
-  )(unlift(Element.unapply))
+  implicit val elementWrites = Json.writes[Element]
 
   implicit val elementResponseWrites: Writes[ElementResponse] = (
     (JsPath \ ApiConstants.CONTEXT_NAME).write[URL] and 
