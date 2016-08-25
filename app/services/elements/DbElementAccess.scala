@@ -40,49 +40,97 @@ import models.{Element, LegacyMetNoConvention, CfConvention}
 class DbElementAccess extends ElementAccess("") {
 
   val parser: RowParser[Element] = {
-    get[String]("element_id") ~
-    get[String]("element_name") ~
-    get[String]("element_description") ~
-    get[String]("element_unit") ~
-    get[Option[String]]("element_codeTable") ~
-    get[Option[String]]("kdvh_code") ~
-    get[Option[String]]("kdvh_category") ~
-    get[Option[String]]("kdvh_unit") ~
-    get[Option[String]]("cf_standard_name") ~
-    get[Option[String]]("cf_cell_method") ~
-    get[Option[String]]("cf_unit") ~
-    get[Option[String]]("cf_status") map {
-      case id~name~desc~unit~codeTable~kdvhCode~kdvhCategory~kdvhUnit~cfName~cfMethod~cfUnit~cfStatus => Element(id.toLowerCase, name, desc, unit, codeTable, LegacyMetNoConvention(kdvhCode, kdvhCategory, kdvhUnit), CfConvention(cfName, cfMethod, cfUnit, cfStatus))
+    get[Option[String]]("id") ~
+    get[Option[String]]("name") ~
+    get[Option[String]]("description") ~
+    get[Option[String]]("unit") ~
+    get[Option[String]]("codetable") ~
+    get[Option[String]]("legacymetnoconvention_elemcode") ~
+    get[Option[String]]("legacymetnoconvention_category") ~
+    get[Option[String]]("legacymetnoconvention_unit") ~
+    get[Option[String]]("cfconvention_standardname") ~
+    get[Option[String]]("cfconvention_cellmethod") ~
+    get[Option[String]]("cfconvention_unit") ~
+    get[Option[String]]("cfconvention_status") map {
+      case id~name~desc~unit~codeTable~kdvhCode~kdvhCategory~kdvhUnit~cfName~cfMethod~cfUnit~cfStatus 
+        => Element(id,
+                  name,
+                  desc,
+                  unit,
+                  codeTable,
+                  if (kdvhCode.isEmpty && kdvhCategory.isEmpty && kdvhUnit.isEmpty)
+                    None
+                  else
+                    Some(LegacyMetNoConvention(kdvhCode, kdvhCategory, kdvhUnit)),
+                  if (cfName.isEmpty && cfMethod.isEmpty && cfUnit.isEmpty && cfStatus.isEmpty)
+                    None
+                  else
+                    Some(CfConvention(cfName, cfMethod, cfUnit, cfStatus)))
     }
   }
+  
+  def getSelectQuery(fields: Set[String]) : String = {
+    val legalFields = Set("id", "name", "description", "unit", "codetable", "legacymetnoconvention", "cfconvention")
+    val fieldStr = fields
+      .mkString(", ")
+      .replace("legacymetnoconvention", "legacymetnoconvention_elemcode, legacymetnoconvention_category, legacymetnoconvention_unit")
+      .replace("cfconvention", "cfconvention_standardname, cfconvention_cellmethod, cfconvention_unit, cfconvention_status")
+    val missing = legalFields -- fields
+    if (missing.isEmpty)
+      fieldStr
+    else {
+      val missingStr = missing
+        .map( x => "NULL AS " + x )
+        .mkString(", ")
+        .replace("NULL AS legacymetnoconvention", "NULL AS legacymetnoconvention_elemcode, NULL AS legacymetnoconvention_category, NULL AS legacymetnoconvention_unit")
+        .replace("NULL AS cfconvention", "NULL AS cfconvention_standardname, NULL AS cfconvention_cellmethod, NULL AS cfconvention_unit, NULL AS cfconvention_status")
+      fieldStr + "," + missingStr
+    }
+  }
+  
 
-  def getElements(id: Option[String], code: Option[String], lang: Option[String]): List[Element] = {
-    val idList = id map { _.toUpperCase } map { _.replaceAll("\\s+", " ") } map { _.trim } filter { _.length != 0 }
-    val elemQ = idList map (idStr => {
-      val ids = idStr.split(",").map(_.trim)
-      val qIdList = ids.mkString("','")
-      s"UPPER(element_id) IN ('$qIdList')"
-    } ) getOrElse "element_id IS NOT NULL"
-    val codeList = code map { _.toUpperCase } map { _.replaceAll("\\s+", " ") } map { _.trim } filter { _.length != 0 }
-    val kdvhQ = codeList map (codeStr => {
-      val codes = codeStr.split(",").map(_.trim)
-      val qCodeList = codes.mkString("','")
-      s"UPPER(kdvh_code) IN ('$qCodeList')"
-    } ) getOrElse "kdvh_code IS NOT NULL"
-    val localeQ = "element_description_locale = '" + lang.getOrElse("en-US") + "'";
+  def getElements(ids: List[String], elemCodes: List[String], cfNames: List[String], fields: Set[String], lang: Option[String]): List[Element] = {
+    Logger.debug(fields.isEmpty.toString)
+    // Set up projection clause based on fields
+    val selectQ = 
+      if (fields.isEmpty)
+        "id, name, description, unit, codetable, legacymetnoconvention_elemcode, legacymetnoconvention_category, legacymetnoconvention_unit, cfconvention_standardname, cfconvention_cellmethod, cfconvention_unit, cfconvention_status" 
+      else
+        getSelectQuery(fields)
+    // Filter for selected ids
+    val idList = ids.mkString("','")
+    val idQ =
+      if (ids.isEmpty)
+        "id IS NOT NULL"
+      else
+        s"id IN ('$idList')"
+    // Filter for selected legacy codes
+    val elemList = elemCodes.mkString("','")
+    val elemQ =
+      if (elemCodes.isEmpty)
+        "TRUE"
+      else
+        s"legacymetnoconvention_elemcode IN ('$elemList')"
+    // Filter for selected standard names
+    val cfList = cfNames.mkString("','")
+    val cfQ =
+      if (cfNames.isEmpty)
+        "TRUE"
+      else
+        s"cfconvention_standardname IN ('$cfList')"
+    // Filter for Locale
+    val localeQ = "locale = '" + lang.getOrElse("en-US") + "'";
+    
     val query = s"""
       |SELECT
-        |element_id, element_name, element_description, element_unit, element_codetable, min(kdvh_code) AS kdvh_code, kdvh_unit, kdvh_category, cf_standard_name, cf_cell_method, cf_unit, cf_status
+        |$selectQ
       |FROM
-        |element_kdvh_xref_v
+        |get_elements_v
       |WHERE
+        |$idQ AND
         |$elemQ AND
-        |$kdvhQ AND
-        |$localeQ
-      |GROUP BY
-        |element_id, element_name, element_description, element_unit, element_codetable, kdvh_unit, kdvh_category, cf_standard_name, cf_cell_method, cf_unit, cf_status
-      |ORDER BY
-        |element_id desc""".stripMargin
+        |$cfQ AND
+        |$localeQ""".stripMargin
 
     Logger.debug(query)
 
@@ -91,27 +139,5 @@ class DbElementAccess extends ElementAccess("") {
     }
   }
 
-  def getElementById(id: String, lang: Option[String]): List[Element] = {
-    val idQ = id.toUpperCase.replaceAll("\\s+", " ").trim
-    val localeQ = "element_description_locale = '" + lang.getOrElse("en") + "'";
-    val query = s"""
-      |SELECT
-        |element_id, element_name, element_description, element_unit, element_codetable, min(kdvh_code) AS kdvh_code, kdvh_unit, kdvh_category, cf_standard_name, cf_cell_method, cf_unit, cf_status
-      |FROM
-        |element_kdvh_xref_v
-      |WHERE
-        |UPPER(element_id) = '$idQ' AND
-        |$localeQ
-      |GROUP BY
-        |element_id, element_name, element_description, element_unit, element_codetable, kdvh_unit, kdvh_category, cf_standard_name, cf_cell_method, cf_unit, cf_status
-      |ORDER BY
-        |element_id desc""".stripMargin
-
-    Logger.debug(query)
-
-    DB.withConnection("elements") { implicit connection =>
-      SQL(query).as( parser * )
-    }
-  }
 }
 // $COVERAGE-ON$

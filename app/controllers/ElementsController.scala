@@ -58,9 +58,15 @@ class ElementsController @Inject()(elementService: ElementAccess) extends Contro
     @ApiParam(value = "The MET API element ID(s) that you want metadata. Enter a comma-separated list to select multiple elements.",
               required = false)
               ids: Option[String],
-    @ApiParam(value = "The legacy MET Norway element code that you want metadata for. Enter a comma-separated list to select multiple elements.",
+    @ApiParam(value = "The legacy MET Norway element codes that you want metadata for. Enter a comma-separated list to select multiple elements.",
               required = false)
               legacyElemCodes: Option[String],
+    @ApiParam(value = "The CF standard names that you want metadata for. Enter a comma-separated list to select multiple elements.",
+              required = false)
+              cfStandardNames: Option[String],
+    @ApiParam(value = "A comma-separated list of the fields that should be present in the response. If set, only those fields listed here will be visible in the result set; e.g.: id,description will show only those two entries in the data set. The legacyMetNoConvention and cfConvention objects are included or excluded as a block by adding or omitting those two fields",
+              required = false)
+              fields: Option[String],
     @ApiParam(value = "ISO language/locale of return values.",
               allowableValues = "en-US,nb-NO,nn-NO",
               defaultValue = "en-US",
@@ -74,8 +80,24 @@ class ElementsController @Inject()(elementService: ElementAccess) extends Contro
     implicit request =>
     // Start the clock
     val start = DateTime.now(DateTimeZone.UTC)
+    val idList : List[String] = ids match {
+        case Some(x) => x.toLowerCase.split(",").map(_.trim).toList
+        case _ => List()
+    }
+    val legacyElemCodeList : List[String] = legacyElemCodes match {
+        case Some(x) => x.toLowerCase.split(",").map(_.trim).toList
+        case _ => List()
+    }
+    val cfStandardNameList : List[String] = cfStandardNames match {
+        case Some(x) => x.toLowerCase.split(",").map(_.trim).toList
+        case _ => List()
+    }
+    val fieldList : Set[String] = fields match {
+        case Some(x) => x.toLowerCase.split(",").map(_.trim).toSet
+        case _ => Set()
+    }
     Try  {
-      elementService.getElements(ids, legacyElemCodes, lang)
+      elementService.getElements(idList, legacyElemCodeList, cfStandardNameList, fieldList, lang)
     } match {
       case Success(data) =>
         if (data isEmpty) {
@@ -110,6 +132,9 @@ class ElementsController @Inject()(elementService: ElementAccess) extends Contro
               example="air_temperature",
               required = true)
               id: String,
+    @ApiParam(value = "A comma-separated list of the fields that should be present in the response. If set, only those fields listed here will be visible in the result set; e.g.: id,description will show only those two entries in the data set. The legacyMetNoConvention and cfConvention objects are included or excluded as a block by adding or omitting those two fields",
+              required = false)
+              fields: Option[String],
     @ApiParam(value = "ISO language/locale of return values.",
               allowableValues="en-US,nb-NO,nn-NO",
               defaultValue="en-US",
@@ -122,9 +147,13 @@ class ElementsController @Inject()(elementService: ElementAccess) extends Contro
     implicit request =>
     // Start the clock
     val start = DateTime.now(DateTimeZone.UTC)
-    
+    val idList = id split "," map (_ trim) map (_ toLowerCase) toList
+    val fieldList : Set[String] = fields match {
+        case Some(x) => x.toLowerCase.split(",").map(_.trim).toSet
+        case _ => Set()
+    }
     Try {
-      elementService.getElementById(id, lang)
+      elementService.getElements(idList, List(), List(), fieldList, lang)
     } match {
       case Success(data) =>
         if (data isEmpty) {

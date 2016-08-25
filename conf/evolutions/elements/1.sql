@@ -65,33 +65,35 @@ CREATE TABLE kdvh_time_series (
   update_time TIMESTAMP WITH TIME ZONE NOT NULL
 );
 
-CREATE VIEW element_kdvh_xref_v AS
+CREATE VIEW get_elements_v AS
 SELECT
-  t1.id AS element_id,
-  t2.name AS element_name,
-  t1.unit AS element_unit,
-  t4.codetable_name AS element_codetable,
-  t3.description AS element_description,
-  t3.description_locale AS element_description_locale,
-  t5.elem_code AS kdvh_code,
-  t5.unit AS kdvh_unit,
-  t5.category AS kdvh_category,
-  t6.standard_name AS cf_standard_name,
-  t6.cell_method AS cf_cell_method,
-  t6.unit AS cf_unit,
-  t6.status AS cf_status 
+  LOWER(t1.id) AS id,
+  t2.name AS name,
+  t3.description AS description,
+  t1.unit AS unit,
+  t4.codetable_name AS codetable,
+  t3.description_locale AS locale,
+  LOWER(t5.elem_code) AS legacyMetNoConvention_elemcode,
+  t5.category AS legacyMetNoConvention_category,
+  t5.unit AS legacyMetNoConvention_unit,
+  LOWER(t6.standard_name) AS cfConvention_standardname,
+  t6.cell_method AS cfConvention_cellmethod,
+  t6.unit AS cfConvention_unit,
+  t6.status AS cfConvention_status 
 FROM
   (((element t1 LEFT OUTER JOIN 
    (element_name t2 LEFT OUTER JOIN element_description t3 ON (t2.element_id = t3.element_id AND t2.name_locale = t3.description_locale))
    ON t1.id = t2.element_id) 
    LEFT OUTER JOIN element_codetable t4 ON (t1.id = t4.element_id))
    LEFT OUTER JOIN kdvh_element t5 ON (t1.id = t5.element_id))
-   LEFT OUTER JOIN cf_element t6 ON (t1.id = t6.element_id);
+   LEFT OUTER JOIN cf_element t6 ON (t1.id = t6.element_id)
+ORDER BY
+  id;
 
 
 # --- !Downs
 
-DROP VIEW IF EXISTS element_kdvh_xref_v;
+DROP VIEW IF EXISTS get_elements_v;
 DROP TABLE IF EXISTS element_kdvh_xref_v;
 DROP TABLE IF EXISTS kdvh_element;
 DROP TABLE IF EXISTS codetable_entry;

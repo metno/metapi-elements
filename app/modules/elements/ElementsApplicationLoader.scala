@@ -70,7 +70,7 @@ class ElementsApplicationLoader extends GuiceApplicationLoader() {
     context.environment.mode match {
       case Mode.Prod =>
         // start mode
-        builder.bindings(new ElementsDevModule)
+        builder.bindings(new ElementsProdModule)
       case _ =>
         // run mode
         builder.bindings(new ElementsDevModule)

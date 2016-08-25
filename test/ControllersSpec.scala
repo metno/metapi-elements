@@ -102,6 +102,32 @@ class ControllersSpec extends Specification {
       status(response) must equalTo(NOT_FOUND)
     }
 
+    "return a result with a standard name in the route" in new WithApplication(TestUtil.app) {
+      val response = route(FakeRequest(GET, "/v0.jsonld?cfStandardNames=air_temperature")).get
+
+      status(response) must equalTo(OK)
+
+      val json = Json.parse(contentAsString(response))
+      (json \ "data").as[JsArray].value.size must equalTo(2)
+    }
+
+    "return a result with a list of standard names in the route" in new WithApplication(TestUtil.app) {
+      val response = route(FakeRequest(GET, "/v0.jsonld?cfStandardNames=air_temperature,wind_speed")).get
+
+      status(response) must equalTo(OK)
+
+      val json = Json.parse(contentAsString(response))
+      (json \ "data").as[JsArray].value.size must equalTo(3)
+    }
+
+    "return nothing for incorrect standard name" in new WithApplication(TestUtil.app) {
+      val response = route(FakeRequest(GET, "/v0.jsonld?cfStandardNames=dummy")).get
+
+      status(response) must equalTo(NOT_FOUND)
+    }
+
+    
+    
     "returns correct contentType for getElements" in new WithApplication(TestUtil.app) {
       val response = route(FakeRequest(GET, "/v0.jsonld?ids=sum(precipitation_amount%201m)")).get
 
@@ -115,6 +141,12 @@ class ControllersSpec extends Specification {
       status(response) must equalTo(BAD_REQUEST)
     }
 
+    "returns a result for getElements with fields (note: no filtering is actually done in mock)" in new WithApplication(TestUtil.app) {
+      val response = route(FakeRequest(GET, "/v0.jsonld?ids=sum(precipitation_amount%201m)")).get
+
+      status(response) must equalTo(OK)
+    }
+    
     "return a result for valid getById" in new WithApplication(TestUtil.app) {
       val response = route(FakeRequest(GET, "/sum(precipitation_amount%201M)/v0.jsonld")).get
 
@@ -143,6 +175,12 @@ class ControllersSpec extends Specification {
       status(response) must equalTo(BAD_REQUEST)
     }
 
+    "return a result for valid getById with fields (note: no filtering is actually done in mock)" in new WithApplication(TestUtil.app) {
+      val response = route(FakeRequest(GET, "/sum(precipitation_amount%201M)/v0.jsonld?fields=id, description")).get
+
+      status(response) must equalTo(OK)
+    }
+    
   }
 
 }

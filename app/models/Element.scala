@@ -52,13 +52,13 @@ extends BasicResponse( context, responseType, apiVersion, license, createdAt, qu
 
 @ApiModel(description="Metadata for a single element.")
 case class Element(
-    @(ApiModelProperty @field)(value="The MET API id of the element.", example="air_temperature") id: String,
-    @(ApiModelProperty @field)(value="The name of the element.", example="Air temperature") name: String,
-    @(ApiModelProperty @field)(value="The description of the element.", example="Air temperature at time of observation at 2 m height.") description: String,
-    @(ApiModelProperty @field)(value="The default unit, as used for data (UDUNITS notation). *code* if the unit is described using a code table.", example="degree_Celsius") unit: String,
+    @(ApiModelProperty @field)(value="The MET API id of the element.", example="air_temperature") id: Option[String],
+    @(ApiModelProperty @field)(value="The name of the element.", example="Air temperature") name: Option[String],
+    @(ApiModelProperty @field)(value="The description of the element.", example="Air temperature at time of observation at 2 m height.") description: Option[String],
+    @(ApiModelProperty @field)(value="The default unit, as used for data (UDUNITS notation). *code* if the unit is described using a code table.", example="degree_Celsius") unit: Option[String],
     @(ApiModelProperty @field)(value="If the unit is a *code*, the codetable that describes the codes used.", example="beaufort_scale") codeTable: Option[String],
-    @(ApiModelProperty @field)(value="The legacy form of the element.") legacyMetNoConvention: LegacyMetNoConvention,
-    @(ApiModelProperty @field)(value="The CF standard_name of the element.") cfConvention: CfConvention
+    @(ApiModelProperty @field)(value="The legacy form of the element.") legacyMetNoConvention: Option[LegacyMetNoConvention],
+    @(ApiModelProperty @field)(value="The CF standard_name of the element.") cfConvention: Option[CfConvention]
 )
 
 

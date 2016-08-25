@@ -33,8 +33,6 @@ import models.Element
  */
 abstract class ElementAccess(val url: String) {
 
-  def getElements(id: Option[String], code: Option[String], lang: Option[String]) : List[Element]
-
-  def getElementById(id: String, lang: Option[String]) : List[Element]
+  def getElements(ids: List[String], elemCodes: List[String], cfNames: List[String], fields: Set[String], lang: Option[String]) : List[Element]
 
 }

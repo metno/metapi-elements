@@ -61,6 +61,21 @@ class JsonFormat extends BasicJsonFormat {
     (JsPath \ ApiConstants.CURRENT_LINK_NAME).write[URL] and
     (JsPath \ ApiConstants.DATA_NAME).write[Seq[Element]]
   )(unlift(ElementResponse.unapply))
+
+  /*
+  def clean(wanted: Set[String], elem: Element): Element {
+    Element(
+      if (wanted.contains("id") elem.id else None,
+      if (wanted.contains("name") elem.name else None,
+      if (wanted.contains("description") elem.description else None,
+      if (wanted.contains("unit") elem.unit else None,
+      if (wanted.contains("codeTable") elem.codeTable else None,
+      if (wanted.contains("legacyMetNoConvention") elem.legacyMetNoConvention else None,
+      if (wanted.contains("cfConvention") elem.cfConvention else None,
+    )
+  }
+  * 
+  */
   
   /**
    * Create json representation of the given list
@@ -71,6 +86,8 @@ class JsonFormat extends BasicJsonFormat {
   def format[A](start: DateTime, elements: List[Element])(implicit request: Request[A]): String = {
     val size = elements.size
     val duration = new Duration(DateTime.now.getMillis() - start.getMillis())
+    //val wanted = Set("value", "unit", "qualityCode")
+    //val elementClean = elements map ( elem => clean(wanted, elem))
     val response = new ElementResponse( new URL(ApiConstants.METAPI_CONTEXT),
                                        "ElementResponse",
                                        "v0",
@@ -87,5 +104,5 @@ class JsonFormat extends BasicJsonFormat {
                                         elements)
     Json.prettyPrint(Json.toJson(response))
   }
-
+  
 }

@@ -70,6 +70,7 @@ coverageExcludedPackages := """
   ReverseApplication;
   ReverseAssets;
   elements.Routes;
+  elements.RoutesPrefix;
 """
 
 // Play provides two styles of routers, one expects its actions to be injected, the
