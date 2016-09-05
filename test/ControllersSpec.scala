@@ -87,7 +87,7 @@ class ControllersSpec extends Specification {
       (json \ "data").as[JsArray].value.size must equalTo(1)
     }
 
-    "return a result with a list of codes in the route" in new WithApplication(TestUtil.app) {
+    "return a result with a list of kdvh codes in the route" in new WithApplication(TestUtil.app) {
       val response = route(FakeRequest(GET, "/v0.jsonld?legacyElemCodes=TA,TAX")).get
 
       status(response) must equalTo(OK)

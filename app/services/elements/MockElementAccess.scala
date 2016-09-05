@@ -39,7 +39,7 @@ class MockElementAccess extends ElementAccess("") {
       Some("Monthly total of precipitation (precipitation day 06-06 utc))"),
       Some("mm"),
       None,
-      Some(LegacyMetNoConvention(Some("RR"), Some("mm"), None)),
+      Some(LegacyMetNoConvention(Some(Seq("RR")), Some("mm"), None)),
       Some(CfConvention(Some("precipitation_amount"), Some("sum"), Some("kg/m2"), Some("cf28")))
       ),
     new Element(
@@ -48,7 +48,7 @@ class MockElementAccess extends ElementAccess("") {
       Some("Snow depth, total from ground up; normally measured in the morning. Code = -1 means no snow, -3 = not possible to measure."),
       Some("mm"),
       None,
-      Some(LegacyMetNoConvention(Some("RR"), Some("cm"), None)),
+      Some(LegacyMetNoConvention(Some(Seq("RR")), Some("cm"), None)),
       Some(CfConvention(Some("surface_snow_thickness"), Some("sum"), Some("kg/m2"), Some("cf28")))
       ),
     new Element(
@@ -57,7 +57,7 @@ class MockElementAccess extends ElementAccess("") {
       Some("Amount of precipitation last 24 hours"),
       Some("mm"),
       None,
-      Some(LegacyMetNoConvention(Some("RR_24"), Some("mm"), None)),
+      Some(LegacyMetNoConvention(Some(Seq("RR_24")), Some("mm"), None)),
       Some(CfConvention(Some("precipitation_amount"), Some("sum"), Some("kg/m2"), Some("cf28")))
       ),
     new Element(
@@ -66,7 +66,7 @@ class MockElementAccess extends ElementAccess("") {
       Some("Monthly value: Maximum measured observed snow depth."),
       Some("cm"),
       None,
-      Some(LegacyMetNoConvention(Some("SAX"), Some("cm"), None)),
+      Some(LegacyMetNoConvention(Some(Seq("SAX")), Some("cm"), None)),
       Some(CfConvention(Some("surface_snow_thickness"), Some("maximum"), Some("kg/m2"), Some("cf28")))
       ),
     new Element(
@@ -75,7 +75,7 @@ class MockElementAccess extends ElementAccess("") {
       Some("Monthly value: Maximum measured observed snow depth."),
       Some("cm"),
       None,
-      Some(LegacyMetNoConvention(Some("SAX"), Some("cm"), None)),
+      Some(LegacyMetNoConvention(Some(Seq("SAX")), Some("cm"), None)),
       Some(CfConvention(Some("surface_snow_thickness"), Some("percent_coverage, maximum"), Some("kg/m2"), Some("cf28")))
       ),
     new Element(
@@ -84,7 +84,7 @@ class MockElementAccess extends ElementAccess("") {
       Some("Air temperature at time of observation"),
       Some("degC"),
       None,
-      Some(LegacyMetNoConvention(Some("TA"), Some("degree_Celsius"), None)),
+      Some(LegacyMetNoConvention(Some(Seq("TA")), Some("degree_Celsius"), None)),
       Some(CfConvention(Some("surface_snow_thickness"), Some("percent_coverage, maximum"), Some("kg/m2"), Some("cf28")))
       ),
     new Element(
@@ -93,7 +93,7 @@ class MockElementAccess extends ElementAccess("") {
       Some("Highest noted temperature this hour/day"),
       Some("degC"),
       None,
-      Some(LegacyMetNoConvention(Some("TAX"), Some("degC"), None)),
+      Some(LegacyMetNoConvention(Some(Seq("TAX")), Some("degC"), None)),
       Some(CfConvention(Some("air_temperature"), Some("time: maximum over days"), Some("degC"), Some("cf28")))
       ),
     new Element(
@@ -102,16 +102,16 @@ class MockElementAccess extends ElementAccess("") {
       Some("Highest observed temperature last 12 hours"),
       Some("degC"),
       None,
-      Some(LegacyMetNoConvention(Some("TAX_12"), Some("degree_Celsius"), None)),
+      Some(LegacyMetNoConvention(Some(Seq("TAX_12")), Some("degree_Celsius"), None)),
       Some(CfConvention(Some("air_temperature"), None, None, None))
-      ),
+     ),
     new Element(
       Some("wind_speed"),
       Some("Wind speed 10m"),
       Some("Wind speed (10 meters above ground) - standard value: mean value for last 10 minutes before time of observation"),
       Some("m/s"),
       None,
-      Some(LegacyMetNoConvention(Some("FF"), Some("m/s"), None)),
+      Some(LegacyMetNoConvention(Some(Seq("FF")), Some("m/s"), None)),
       Some(CfConvention(Some("wind_speed"), None, Some("m/s"), Some("cf28")))
       ),
     new Element(
@@ -120,7 +120,7 @@ class MockElementAccess extends ElementAccess("") {
       Some("Relative humidity of the air at hour of observation"),
       Some("percent"),
       None,
-      Some(LegacyMetNoConvention(Some("FF"), Some("percent"), None)),
+      Some(LegacyMetNoConvention(Some(Seq("FF")), Some("percent"), None)),
       Some(CfConvention(Some("relative_humidity"), None, None, None))
       ),
     new Element(
@@ -129,15 +129,16 @@ class MockElementAccess extends ElementAccess("") {
       Some("The general wind direction last 10 minutes, defined as the direction the wind comes from, e.g north = 360deg, east = 90deg. -3 = variable direction."),
       Some("angle"),
       None,
-      Some(LegacyMetNoConvention(Some("DD"), Some("angle"), None)),
+      Some(LegacyMetNoConvention(Some(Seq("DD")), Some("angle"), None)),
       Some(CfConvention(Some("wind_from_direction"), None, Some("degR"), Some("cf28")))
       )
   )
 
+  
   def getElements(ids: List[String], elemCodes: List[String], cfNames: List[String], fields: Set[String], lang: Option[String]): List[Element] = {
     elements
       .filter (elem => ids.length == 0 || ids.contains(elem.id.get.toLowerCase) )
-      .filter (elem => elemCodes.length == 0 || elemCodes.contains(elem.legacyMetNoConvention.get.elemCode.get.toLowerCase) )
+      .filter (elem => elemCodes.length == 0 || !(elem.legacyMetNoConvention.get.elemCodes.get.intersect(elemCodes).isEmpty) )
       .filter (elem => cfNames.length == 0 || cfNames.contains(elem.cfConvention.get.standardName.get.toLowerCase) )
   }
 

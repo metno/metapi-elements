@@ -100,3 +100,20 @@ ORDER BY element_name asc;
 ### MINOR QUERY_REPLACES
 'Beaufort' -> 'code'
 '*C' to 'degree_Celsius'
+
+
+
+
+
+CODETABLES
+
+select
+  'weather_symbol' as codetable_id,
+  code_value AS value,
+  min(code_meaning) AS meaning,
+  min(additional_info) as additionalinfo,
+  decode(language, 'no', 'nb-NO', 'en', 'en-US', 'es', 'nn-NO', language) AS meaning_locale
+from KPORTAL.T_CODE_SYMBOLS_VX_TYPE
+group by code_value, decode(language, 'no', 'nb-NO', 'en', 'en-US', 'es', 'nn-NO', language)
+order by code_value;
+

@@ -64,7 +64,7 @@ case class Element(
 
 @ApiModel(description="The element code equivalent(s) in the legacy convention of Met.no.")
 case class LegacyMetNoConvention(
-    @(ApiModelProperty @field)(value="The legacy element code of the element.", example="TA") elemCode: Option[String],
+    @(ApiModelProperty @field)(value="The legacy element code of the element.", example="TA") elemCodes: Option[Seq[String]],
     @(ApiModelProperty @field)(value="The legacy category or group of the element.") category: Option[String],
     @(ApiModelProperty @field)(value="The unit of the legacy element code.", example="degree_Celsius") unit: Option[String]
 )

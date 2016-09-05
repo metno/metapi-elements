@@ -62,21 +62,6 @@ class JsonFormat extends BasicJsonFormat {
     (JsPath \ ApiConstants.DATA_NAME).write[Seq[Element]]
   )(unlift(ElementResponse.unapply))
 
-  /*
-  def clean(wanted: Set[String], elem: Element): Element {
-    Element(
-      if (wanted.contains("id") elem.id else None,
-      if (wanted.contains("name") elem.name else None,
-      if (wanted.contains("description") elem.description else None,
-      if (wanted.contains("unit") elem.unit else None,
-      if (wanted.contains("codeTable") elem.codeTable else None,
-      if (wanted.contains("legacyMetNoConvention") elem.legacyMetNoConvention else None,
-      if (wanted.contains("cfConvention") elem.cfConvention else None,
-    )
-  }
-  * 
-  */
-  
   /**
    * Create json representation of the given list
    * @param start Start time of the query processing.

@@ -64,7 +64,7 @@ class ElementsController @Inject()(elementService: ElementAccess) extends Contro
     @ApiParam(value = "The CF standard names that you want metadata for. Enter a comma-separated list to select multiple elements.",
               required = false)
               cfStandardNames: Option[String],
-    @ApiParam(value = "A comma-separated list of the fields that should be present in the response. If set, only those fields listed here will be visible in the result set; e.g.: id,description will show only those two entries in the data set. The legacyMetNoConvention and cfConvention objects are included or excluded as a block by adding or omitting those two fields",
+    @ApiParam(value = "A comma-separated list of the fields that should be present in the response. If set, only those properties listed here will be visible in the result set; e.g.: id,description will show only those two entries in the data set. The legacyMetNoConvention and cfConvention objects are included or excluded as a block by adding or omitting those two fields",
               required = false)
               fields: Option[String],
     @ApiParam(value = "ISO language/locale of return values.",
@@ -85,7 +85,7 @@ class ElementsController @Inject()(elementService: ElementAccess) extends Contro
         case _ => List()
     }
     val legacyElemCodeList : List[String] = legacyElemCodes match {
-        case Some(x) => x.toLowerCase.split(",").map(_.trim).toList
+        case Some(x) => x.toUpperCase.split(",").map(_.trim).toList
         case _ => List()
     }
     val cfStandardNameList : List[String] = cfStandardNames match {
@@ -132,7 +132,7 @@ class ElementsController @Inject()(elementService: ElementAccess) extends Contro
               example="air_temperature",
               required = true)
               id: String,
-    @ApiParam(value = "A comma-separated list of the fields that should be present in the response. If set, only those fields listed here will be visible in the result set; e.g.: id,description will show only those two entries in the data set. The legacyMetNoConvention and cfConvention objects are included or excluded as a block by adding or omitting those two fields",
+    @ApiParam(value = "A comma-separated list of the fields that should be present in the response. If set, only those properties listed here will be visible in the result set; e.g.: id,description will show only those two entries in the data set. The legacyMetNoConvention and cfConvention objects are included or excluded as a block by adding or omitting those two fields",
               required = false)
               fields: Option[String],
     @ApiParam(value = "ISO language/locale of return values.",

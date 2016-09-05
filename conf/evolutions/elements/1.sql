@@ -25,14 +25,21 @@ CREATE TABLE element_codetable (
 );
 
 CREATE TABLE codetable (
-  name TEXT NOT NULL,
-  description TEXT NOT NULL
+  id TEXT NOT NULL
+);
+
+CREATE TABLE codetable_description (
+  codetable_id TEXT NOT NULL,
+  description TEXT NOT NULL,
+  additional_info TEXT,
+  description_locale LOCALE NOT NULL
 );
 
 CREATE TABLE codetable_entry (
-  code_table_name TEXT NOT NULL,
-  entry TEXT NOT NULL,
+  codetable_id TEXT NOT NULL,
+  value TEXT NOT NULL,
   meaning TEXT NOT NULL,
+  additional_info TEXT,
   meaning_locale LOCALE NOT NULL
 );
 
@@ -67,16 +74,16 @@ CREATE TABLE kdvh_time_series (
 
 CREATE VIEW get_elements_v AS
 SELECT
-  LOWER(t1.id) AS id,
+  t1.id AS id,
   t2.name AS name,
   t3.description AS description,
   t1.unit AS unit,
   t4.codetable_name AS codetable,
   t3.description_locale AS locale,
-  LOWER(t5.elem_code) AS legacyMetNoConvention_elemcode,
-  t5.category AS legacyMetNoConvention_category,
-  t5.unit AS legacyMetNoConvention_unit,
-  LOWER(t6.standard_name) AS cfConvention_standardname,
+  ARRAY_AGG(t5.elem_code) AS legacyMetNoConvention_elemcodes,
+  min(t5.category) AS legacyMetNoConvention_category,
+  min(t5.unit) AS legacyMetNoConvention_unit,
+  t6.standard_name AS cfConvention_standardname,
   t6.cell_method AS cfConvention_cellmethod,
   t6.unit AS cfConvention_unit,
   t6.status AS cfConvention_status 
@@ -87,8 +94,10 @@ FROM
    LEFT OUTER JOIN element_codetable t4 ON (t1.id = t4.element_id))
    LEFT OUTER JOIN kdvh_element t5 ON (t1.id = t5.element_id))
    LEFT OUTER JOIN cf_element t6 ON (t1.id = t6.element_id)
+GROUP BY
+  t1.id, t2.name, t3.description, t1.unit, t4.codetable_name, t3.description_locale, t6.standard_name, t6.cell_method, t6.unit, t6.status
 ORDER BY
-  id;
+  id, legacyMetNoConvention_elemcodes, cfConvention_standardname, name, unit;
 
 
 # --- !Downs

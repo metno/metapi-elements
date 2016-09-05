@@ -45,23 +45,23 @@ class DbElementAccess extends ElementAccess("") {
     get[Option[String]]("description") ~
     get[Option[String]]("unit") ~
     get[Option[String]]("codetable") ~
-    get[Option[String]]("legacymetnoconvention_elemcode") ~
+    get[Option[String]]("legacymetnoconvention_elemcodes") ~
     get[Option[String]]("legacymetnoconvention_category") ~
     get[Option[String]]("legacymetnoconvention_unit") ~
     get[Option[String]]("cfconvention_standardname") ~
     get[Option[String]]("cfconvention_cellmethod") ~
     get[Option[String]]("cfconvention_unit") ~
     get[Option[String]]("cfconvention_status") map {
-      case id~name~desc~unit~codeTable~kdvhCode~kdvhCategory~kdvhUnit~cfName~cfMethod~cfUnit~cfStatus 
+      case id~name~desc~unit~codeTable~kdvhCodes~kdvhCategory~kdvhUnit~cfName~cfMethod~cfUnit~cfStatus 
         => Element(id,
                   name,
                   desc,
                   unit,
                   codeTable,
-                  if (kdvhCode.isEmpty && kdvhCategory.isEmpty && kdvhUnit.isEmpty)
+                  if (kdvhCodes.isEmpty && kdvhCategory.isEmpty && kdvhUnit.isEmpty)
                     None
                   else
-                    Some(LegacyMetNoConvention(kdvhCode, kdvhCategory, kdvhUnit)),
+                    Some(LegacyMetNoConvention(Some(kdvhCodes.getOrElse("").split(",")), kdvhCategory, kdvhUnit)),
                   if (cfName.isEmpty && cfMethod.isEmpty && cfUnit.isEmpty && cfStatus.isEmpty)
                     None
                   else
@@ -73,7 +73,7 @@ class DbElementAccess extends ElementAccess("") {
     val legalFields = Set("id", "name", "description", "unit", "codetable", "legacymetnoconvention", "cfconvention")
     val fieldStr = fields
       .mkString(", ")
-      .replace("legacymetnoconvention", "legacymetnoconvention_elemcode, legacymetnoconvention_category, legacymetnoconvention_unit")
+      .replace("legacymetnoconvention", "array_to_string(legacymetnoconvention_elemcodes, ','), legacymetnoconvention_category, legacymetnoconvention_unit")
       .replace("cfconvention", "cfconvention_standardname, cfconvention_cellmethod, cfconvention_unit, cfconvention_status")
     val missing = legalFields -- fields
     if (missing.isEmpty)
@@ -103,14 +103,14 @@ class DbElementAccess extends ElementAccess("") {
       if (ids.isEmpty)
         "id IS NOT NULL"
       else
-        s"id IN ('$idList')"
+        s"LOWER(id) IN ('$idList')"
     // Filter for selected legacy codes
     val elemList = elemCodes.mkString("','")
     val elemQ =
       if (elemCodes.isEmpty)
         "TRUE"
       else
-        s"legacymetnoconvention_elemcode IN ('$elemList')"
+        s"legacymetnoconvention_elemcode && ARRAY['$elemList']"
     // Filter for selected standard names
     val cfList = cfNames.mkString("','")
     val cfQ =
@@ -130,7 +130,8 @@ class DbElementAccess extends ElementAccess("") {
         |$idQ AND
         |$elemQ AND
         |$cfQ AND
-        |$localeQ""".stripMargin
+        |$localeQ
+      """.stripMargin
 
     Logger.debug(query)
 
