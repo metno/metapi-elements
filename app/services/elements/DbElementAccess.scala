@@ -82,7 +82,7 @@ class DbElementAccess extends ElementAccess("") {
       val missingStr = missing
         .map( x => "NULL AS " + x )
         .mkString(", ")
-        .replace("NULL AS legacymetnoconvention", "NULL AS legacymetnoconvention_elemcode, NULL AS legacymetnoconvention_category, NULL AS legacymetnoconvention_unit")
+        .replace("NULL AS legacymetnoconvention", "NULL AS legacymetnoconvention_elemcodes, NULL AS legacymetnoconvention_category, NULL AS legacymetnoconvention_unit")
         .replace("NULL AS cfconvention", "NULL AS cfconvention_standardname, NULL AS cfconvention_cellmethod, NULL AS cfconvention_unit, NULL AS cfconvention_status")
       fieldStr + "," + missingStr
     }
@@ -94,7 +94,7 @@ class DbElementAccess extends ElementAccess("") {
     // Set up projection clause based on fields
     val selectQ = 
       if (fields.isEmpty)
-        "id, name, description, unit, codetable, legacymetnoconvention_elemcode, legacymetnoconvention_category, legacymetnoconvention_unit, cfconvention_standardname, cfconvention_cellmethod, cfconvention_unit, cfconvention_status" 
+        "id, name, description, unit, codetable, legacymetnoconvention_elemcodes, legacymetnoconvention_category, legacymetnoconvention_unit, cfconvention_standardname, cfconvention_cellmethod, cfconvention_unit, cfconvention_status" 
       else
         getSelectQuery(fields)
     // Filter for selected ids
@@ -110,7 +110,7 @@ class DbElementAccess extends ElementAccess("") {
       if (elemCodes.isEmpty)
         "TRUE"
       else
-        s"legacymetnoconvention_elemcode && ARRAY['$elemList']"
+        s"legacymetnoconvention_elemcodes && ARRAY['$elemList']"
     // Filter for selected standard names
     val cfList = cfNames.mkString("','")
     val cfQ =
