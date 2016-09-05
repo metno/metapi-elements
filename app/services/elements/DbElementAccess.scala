@@ -45,7 +45,7 @@ class DbElementAccess extends ElementAccess("") {
     get[Option[String]]("description") ~
     get[Option[String]]("unit") ~
     get[Option[String]]("codetable") ~
-    get[Option[String]]("legacymetnoconvention_elemcodes") ~
+    get[Option[Array[String]]]("legacymetnoconvention_elemcodes") ~
     get[Option[String]]("legacymetnoconvention_category") ~
     get[Option[String]]("legacymetnoconvention_unit") ~
     get[Option[String]]("cfconvention_standardname") ~
@@ -58,11 +58,11 @@ class DbElementAccess extends ElementAccess("") {
                   desc,
                   unit,
                   codeTable,
-                  if (kdvhCodes.isEmpty && kdvhCategory.isEmpty && kdvhUnit.isEmpty)
+                  if (kdvhCodes.isEmpty)
                     None
                   else
-                    Some(LegacyMetNoConvention(Some(kdvhCodes.getOrElse("").split(",")), kdvhCategory, kdvhUnit)),
-                  if (cfName.isEmpty && cfMethod.isEmpty && cfUnit.isEmpty && cfStatus.isEmpty)
+                    Some(LegacyMetNoConvention(Some(kdvhCodes.get.toSeq), kdvhCategory, kdvhUnit)),
+                  if (cfName.isEmpty)
                     None
                   else
                     Some(CfConvention(cfName, cfMethod, cfUnit, cfStatus)))
