@@ -61,7 +61,7 @@ class DbElementAccess extends ElementAccess("") {
                   if (kdvhCodes.isEmpty)
                     None
                   else
-                    Some(LegacyMetNoConvention(Some(kdvhCodes.get.toSeq), kdvhCategory, kdvhUnit)),
+                    Some(LegacyMetNoConvention(Some(kdvhCodes.get.toSeq.sorted), kdvhCategory, kdvhUnit)),
                   if (cfName.isEmpty)
                     None
                   else
