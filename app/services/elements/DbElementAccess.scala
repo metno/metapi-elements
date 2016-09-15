@@ -52,75 +52,59 @@ class DbElementAccess extends ElementAccess("") {
     get[Option[String]]("cfconvention_cellmethod") ~
     get[Option[String]]("cfconvention_unit") ~
     get[Option[String]]("cfconvention_status") map {
-      case id~name~desc~unit~codeTable~kdvhCodes~kdvhCategory~kdvhUnit~cfName~cfMethod~cfUnit~cfStatus 
+      case id~name~desc~unit~codeTable~kdvhCodes~kdvhCategory~kdvhUnit~cfName~cfMethod~cfUnit~cfStatus
         => Element(id,
                   name,
                   desc,
                   unit,
                   codeTable,
-                  if (kdvhCodes.isEmpty)
-                    None
-                  else
-                    Some(LegacyMetNoConvention(Some(kdvhCodes.get.toSeq.sorted), kdvhCategory, kdvhUnit)),
-                  if (cfName.isEmpty)
-                    None
-                  else
-                    Some(CfConvention(cfName, cfMethod, cfUnit, cfStatus)))
+                  if (kdvhCodes.isEmpty) None else Some(LegacyMetNoConvention(Some(kdvhCodes.get.toSeq.sorted), kdvhCategory, kdvhUnit)),
+                  if (cfName.isEmpty) None else Some(CfConvention(cfName, cfMethod, cfUnit, cfStatus)))
     }
   }
-  
+
   def getSelectQuery(fields: Set[String]) : String = {
     val legalFields = Set("id", "name", "description", "unit", "codetable", "legacymetnoconvention", "cfconvention")
     val fieldStr = fields
       .mkString(", ")
-      .replace("legacymetnoconvention", "array_to_string(legacymetnoconvention_elemcodes, ','), legacymetnoconvention_category, legacymetnoconvention_unit")
-      .replace("cfconvention", "cfconvention_standardname, cfconvention_cellmethod, cfconvention_unit, cfconvention_status")
+      .replace("legacymetnoconvention",
+          "array_to_string(legacymetnoconvention_elemcodes, ','), legacymetnoconvention_category, legacymetnoconvention_unit")
+      .replace("cfconvention",
+          "cfconvention_standardname, cfconvention_cellmethod, cfconvention_unit, cfconvention_status")
     val missing = legalFields -- fields
-    if (missing.isEmpty)
+    if (missing.isEmpty) {
       fieldStr
+    }
     else {
       val missingStr = missing
         .map( x => "NULL AS " + x )
         .mkString(", ")
-        .replace("NULL AS legacymetnoconvention", "NULL AS legacymetnoconvention_elemcodes, NULL AS legacymetnoconvention_category, NULL AS legacymetnoconvention_unit")
-        .replace("NULL AS cfconvention", "NULL AS cfconvention_standardname, NULL AS cfconvention_cellmethod, NULL AS cfconvention_unit, NULL AS cfconvention_status")
+        .replace("NULL AS legacymetnoconvention",
+            "NULL AS legacymetnoconvention_elemcodes, NULL AS legacymetnoconvention_category, NULL AS legacymetnoconvention_unit")
+        .replace("NULL AS cfconvention",
+            "NULL AS cfconvention_standardname, NULL AS cfconvention_cellmethod, NULL AS cfconvention_unit, NULL AS cfconvention_status")
       fieldStr + "," + missingStr
     }
   }
-  
+
 
   def getElements(ids: List[String], elemCodes: List[String], cfNames: List[String], fields: Set[String], lang: Option[String]): List[Element] = {
     Logger.debug(fields.isEmpty.toString)
     // Set up projection clause based on fields
-    val selectQ = 
-      if (fields.isEmpty)
-        "id, name, description, unit, codetable, legacymetnoconvention_elemcodes, legacymetnoconvention_category, legacymetnoconvention_unit, cfconvention_standardname, cfconvention_cellmethod, cfconvention_unit, cfconvention_status" 
-      else
-        getSelectQuery(fields)
+    val selectQ =
+      if (fields.isEmpty) "*" else getSelectQuery(fields)
     // Filter for selected ids
     val idList = ids.mkString("','")
-    val idQ =
-      if (ids.isEmpty)
-        "id IS NOT NULL"
-      else
-        s"LOWER(id) IN ('$idList')"
+    val idQ = if (ids.isEmpty) "id IS NOT NULL" else s"LOWER(id) IN ('$idList')"
     // Filter for selected legacy codes
     val elemList = elemCodes.mkString("','")
-    val elemQ =
-      if (elemCodes.isEmpty)
-        "TRUE"
-      else
-        s"legacymetnoconvention_elemcodes && ARRAY['$elemList']"
+    val elemQ = if (elemCodes.isEmpty) "TRUE" else s"legacymetnoconvention_elemcodes && ARRAY['$elemList']"
     // Filter for selected standard names
     val cfList = cfNames.mkString("','")
-    val cfQ =
-      if (cfNames.isEmpty)
-        "TRUE"
-      else
-        s"cfconvention_standardname IN ('$cfList')"
+    val cfQ = if (cfNames.isEmpty) "TRUE" else s"cfconvention_standardname IN ('$cfList')"
     // Filter for Locale
     val localeQ = "locale = '" + lang.getOrElse("en-US") + "'";
-    
+
     val query = s"""
       |SELECT
         |$selectQ

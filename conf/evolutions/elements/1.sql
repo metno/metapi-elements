@@ -86,11 +86,11 @@ SELECT
   t6.standard_name AS cfConvention_standardname,
   t6.cell_method AS cfConvention_cellmethod,
   t6.unit AS cfConvention_unit,
-  t6.status AS cfConvention_status 
+  t6.status AS cfConvention_status
 FROM
-  (((element t1 LEFT OUTER JOIN 
+  (((element t1 LEFT OUTER JOIN
    (element_name t2 LEFT OUTER JOIN element_description t3 ON (t2.element_id = t3.element_id AND t2.name_locale = t3.description_locale))
-   ON t1.id = t2.element_id) 
+   ON t1.id = t2.element_id)
    LEFT OUTER JOIN element_codetable t4 ON (t1.id = t4.element_id))
    LEFT OUTER JOIN kdvh_element t5 ON (t1.id = t5.element_id))
    LEFT OUTER JOIN cf_element t6 ON (t1.id = t6.element_id)

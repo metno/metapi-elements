@@ -33,10 +33,12 @@ import javax.inject.Inject
 import io.swagger.annotations._
 import scala.language.postfixOps
 import util._
+import no.met.data.FieldSpecification
 import models.Element
 import services.elements.{ ElementAccess, JsonFormat }
 
 // scalastyle:off magic.number
+// scalastyle:off line.size.limit
 
 @Api(value = "elements")
 class ElementsController @Inject()(elementService: ElementAccess) extends Controller {
@@ -112,8 +114,6 @@ class ElementsController @Inject()(elementService: ElementAccess) extends Contro
     }
   }
 
-  // Write something about filtering + empty = all.
-  
   /**
    * GET element metadata data from elements-db
    */
@@ -148,10 +148,7 @@ class ElementsController @Inject()(elementService: ElementAccess) extends Contro
     // Start the clock
     val start = DateTime.now(DateTimeZone.UTC)
     val idList = id split "," map (_ trim) map (_ toLowerCase) toList
-    val fieldList : Set[String] = fields match {
-        case Some(x) => x.toLowerCase.split(",").map(_.trim).toSet
-        case _ => Set()
-    }
+    val fieldList = FieldSpecification.parse(fields)
     Try {
       elementService.getElements(idList, List(), List(), fieldList, lang)
     } match {

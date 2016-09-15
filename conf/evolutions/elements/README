@@ -80,10 +80,10 @@ ORDER BY b.ELEMENT_ID asc;
 
 select
   distinct b.ELEM_CODE as elem_code,
-  coalesce(a.ELEM_GROUP, 'N/A') AS category, 
+  coalesce(a.ELEM_GROUP, 'N/A') AS category,
   coalesce(a.UNIT, 'N/A') as unit,
   b.TABLE_NAME as table_name,
-  b.ELEMENT_ID AS element_name  
+  b.ELEMENT_ID AS element_name
 from
   (kportal.T_ELEM_MAP_CFNAMES b
    LEFT OUTER JOIN KPORTAL.t_cfnames c ON b.standard_name = c.standard_name)
@@ -116,4 +116,3 @@ select
 from KPORTAL.T_CODE_SYMBOLS_VX_TYPE
 group by code_value, decode(language, 'no', 'nb-NO', 'en', 'en-US', 'es', 'nn-NO', language)
 order by code_value;
-

@@ -29,6 +29,8 @@ import javax.inject.Singleton
 import models._
 import play.Logger
 
+// scalastyle:off line.size.limit
+
 @Singleton
 class MockElementAccess extends ElementAccess("") {
   // Mock Elements
@@ -134,7 +136,7 @@ class MockElementAccess extends ElementAccess("") {
       )
   )
 
-  
+
   def getElements(ids: List[String], elemCodes: List[String], cfNames: List[String], fields: Set[String], lang: Option[String]): List[Element] = {
     elements
       .filter (elem => ids.length == 0 || ids.contains(elem.id.get.toLowerCase) )
@@ -143,3 +145,5 @@ class MockElementAccess extends ElementAccess("") {
   }
 
 }
+
+// scalastyle:on

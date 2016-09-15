@@ -31,6 +31,8 @@ import java.net.URL
 import com.github.nscala_time.time.Imports._
 import no.met.data.{ApiConstants,BasicResponse}
 
+// scalastyle:off line.size.limit
+
 @ApiModel(description="Data response for element metadata.")
 case class ElementResponse(
   @(ApiModelProperty @field)(name=ApiConstants.CONTEXT_NAME, value=ApiConstants.CONTEXT, example=ApiConstants.METAPI_CONTEXT) context: URL,
@@ -47,8 +49,9 @@ case class ElementResponse(
   @(ApiModelProperty @field)(value=ApiConstants.PREVIOUS_LINK, example=ApiConstants.PREVIOUS_LINK_EXAMPLE) previousLink: Option[URL],
   @(ApiModelProperty @field)(value=ApiConstants.CURRENT_LINK, example=ApiConstants.CURRENT_LINK_EXAMPLE) currentLink: URL,
   @(ApiModelProperty @field)(value=ApiConstants.DATA) data: Seq[Element]
-) 
-extends BasicResponse( context, responseType, apiVersion, license, createdAt, queryTime, currentItemCount, itemsPerPage, offset, totalItemCount, nextLink, previousLink, currentLink)
+)
+extends BasicResponse( context, responseType, apiVersion, license, createdAt, queryTime, currentItemCount, itemsPerPage, offset, totalItemCount,
+    nextLink, previousLink, currentLink)
 
 @ApiModel(description="Metadata for a single element.")
 case class Element(
@@ -76,3 +79,5 @@ case class CfConvention(
     @(ApiModelProperty @field)(value="The corresponding unit of the CF element.", example="kelvin") unit: Option[String],
     @(ApiModelProperty @field)(value="The status of the CF name; either a reference to the CF version, Met Norway local standard or test.", example="cf28") status: Option[String]
 )
+
+// scalastyle:on

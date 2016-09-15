@@ -126,8 +126,8 @@ class ControllersSpec extends Specification {
       status(response) must equalTo(NOT_FOUND)
     }
 
-    
-    
+
+
     "returns correct contentType for getElements" in new WithApplication(TestUtil.app) {
       val response = route(FakeRequest(GET, "/v0.jsonld?ids=sum(precipitation_amount%201m)")).get
 
@@ -146,7 +146,7 @@ class ControllersSpec extends Specification {
 
       status(response) must equalTo(OK)
     }
-    
+
     "return a result for valid getById" in new WithApplication(TestUtil.app) {
       val response = route(FakeRequest(GET, "/sum(precipitation_amount%201M)/v0.jsonld")).get
 
@@ -180,7 +180,7 @@ class ControllersSpec extends Specification {
 
       status(response) must equalTo(OK)
     }
-    
+
   }
 
 }
