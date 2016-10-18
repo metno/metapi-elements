@@ -33,12 +33,9 @@ import javax.inject.Inject
 import io.swagger.annotations._
 import scala.language.postfixOps
 import util._
-import no.met.data.FieldSpecification
+import no.met.data._
 import models.Element
 import services.elements.{ ElementAccess, JsonFormat }
-
-// scalastyle:off magic.number
-// scalastyle:off line.size.limit
 
 @Api(value = "elements")
 class ElementsController @Inject()(elementService: ElementAccess) extends Controller {
@@ -80,8 +77,7 @@ class ElementsController @Inject()(elementService: ElementAccess) extends Contro
               required = true)
               format: String) = no.met.security.AuthorizedAction {
     implicit request =>
-    // Start the clock
-    val start = DateTime.now(DateTimeZone.UTC)
+    val start = DateTime.now(DateTimeZone.UTC) // start the clock
     val idList : List[String] = ids match {
         case Some(x) => x.toLowerCase.split(",").map(_.trim).toList
         case _ => List()
@@ -103,14 +99,17 @@ class ElementsController @Inject()(elementService: ElementAccess) extends Contro
     } match {
       case Success(data) =>
         if (data isEmpty) {
-          NotFound("Could not find any data elements for id " + ids)
+          Error.error(NOT_FOUND, Some("Could not find any data elements for id " + ids), None, start)
         } else {
           format.toLowerCase() match {
             case "jsonld" => Ok(new JsonFormat().format(start, data)) as "application/vnd.no.met.data.elements-v0+json"
-            case x        => BadRequest(s"Invalid output format: $x")
+            case x        => Error.error(BAD_REQUEST, Some(s"Invalid output format: $x"), Some("Supported output formats: jsonld"), start)
           }
         }
-      case Failure(x) => BadRequest(x getLocalizedMessage)
+      case Failure(x: BadRequestException) =>
+        Error.error(BAD_REQUEST, Some(x getLocalizedMessage), x help, start)
+      case Failure(x) =>
+        Error.error(BAD_REQUEST, Some(x getLocalizedMessage), None, start)
     }
   }
 
@@ -145,8 +144,7 @@ class ElementsController @Inject()(elementService: ElementAccess) extends Contro
               required = true)
               format: String) = no.met.security.AuthorizedAction {
     implicit request =>
-    // Start the clock
-    val start = DateTime.now(DateTimeZone.UTC)
+    val start = DateTime.now(DateTimeZone.UTC) // start the clock
     val idList = id split "," map (_ trim) map (_ toLowerCase) toList
     val fieldList = FieldSpecification.parse(fields)
     Try {
@@ -154,14 +152,17 @@ class ElementsController @Inject()(elementService: ElementAccess) extends Contro
     } match {
       case Success(data) =>
         if (data isEmpty) {
-          NotFound("Could not find any data elements for id " + id)
+          Error.error(NOT_FOUND, Some("Could not find any data elements for id " + id), None, start)
         } else {
           format.toLowerCase() match {
             case "jsonld" => Ok(new JsonFormat().format(start, data)) as "application/vnd.no.met.data.elements-v0+json"
-            case x        => BadRequest(s"Invalid output format: $x")
+            case x        => Error.error(BAD_REQUEST, Some(s"Invalid output format: $x"), Some("Supported output formats: jsonld"), start)
           }
         }
-      case Failure(x) => BadRequest(x getLocalizedMessage)
+      case Failure(x: BadRequestException) =>
+        Error.error(BAD_REQUEST, Some(x getLocalizedMessage), x help, start)
+      case Failure(x) =>
+        Error.error(BAD_REQUEST, Some(x getLocalizedMessage), None, start)
     }
   }
 
