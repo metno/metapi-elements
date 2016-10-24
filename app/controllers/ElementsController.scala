@@ -95,6 +95,9 @@ class ElementsController @Inject()(elementService: ElementAccess) extends Contro
         case _ => Set()
     }
     Try  {
+      // ensure that the query string contains supported fields only
+      QueryStringUtil.ensureSubset(Set("ids", "legacyElemCodes", "cfStandardNames", "fields", "lang"), request.queryString.keySet)
+
       elementService.getElements(idList, legacyElemCodeList, cfStandardNameList, fieldList, lang)
     } match {
       case Success(data) =>
@@ -148,6 +151,9 @@ class ElementsController @Inject()(elementService: ElementAccess) extends Contro
     val idList = id split "," map (_ trim) map (_ toLowerCase) toList
     val fieldList = FieldSpecification.parse(fields)
     Try {
+      // ensure that the query string contains supported fields only
+      QueryStringUtil.ensureSubset(Set("id", "fields", "lang"), request.queryString.keySet)
+
       elementService.getElements(idList, List(), List(), fieldList, lang)
     } match {
       case Success(data) =>
