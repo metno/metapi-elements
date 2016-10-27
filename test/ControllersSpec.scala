@@ -128,20 +128,20 @@ class ControllersSpec extends Specification {
 
 
 
-    "returns correct contentType for getElements" in new WithApplication(TestUtil.app) {
+    "return correct contentType for getElements" in new WithApplication(TestUtil.app) {
       val response = route(FakeRequest(GET, "/v0.jsonld?ids=sum(precipitation_amount%201m)")).get
 
       status(response) must equalTo(OK)
       contentType(response) must beSome.which(_ == "application/vnd.no.met.data.elements-v0+json")
     }
 
-    "returns error if format is incorrect" in new WithApplication(TestUtil.app) {
+    "return error if format is incorrect" in new WithApplication(TestUtil.app) {
       val response = route(FakeRequest(GET, "/v0.txt?ids=sum(precipitation_amount%201m)")).get
 
       status(response) must equalTo(BAD_REQUEST)
     }
 
-    "returns a result for getElements with fields (note: no filtering is actually done in mock)" in new WithApplication(TestUtil.app) {
+    "return a result for getElements with fields (note: no filtering is actually done in mock)" in new WithApplication(TestUtil.app) {
       val response = route(FakeRequest(GET, "/v0.jsonld?ids=sum(precipitation_amount%201m)")).get
 
       status(response) must equalTo(OK)
@@ -162,14 +162,14 @@ class ControllersSpec extends Specification {
       status(response) must equalTo(NOT_FOUND)
     }
 
-    "returns correct contentType for getElementById" in new WithApplication(TestUtil.app) {
+    "return correct contentType for getElementById" in new WithApplication(TestUtil.app) {
       val response = route(FakeRequest(GET, "/sum(precipitation_amount%201m)/v0.jsonld")).get
 
       status(response) must equalTo(OK)
       contentType(response) must beSome.which(_ == "application/vnd.no.met.data.elements-v0+json")
     }
 
-    "returns error for incorrect format in getElementById" in new WithApplication(TestUtil.app) {
+    "return error for incorrect format in getElementById" in new WithApplication(TestUtil.app) {
       val response = route(FakeRequest(GET, "/sum(precipitation_amount%201m)/v0.txt")).get
 
       status(response) must equalTo(BAD_REQUEST)
@@ -179,6 +179,18 @@ class ControllersSpec extends Specification {
       val response = route(FakeRequest(GET, "/sum(precipitation_amount%201M)/v0.jsonld?fields=id, description")).get
 
       status(response) must equalTo(OK)
+    }
+
+    "return error if unsupported field names are specified" in new WithApplication(TestUtil.app) {
+      val response = route(FakeRequest(GET, "/v0.jsonld?foo=bar")).get
+
+      status(response) must equalTo(BAD_REQUEST)
+    }
+
+    "return error if unsupported field names are specified for getById" in new WithApplication(TestUtil.app) {
+      val response = route(FakeRequest(GET, "/dummy/v0.jsonld?foo=bar")).get
+
+      status(response) must equalTo(BAD_REQUEST)
     }
 
   }
