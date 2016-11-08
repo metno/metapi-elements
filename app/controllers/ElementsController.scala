@@ -54,7 +54,7 @@ class ElementsController @Inject()(elementService: ElementAccess) extends Contro
     new ApiResponse(code = 404, message = "No data was found for the list of query Ids."),
     new ApiResponse(code = 500, message = "Internal server error.")))
   def getElements( // scalastyle:ignore public.methods.have.type
-    @ApiParam(value = "The MET API element ID(s) that you want metadata. Enter a comma-separated list to select multiple elements.",
+    @ApiParam(value = "The MET API element ID(s) that you want metadata for. Enter a comma-separated list to select multiple elements.",
               required = false)
               ids: Option[String],
     @ApiParam(value = "The legacy MET Norway element codes that you want metadata for. Enter a comma-separated list to select multiple elements.",
