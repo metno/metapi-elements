@@ -102,7 +102,9 @@ class ElementsController @Inject()(elementService: ElementAccess) extends Contro
     } match {
       case Success(data) =>
         if (data isEmpty) {
-          Error.error(NOT_FOUND, Some("Could not find any data elements for id " + ids), None, start)
+          Error.error(NOT_FOUND,
+            Some("No data found for any of the element ids"),
+            Some("Ensure that information exists for at least one element id"), start)
         } else {
           format.toLowerCase() match {
             case "jsonld" => Ok(new JsonFormat().format(start, data)) as "application/vnd.no.met.data.elements-v0+json"
