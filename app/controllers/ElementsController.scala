@@ -103,8 +103,8 @@ class ElementsController @Inject()(elementService: ElementAccess) extends Contro
       case Success(data) =>
         if (data isEmpty) {
           Error.error(NOT_FOUND,
-            Some("No data found for any of the element ids"),
-            Some("Ensure that information exists for at least one element id"), start)
+            Some("No data found for this combination of element IDs, legacy element codes, and CF standard names"),
+            Some("Specify a valid combination (note that leaving out one of the three components will match anything)"), start)
         } else {
           format.toLowerCase() match {
             case "jsonld" => Ok(new JsonFormat().format(start, data)) as "application/vnd.no.met.data.elements-v0+json"
