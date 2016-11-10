@@ -65,6 +65,12 @@ class DbElementAccess extends ElementAccess("") {
 
   def getSelectQuery(fields: Set[String]) : String = {
     val legalFields = Set("id", "name", "description", "unit", "codetable", "legacymetnoconvention", "cfconvention")
+    val illegalFields = fields -- legalFields
+    if (!illegalFields.isEmpty) {
+      throw new BadRequestException(
+        "Invalid fields in the query parameter: " + illegalFields.mkString(","),
+        Some(s"Supported fields: ${legalFields.mkString(", ")}"))
+    }
     val fieldStr = fields
       .mkString(", ")
       .replace("legacymetnoconvention",
