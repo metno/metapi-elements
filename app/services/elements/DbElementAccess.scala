@@ -34,6 +34,7 @@ import java.sql.Connection
 import javax.inject.Singleton
 import scala.language.postfixOps
 import models.{Element, LegacyMetNoConvention, CfConvention}
+import no.met.data.BadRequestException
 
 //$COVERAGE-OFF$Not testing database queries
 @Singleton
