@@ -110,6 +110,12 @@ class DbElementAccess extends ElementAccess("") {
     val cfList = cfNames.mkString("','")
     val cfQ = if (cfNames.isEmpty) "TRUE" else s"cfconvention_standardname IN ('$cfList')"
     // Filter for Locale
+    val legalLangs = Set("en-US", "nb-NO", "nn-NO")
+    if ((lang != None) && (!legalLangs.contains(lang.get))) {
+      throw new BadRequestException(
+        "Invalid language in the query parameter: " + lang.get,
+        Some(s"Supported languages: ${legalLangs.mkString(", ")}"))
+    }
     val localeQ = "locale = '" + lang.getOrElse("en-US") + "'";
 
     val query = s"""
