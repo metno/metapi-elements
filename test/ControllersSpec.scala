@@ -108,7 +108,7 @@ class ControllersSpec extends Specification {
       status(response) must equalTo(OK)
 
       val json = Json.parse(contentAsString(response))
-      (json \ "data").as[JsArray].value.size must equalTo(2)
+      (json \ "data").as[JsArray].value.size must equalTo(3)
     }
 
     "return a result with a list of standard names in the route" in new WithApplication(TestUtil.app) {
@@ -117,7 +117,7 @@ class ControllersSpec extends Specification {
       status(response) must equalTo(OK)
 
       val json = Json.parse(contentAsString(response))
-      (json \ "data").as[JsArray].value.size must equalTo(3)
+      (json \ "data").as[JsArray].value.size must equalTo(4)
     }
 
     "return nothing for incorrect standard name" in new WithApplication(TestUtil.app) {
@@ -192,6 +192,22 @@ class ControllersSpec extends Specification {
 
       status(response) must equalTo(BAD_REQUEST)
     }
+
+    "return a cfConvention element that follows standard" in new WithApplication(TestUtil.app) {
+      val response = route(FakeRequest(GET, "/v0.jsonld?ids=sum(precipitation_amount%201m)")).get
+      status(response) must equalTo(OK)
+
+      val json = Json.parse(contentAsString(response))
+      val data = (json \ "data").as[JsArray]
+      data.value.size must equalTo(1)
+
+      val cf = data(0) \ "cfConvention"
+
+      (cf \ "standardName").as[String] must equalTo("precipitation_amount")
+      (cf \ "cellMethod").as[String] must equalTo("time: sum")
+      (cf \ "unit").as[String] must equalTo("kg m-2")
+    }
+
 
   }
 

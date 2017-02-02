@@ -42,7 +42,7 @@ class MockElementAccess extends ElementAccess("") {
       Some("mm"),
       None,
       Some(LegacyMetNoConvention(Some(Seq("RR")), Some("mm"), None)),
-      Some(CfConvention(Some("precipitation_amount"), Some("sum"), Some("kg/m2"), Some("cf28")))
+      Some(CfConvention(Some("precipitation_amount"), Some("time: sum"), Some("kg m-2"), Some("37")))
       ),
     new Element(
       Some("surface_snow_thickness"),
@@ -51,7 +51,7 @@ class MockElementAccess extends ElementAccess("") {
       Some("mm"),
       None,
       Some(LegacyMetNoConvention(Some(Seq("RR")), Some("cm"), None)),
-      Some(CfConvention(Some("surface_snow_thickness"), Some("sum"), Some("kg/m2"), Some("cf28")))
+      Some(CfConvention(Some("surface_snow_thickness"), Some("time: sum"), Some("kg m-2"), Some("37")))
       ),
     new Element(
       Some("sum(precipitation_amount T24H)"),
@@ -60,7 +60,7 @@ class MockElementAccess extends ElementAccess("") {
       Some("mm"),
       None,
       Some(LegacyMetNoConvention(Some(Seq("RR_24")), Some("mm"), None)),
-      Some(CfConvention(Some("precipitation_amount"), Some("sum"), Some("kg/m2"), Some("cf28")))
+      Some(CfConvention(Some("precipitation_amount"), Some("time: sum"), Some("kg m-2"), Some("37")))
       ),
     new Element(
       Some("max(surface_snow_thickness 1M)"),
@@ -69,7 +69,7 @@ class MockElementAccess extends ElementAccess("") {
       Some("cm"),
       None,
       Some(LegacyMetNoConvention(Some(Seq("SAX")), Some("cm"), None)),
-      Some(CfConvention(Some("surface_snow_thickness"), Some("maximum"), Some("kg/m2"), Some("cf28")))
+      Some(CfConvention(Some("surface_snow_thickness"), Some("time: maximum"), Some("kg m-2"), Some("37")))
       ),
     new Element(
       Some("percent_coverage(max(surface_snow_thickness 1M) 1M)"),
@@ -78,7 +78,7 @@ class MockElementAccess extends ElementAccess("") {
       Some("cm"),
       None,
       Some(LegacyMetNoConvention(Some(Seq("SAX")), Some("cm"), None)),
-      Some(CfConvention(Some("surface_snow_thickness"), Some("percent_coverage, maximum"), Some("kg/m2"), Some("cf28")))
+      Some(CfConvention(Some("surface_snow_area_fraction"), Some("time: maximum"), Some("1"), Some("37")))
       ),
     new Element(
       Some("air_temperature"),
@@ -87,7 +87,7 @@ class MockElementAccess extends ElementAccess("") {
       Some("degC"),
       None,
       Some(LegacyMetNoConvention(Some(Seq("TA")), Some("degree_Celsius"), None)),
-      Some(CfConvention(Some("surface_snow_thickness"), Some("percent_coverage, maximum"), Some("kg/m2"), Some("cf28")))
+      Some(CfConvention(Some("air_temperature"), None, Some("K"), Some("37")))
       ),
     new Element(
       Some("max(air_temperature T1H)"),
@@ -96,7 +96,7 @@ class MockElementAccess extends ElementAccess("") {
       Some("degC"),
       None,
       Some(LegacyMetNoConvention(Some(Seq("TAX")), Some("degC"), None)),
-      Some(CfConvention(Some("air_temperature"), Some("time: maximum over days"), Some("degC"), Some("cf28")))
+      Some(CfConvention(Some("air_temperature"), Some("time: maximum"), Some("K"), Some("37")))
       ),
     new Element(
       Some("max(air_temperature T12H)"),
@@ -114,7 +114,7 @@ class MockElementAccess extends ElementAccess("") {
       Some("m/s"),
       None,
       Some(LegacyMetNoConvention(Some(Seq("FF")), Some("m/s"), None)),
-      Some(CfConvention(Some("wind_speed"), None, Some("m/s"), Some("cf28")))
+      Some(CfConvention(Some("wind_speed"), None, Some("m/s"), Some("37")))
       ),
     new Element(
       Some("relative_humidity"),
@@ -132,7 +132,7 @@ class MockElementAccess extends ElementAccess("") {
       Some("angle"),
       None,
       Some(LegacyMetNoConvention(Some(Seq("DD")), Some("angle"), None)),
-      Some(CfConvention(Some("wind_from_direction"), None, Some("degR"), Some("cf28")))
+      Some(CfConvention(Some("wind_from_direction"), None, Some("degree"), Some("37")))
       )
   )
 
