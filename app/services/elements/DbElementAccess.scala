@@ -40,7 +40,7 @@ import no.met.data.BadRequestException
 @Singleton
 class DbElementAccess extends ElementAccess("") {
 
-  val parser: RowParser[Element] = {
+  private val parser: RowParser[Element] = {
     get[Option[String]]("id") ~
     get[Option[String]]("name") ~
     get[Option[String]]("description") ~
@@ -64,7 +64,7 @@ class DbElementAccess extends ElementAccess("") {
     }
   }
 
-  def getSelectQuery(fields: Set[String]) : String = {
+  private def getSelectQuery(fields: Set[String]) : String = {
     val legalFields = Set("id", "name", "description", "unit", "codetable", "legacymetnoconvention", "cfconvention")
     val illegalFields = fields -- legalFields
     if (!illegalFields.isEmpty) {
@@ -94,21 +94,46 @@ class DbElementAccess extends ElementAccess("") {
     }
   }
 
+  // Converts a SQL query to a version where placeholder base tags have been replaced with comma-separated, indexed tags
+  // to support prepared statements (which in turn serves to prevent SQL injection).
+  private def insertPlaceholders(query: String, items: List[(String, Int)]): String = {
+    var result = query
+    items.foreach( item => {
+      val tag = item._1
+      val size = item._2
+      val toBeReplaced = "{%s}" format tag
+      val tags = (1 to size) map ("%s%d" format (tag, _))
+      val tagsWithBraces = tags map ("{%s}" format _)
+      val replacement = "(%s)" format (tagsWithBraces mkString ",")
+      result = result replace (toBeReplaced, replacement)
+    })
+    result
+  }
 
-  def getElements(ids: List[String], elemCodes: List[String], cfNames: List[String], fields: Set[String], lang: Option[String]): List[Element] = {
+  // Generates the argument to pass to the on() function for a query that has been converted using insertPlaceholders().
+  private def onArg(items: List[(String, List[String])]): Seq[NamedParameter] = {
+    var result = Seq[NamedParameter]()
+    items.foreach( item => {
+      val tag = item._1
+      val values = item._2
+      val tags = (1 to values.length) map ("%s%d" format (tag, _))
+      val paramValues: List[ParameterValue] = values map (ParameterValue.toParameterValue(_))
+      result = result ++ (tags zip paramValues map { (x) => new NamedParameter(x._1, x._2) })
+    })
+    result
+  }
+
+  def getElements(ids: List[String], legacyCodes: List[String], cfNames: List[String], fields: Set[String], lang: Option[String]): List[Element] = {
     Logger.debug(fields.isEmpty.toString)
     // Set up projection clause based on fields
     val selectQ =
       if (fields.isEmpty) "*" else getSelectQuery(fields)
     // Filter for selected ids
-    val idList = ids.mkString("','")
-    val idQ = if (ids.isEmpty) "id IS NOT NULL" else s"LOWER(id) IN ('$idList')"
+    val idQ = if (ids.isEmpty) "id IS NOT NULL" else s"LOWER(id) IN ({ids})"
     // Filter for selected legacy codes
-    val elemList = elemCodes.mkString("','")
-    val elemQ = if (elemCodes.isEmpty) "TRUE" else s"legacymetnoconvention_elemcodes && ARRAY['$elemList']"
+    val elemQ = if (legacyCodes.isEmpty) "TRUE" else s"legacymetnoconvention_elemcodes && ARRAY[{legacycodes}]"
     // Filter for selected standard names
-    val cfList = cfNames.mkString("','")
-    val cfQ = if (cfNames.isEmpty) "TRUE" else s"cfconvention_standardname IN ('$cfList')"
+    val cfQ = if (cfNames.isEmpty) "TRUE" else s"cfconvention_standardname IN ({cfnames})"
     // Filter for Locale
     val legalLangs = Set("en-US", "nb-NO", "nn-NO")
     if ((lang != None) && (!legalLangs.contains(lang.get))) {
@@ -133,7 +158,9 @@ class DbElementAccess extends ElementAccess("") {
     Logger.debug(query)
 
     DB.withConnection("elements") { implicit connection =>
-      SQL(query).as( parser * )
+      SQL(insertPlaceholders(query, List(("ids", ids.size), ("legacycodes", legacyCodes.size), ("cfnames", cfNames.size))))
+        .on(onArg(List(("ids", ids), ("legacycodes", legacyCodes), ("cfnames", cfNames))): _*)
+        .as( parser * )
     }
   }
 
