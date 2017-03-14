@@ -102,11 +102,11 @@ class DbElementAccess extends ElementAccess("") {
     val selectQ =
       if (fields.isEmpty) "*" else getSelectQuery(fields)
     // Filter for selected ids
-    val idQ = if (ids.isEmpty) "id IS NOT NULL" else s"LOWER(id) IN ({ids})"
+    val idQ = if (ids.isEmpty) "id IS NOT NULL" else "LOWER(id) IN ({ids})"
     // Filter for selected legacy codes
-    val elemQ = if (legacyCodes.isEmpty) "TRUE" else s"legacymetnoconvention_elemcodes && ARRAY[{legacycodes}]::text[]"
+    val elemQ = if (legacyCodes.isEmpty) "TRUE" else "legacymetnoconvention_elemcodes && ARRAY[{legacycodes}]::text[]"
     // Filter for selected standard names
-    val cfQ = if (cfNames.isEmpty) "TRUE" else s"cfconvention_standardname IN ({cfnames})"
+    val cfQ = if (cfNames.isEmpty) "TRUE" else "cfconvention_standardname IN ({cfnames})"
     // Filter for Locale
     val legalLangs = Set("en-US", "nb-NO", "nn-NO")
     if ((lang != None) && (!legalLangs.contains(lang.get))) {
