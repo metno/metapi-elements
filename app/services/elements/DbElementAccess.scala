@@ -96,17 +96,29 @@ class DbElementAccess extends ElementAccess("") {
     }
   }
 
+  // Converts a string to use '%' for wildcards instead of '*'.
+  private def replaceWildcards(s: String): String = {
+    s.replaceAll("\\*", "%")
+  }
+
   def getElements(ids: List[String], legacyCodes: List[String], cfNames: List[String], fields: Set[String], lang: Option[String]): List[Element] = {
-    Logger.debug(fields.isEmpty.toString)
+    //Logger.debug(fields.isEmpty.toString)
     // Set up projection clause based on fields
-    val selectQ =
-      if (fields.isEmpty) "*" else getSelectQuery(fields)
+    val selectQ = if (fields.isEmpty) "*" else getSelectQuery(fields)
+
     // Filter for selected ids
-    val idQ = if (ids.isEmpty) "id IS NOT NULL" else "LOWER(id) IN ({ids})"
+    val idQ = if (ids.isEmpty) {
+      "id IS NOT NULL"
+    } else {
+      "(" + (1 to ids.size).foldLeft("") { (s: String, i: Int) => s + s"${if (i == 1) "" else " OR "}(lower(id) LIKE {ids$i})" } + ")"
+    }
+
     // Filter for selected legacy codes
     val elemQ = if (legacyCodes.isEmpty) "TRUE" else "legacymetnoconvention_elemcodes && ARRAY[{legacycodes}]::text[]"
+
     // Filter for selected standard names
     val cfQ = if (cfNames.isEmpty) "TRUE" else "cfconvention_standardname IN ({cfnames})"
+
     // Filter for Locale
     val legalLangs = Set("en-US", "nb-NO", "nn-NO")
     if ((lang != None) && (!legalLangs.contains(lang.get))) {
@@ -128,11 +140,12 @@ class DbElementAccess extends ElementAccess("") {
         |$localeQ
       """.stripMargin
 
-    Logger.debug(query)
+    //Logger.debug(query)
 
     DB.withConnection("elements") { implicit connection =>
-      SQL(insertPlaceholders(query, List(("ids", ids.size), ("legacycodes", legacyCodes.size), ("cfnames", cfNames.size))))
-        .on(onArg(List(("ids", ids), ("legacycodes", legacyCodes), ("cfnames", cfNames))): _*)
+      val idsList = if (ids.isEmpty) List[String]() else ids.map(id => replaceWildcards(id))
+      SQL(insertPlaceholders(query, List(("legacycodes", legacyCodes.size), ("cfnames", cfNames.size))))
+        .on(onArg(List(("ids", idsList), ("legacycodes", legacyCodes), ("cfnames", cfNames))): _*)
         .as( parser * )
     }
   }
