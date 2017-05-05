@@ -48,7 +48,7 @@ class DbElementAccess extends ElementAccess("") {
     get[Option[String]]("description") ~
     get[Option[String]]("unit") ~
     get[Option[String]]("codetable") ~
-    get[Option[Array[String]]]("legacymetnoconvention_elemcodes") ~
+    get[Option[String]]("legacymetnoconvention_elemcodes") ~
     get[Option[String]]("legacymetnoconvention_category") ~
     get[Option[String]]("legacymetnoconvention_unit") ~
     get[Option[String]]("cfconvention_standardname") ~
@@ -61,7 +61,7 @@ class DbElementAccess extends ElementAccess("") {
                   desc,
                   unit,
                   codeTable,
-                  if (kdvhCodes.isEmpty) None else Some(LegacyMetNoConvention(Some(kdvhCodes.get.toSeq.sorted), kdvhCategory, kdvhUnit)),
+                  if (kdvhCodes.isEmpty) None else Some(LegacyMetNoConvention(Some(kdvhCodes.get.split(",").map(_.trim).toSeq.sorted), kdvhCategory, kdvhUnit)),
                   if (cfName.isEmpty) None else Some(CfConvention(cfName, cfMethod, cfUnit, cfStatus)))
     }
   }
@@ -76,8 +76,12 @@ class DbElementAccess extends ElementAccess("") {
     }
     val fieldStr = fields
       .mkString(", ")
-      .replace("legacymetnoconvention",
-          "array_to_string(legacymetnoconvention_elemcodes, ','), legacymetnoconvention_category, legacymetnoconvention_unit")
+      .replace(
+        "legacymetnoconvention",
+        """
+          array_to_string(legacymetnoconvention_elemcodes, ',') AS legacymetnoconvention_elemcodes, legacymetnoconvention_category,
+          legacymetnoconvention_unit
+        """)
       .replace("cfconvention",
           "cfconvention_standardname, cfconvention_cellmethod, cfconvention_unit, cfconvention_status")
     val missing = legalFields -- fields
