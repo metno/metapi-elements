@@ -66,13 +66,14 @@ class DbElementAccess extends ElementAccess("") {
     }
   }
 
+  private val supportedFields = Set("id", "name", "description", "unit", "codetable", "legacymetnoconvention", "cfconvention")
+
   private def getSelectQuery(fields: Set[String]) : String = {
-    val legalFields = Set("id", "name", "description", "unit", "codetable", "legacymetnoconvention", "cfconvention")
-    val illegalFields = fields -- legalFields
+    val illegalFields = fields -- supportedFields
     if (!illegalFields.isEmpty) {
       throw new BadRequestException(
         "Invalid fields in the query parameter: " + illegalFields.mkString(","),
-        Some(s"Supported fields: ${legalFields.mkString(", ")}"))
+        Some(s"Supported fields: ${supportedFields.mkString(", ")}"))
     }
     val fieldStr = fields
       .mkString(", ")
@@ -84,7 +85,7 @@ class DbElementAccess extends ElementAccess("") {
         """)
       .replace("cfconvention",
           "cfconvention_standardname, cfconvention_cellmethod, cfconvention_unit, cfconvention_status")
-    val missing = legalFields -- fields
+    val missing = supportedFields -- fields
     if (missing.isEmpty) {
       fieldStr
     }
@@ -108,7 +109,7 @@ class DbElementAccess extends ElementAccess("") {
   def getElements(ids: List[String], legacyCodes: List[String], cfNames: List[String], fields: Set[String], lang: Option[String]): List[Element] = {
     //Logger.debug(fields.isEmpty.toString)
     // Set up projection clause based on fields
-    val selectQ = if (fields.isEmpty) "*" else getSelectQuery(fields)
+    val selectQ = getSelectQuery(if (fields.isEmpty) supportedFields else fields)
 
     // Filter for selected ids
     val idQ = if (ids.isEmpty) {
