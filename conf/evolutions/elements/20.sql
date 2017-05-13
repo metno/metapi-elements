@@ -1,3 +1,5 @@
+# --- !Ups
+
 --update element_codetable with new names of the code tables
 
 update element_codetable set codetable_name = 'sea_state_type' where element_id='min(sea_state P1M)';
@@ -991,3 +993,5 @@ insert into codetable_entry (codetable_id, value, meaning, additional_info, mean
 insert into codetable_entry (codetable_id, value, meaning, additional_info, meaning_locale) values ('precipitation_type_intensity', 2,'Moderat',null,'nn-NO');
 insert into codetable_entry (codetable_id, value, meaning, additional_info, meaning_locale) values ('precipitation_type_intensity', 3,'Kraftig',null,'nn-NO');
 insert into codetable_entry (codetable_id, value, meaning, additional_info, meaning_locale) values ('precipitation_type_intensity', 4,'Skadeleg',null,'nn-NO');
+
+# --- !Downs

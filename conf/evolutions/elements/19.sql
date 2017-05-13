@@ -1,3 +1,5 @@
+# --- !Ups
+
 --insert elements that is not included yet
 insert into element (id, unit) values ('boolean_clear_sky_weather(cloud_area_fraction P1D)','sum');
 insert into element (id, unit) values ('boolean_fair_weather(cloud_area_fraction P1D)','sum');
@@ -362,3 +364,5 @@ insert into kdvh_element (element_id, elem_code,category,unit) values ('sum(dura
 insert into kdvh_element (element_id, elem_code,category,unit) values ('sum(precipitation_amount PT30D)','RR_720','Precipitation','mm');
 insert into kdvh_element (element_id, elem_code,category,unit) values ('weather_type_automatic','WAWA','Weather','code');
 insert into kdvh_element (element_id, elem_code,category,unit) values ('weather_type_automatic','WAWA_015','Weather','code');
+
+# --- !Downs
