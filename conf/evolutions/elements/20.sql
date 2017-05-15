@@ -298,7 +298,7 @@ insert into codetable_entry (codetable_id, value, meaning, additional_info, mean
 insert into codetable_entry (codetable_id, value, meaning, additional_info, meaning_locale) values ('stateofground_codes', 16,'Loose dry snow covering at least one half of the ground but ground not completely covered','With snow or measurable ice cover','en-US');
 insert into codetable_entry (codetable_id, value, meaning, additional_info, meaning_locale) values ('stateofground_codes', 17,'Even layer of loose dry snow covering ground completely','With snow or measurable ice cover','en-US');
 insert into codetable_entry (codetable_id, value, meaning, additional_info, meaning_locale) values ('stateofground_codes', 18,'Uneven layer of loose dry snow covering ground completely','With snow or measurable ice cover','en-US');
-insert into codetable_entry (codetable_id, value, meaning, additional_info, meaning_locale) values ('stateofground_codes', 19,'Snow covering ground completely; deep drifts','With snow or measurable ice cover','en-US');
+insert into codetable_entry (codetable_id, value, meaning, additional_info, meaning_locale) values ('stateofground_codes', 19,'Snow covering ground completely, deep drifts','With snow or measurable ice cover','en-US');
 insert into codetable_entry (codetable_id, value, meaning, additional_info, meaning_locale) values ('stateofground_codes', 31,'Missing value',null,'en-US');
 
 --insert into present weather manned
@@ -979,7 +979,7 @@ insert into codetable_entry (codetable_id, value, meaning, additional_info, mean
 
 --type of preciptation intensity
 insert into codetable_entry (codetable_id, value, meaning, additional_info, meaning_locale) values ('precipitation_type_intensity', 0,'No phenomena',null,'en-US');
-insert into codetable_entry (codetable_id, value, meaning, additional_info, meaning_locale) values ('precipitation_type_intensity', 1,'Light','E.g.: Snowflakes  small  and  sparse; reduces visibility, but to no less than 1000','en-US');
+insert into codetable_entry (codetable_id, value, meaning, additional_info, meaning_locale) values ('precipitation_type_intensity', 1,'Light','E.g.: Snowflakes  small  and  sparse, reduces visibility, but to no less than 1000','en-US');
 insert into codetable_entry (codetable_id, value, meaning, additional_info, meaning_locale) values ('precipitation_type_intensity', 2,'Moderate','E.g.: Larger, more numerous flakes reducing visibility to between 400 and 1000m. ','en-US');
 insert into codetable_entry (codetable_id, value, meaning, additional_info, meaning_locale) values ('precipitation_type_intensity', 3,'Heavy','E.g.: Numerous flakes of all sizes reducing visibility to below 400','en-US');
 insert into codetable_entry (codetable_id, value, meaning, additional_info, meaning_locale) values ('precipitation_type_intensity', 4,'Violent',null,'en-US');
