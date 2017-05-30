@@ -47,11 +47,11 @@ class DbElementsAccess extends ElementsAccess {
   // Returns true iff words is None or w ("" if None) matches any word in the comma-separated list words.
   // The matching is case-insensitive and a word in words is allowed to contain asterisks to represent zero or more characters.
   // ### TBD: Move to util package (used also in records module)
-  private def matchesWords1(w: Option[String], words: Option[String]) = {
+  private def matchesWords1(w: Option[String], words: Option[String]): Boolean = {
     words match {
       case Some(wlist) => {
         val w1 = w.getOrElse("").trim.toLowerCase
-        wlist.split(",").toSet.exists((w2: String) => { w1.matches(w2.trim.toLowerCase.replace("*", ".*")) } ) // ### curly brackets redundant?
+        wlist.split(",").toSet.exists((w2: String) => w1.matches(w2.trim.toLowerCase.replace("*", ".*")))
       }
       case None => true
     }
@@ -60,13 +60,13 @@ class DbElementsAccess extends ElementsAccess {
   // Returns true iff words2 is None or any of the words in words1 (List() if None) matches any word in the comma-separated list words2.
   // The matching is case-insensitive and a word in words2 is allowed to contain asterisks to represent zero or more characters.
   // ### TBD: Move to util package
-  private def matchesWordsN(words1: Option[List[String]], words2: Option[String]) = {
+  private def matchesWordsN(words1: Option[List[String]], words2: Option[String]): Boolean = {
     words2 match {
       case Some(wlist2) => {
-        val wset1 = words1.getOrElse(List[String]()).toSet
+        val wset1 = words1.getOrElse(List[String]()).toSet.map((w: String) => w.toLowerCase)
         wlist2.split(",").toSet.exists((w2: String) => {
           val w2pattern = w2.trim.toLowerCase.replace("*", ".*")
-          wset1.exists((w1: String) => { w1.matches(w2pattern) }) // ### curly brackets redundant?
+          wset1.exists((w1: String) => w1.matches(w2pattern))
         })
       }
       case None => true
@@ -91,7 +91,7 @@ class DbElementsAccess extends ElementsAccess {
     }
   }
 
-  private def getQuery = {
+  private def getQuery: String = {
     s"""
        |SELECT
        |  id,
