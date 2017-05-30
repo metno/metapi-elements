@@ -25,14 +25,39 @@
 
 package services.elements
 
-import play.api._
-import models.Element
+import javax.inject.Singleton
+import models._
+import play.Logger
 
-/**
- * Abstract class for ElementAccess injection
- */
-abstract class ElementAccess(val url: String) {
+// scalastyle:off line.size.limit
 
-  def getElements(ids: List[String], elemCodes: List[String], cfNames: List[String], fields: Set[String], lang: Option[String]) : List[Element]
+@Singleton
+class MockElementsAccess extends ElementsAccess {
+
+  override def elements(qp: ElementsQueryParameters): List[Element] = {
+    List(Element(
+      Some("dummy id"),
+      Some("dummy name"),
+      Some("dummy description"),
+      Some("dummy unit"),
+      Some("dummy code table"),
+      Some("dummy status"),
+      Some("dummy base name"),
+      Some(Seq(FuncPeriod(Some("dummy function"), Some("dummy period")))),
+      Some("dummy category"),
+      Some(LegacyMetNoConvention(
+        Some(Seq("dummy elemCode 1", "dummy elemCode 2")),
+        Some("dummy unit"))
+      ),
+      Some(CfConvention(
+        Some("dummy base name"),
+        Some("dummy cell method"),
+        Some("dummy unit"),
+        Some("dummy status"))
+      )
+    ))
+  }
 
 }
+
+// scalastyle:on

@@ -38,7 +38,7 @@ import services.elements._
 class ElementsProdModule extends AbstractModule {
 
   def configure() {
-    bind(classOf[ElementAccess]).to(classOf[DbElementAccess])
+    bind(classOf[ElementsAccess]).to(classOf[DbElementsAccess])
   }
 
 }
@@ -50,7 +50,7 @@ class ElementsProdModule extends AbstractModule {
 class ElementsDevModule extends AbstractModule {
 
   def configure() {
-    bind(classOf[ElementAccess]).to(classOf[MockElementAccess])
+    bind(classOf[ElementsAccess]).to(classOf[MockElementsAccess])
   }
 
 }

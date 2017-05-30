@@ -34,14 +34,13 @@ import io.swagger.annotations._
 import scala.language.postfixOps
 import util._
 import no.met.data._
-
 import models.Element
-import services.elements.{ ElementAccess, JsonFormat }
+import services.elements._
 
 // scalastyle:off line.size.limit
 
 @Api(value = "elements")
-class ElementsController @Inject()(elementService: ElementAccess) extends Controller {
+class ElementsController @Inject()(elementsAccess: ElementsAccess) extends Controller {
 
   /**
    * GET element metadata data from elements-db
@@ -57,19 +56,55 @@ class ElementsController @Inject()(elementService: ElementAccess) extends Contro
     new ApiResponse(code = 404, message = "No data was found for the list of query Ids."),
     new ApiResponse(code = 500, message = "Internal server error.")))
   def getElements( // scalastyle:ignore public.methods.have.type
-    @ApiParam(value = "The MET API element ID(s) that you want metadata for as a comma-separated list of <a href=concepts#searchfilter>search filters</a>.",
+    @ApiParam(value = "The element IDs to get metadata for as a comma-separated list of <a href=concepts#searchfilter>search filters</a>.",
               required = false)
               ids: Option[String],
-    @ApiParam(value = "The legacy MET Norway element codes that you want metadata for. Enter a comma-separated list to select multiple elements.",
+    @ApiParam(value = "The element names to get metadata for as a comma-separated list of <a href=concepts#searchfilter>search filters</a>.",
+              required = false)
+              names: Option[String],
+    @ApiParam(value = "The descriptions to get metadata for as a comma-separated list of <a href=concepts#searchfilter>search filters</a>.",
+              required = false)
+              descriptions: Option[String],
+    @ApiParam(value = "The units to get metadata for as a comma-separated list of <a href=concepts#searchfilter>search filters</a>.",
+              required = false)
+              units: Option[String],
+    @ApiParam(value = "The code tables to get metadata for as a comma-separated list of <a href=concepts#searchfilter>search filters</a>.",
+              required = false)
+              codeTables: Option[String],
+    @ApiParam(value = "The statuses to get metadata for as a comma-separated list of <a href=concepts#searchfilter>search filters</a>.",
+              required = false)
+              statuses: Option[String],
+    @ApiParam(value = "The base names to get metadata for as a comma-separated list of <a href=concepts#searchfilter>search filters</a>.",
+              required = false)
+              baseNames: Option[String],
+    @ApiParam(value = "The calculation methods to get metadata for as a comma-separated list of <a href=concepts#searchfilter>search filters</a>.",
+              required = false)
+              calcMethods: Option[String],
+    @ApiParam(value = "The categories to get metadata for as a comma-separated list of <a href=concepts#searchfilter>search filters</a>.",
+              required = false)
+              categories: Option[String],
+    @ApiParam(value = "The legacy MET Norway element codes to get metadata for as a comma-separated list of <a href=concepts#searchfilter>search filters</a>.",
               required = false)
               legacyElemCodes: Option[String],
-    @ApiParam(value = "The CF standard names that you want metadata for. Enter a comma-separated list to select multiple elements.",
+    @ApiParam(value = "The legacy MET Norway units to get metadata for as a comma-separated list of <a href=concepts#searchfilter>search filters</a>.",
               required = false)
-              cfStandardNames: Option[String],
-    @ApiParam(value = "A comma-separated list of the fields that should be present in the response. If set, only those properties listed here will be visible in the result set; e.g.: id,description will show only those two entries in the data set. The legacyMetNoConvention and cfConvention objects are included or excluded as a block by adding or omitting those two fields",
+              legacyUnits: Option[String],
+    @ApiParam(value = "The CF base names to get metadata for as a comma-separated list of <a href=concepts#searchfilter>search filters</a>.",
+              required = false)
+              cfBaseNames: Option[String],
+    @ApiParam(value = "The CF cell methods to get metadata for as a comma-separated list of <a href=concepts#searchfilter>search filters</a>.",
+              required = false)
+              cfCellMethod: Option[String],
+    @ApiParam(value = "The CF units to get metadata for as a comma-separated list of <a href=concepts#searchfilter>search filters</a>.",
+              required = false)
+              cfUnits: Option[String],
+    @ApiParam(value = "The CF statuses to get metadata for as a comma-separated list of <a href=concepts#searchfilter>search filters</a>.",
+              required = false)
+              cfStatuses: Option[String],
+    @ApiParam(value = "The information to return as a comma-separated list of 'id', 'name', 'description', 'unit', 'codeTable', 'status', 'baseName', 'calcMethod', 'category', 'legacyElemCodes', 'legacyUnit', 'cfBaseName', 'cfCellMethod', 'cfUnit', or 'cfStatus'. For example 'id,unit,legacyElemCodes,legacyUnit'. If omitted, all fields are returned.",
               required = false)
               fields: Option[String],
-    @ApiParam(value = "ISO language/locale of return values.",
+    @ApiParam(value = "ISO language/locale to be used for search filters and return values.",
               allowableValues = "en-US,nb-NO,nn-NO",
               defaultValue = "en-US",
               required = false)
@@ -78,96 +113,22 @@ class ElementsController @Inject()(elementService: ElementAccess) extends Contro
               allowableValues = "jsonld",
               defaultValue = "jsonld",
               required = true)
-              format: String) = no.met.security.AuthorizedAction {
-    implicit request =>
+              format: String) = no.met.security.AuthorizedAction { implicit request =>
+
     val start = DateTime.now(DateTimeZone.UTC) // start the clock
-    val idList : List[String] = ids match {
-        case Some(x) => x.toLowerCase.split(",").map(_.trim).toList
-        case _ => List()
-    }
-    val legacyElemCodeList : List[String] = legacyElemCodes match {
-        case Some(x) => x.toUpperCase.split(",").map(_.trim).toList
-        case _ => List()
-    }
-    val cfStandardNameList : List[String] = cfStandardNames match {
-        case Some(x) => x.toLowerCase.split(",").map(_.trim).toList
-        case _ => List()
-    }
-    val fieldList : Set[String] = fields match {
-        case Some(x) => x.toLowerCase.split(",").map(_.trim).toSet
-        case _ => Set()
-    }
+
     Try  {
       // ensure that the query string contains supported fields only
-      QueryStringUtil.ensureSubset(Set("ids", "legacyElemCodes", "cfStandardNames", "fields", "lang"), request.queryString.keySet)
+      QueryStringUtil.ensureSubset(Set("ids", "names", "descriptions", "units", "codeTables", "statuses", "baseNames", "calcMethods",
+        "categories", "legacyElemCodes", "legacyUnits", "cfBaseNames", "cfCellMethod", "cfUnits", "cfStatuses", "fields", "lang"),
+        request.queryString.keySet)
 
-      elementService.getElements(idList, legacyElemCodeList, cfStandardNameList, fieldList, lang)
+      elementsAccess.elements(ElementsQueryParameters(ids, names, descriptions, units, codeTables, statuses, baseNames, calcMethods,
+        categories, legacyElemCodes, legacyUnits, cfBaseNames, cfCellMethod, cfUnits, cfStatuses, fields, lang))
     } match {
       case Success(data) =>
         if (data isEmpty) {
-          Error.error(NOT_FOUND,
-            Some("No data found for this combination of element IDs, legacy element codes, and CF standard names"),
-            Some("Specify a valid combination (note that leaving out one of the three components will match anything)"), start)
-        } else {
-          format.toLowerCase() match {
-            case "jsonld" => Ok(new JsonFormat().format(start, data)) as "application/vnd.no.met.data.elements-v0+json"
-            case x        => Error.error(BAD_REQUEST, Some(s"Invalid output format: $x"), Some("Supported output formats: jsonld"), start)
-          }
-        }
-      case Failure(x: BadRequestException) =>
-        Error.error(BAD_REQUEST, Some(x getLocalizedMessage), x help, start)
-      case Failure(x) => {
-        //$COVERAGE-OFF$
-        Logger.error(x.getLocalizedMessage)
-        Error.error(INTERNAL_SERVER_ERROR, Some("An internal error occurred"), None, start)
-        //$COVERAGE-ON$
-      }
-    }
-  }
-
-  /**
-   * GET element metadata data from elements-db
-   */
-  @ApiOperation(
-    value = "Get metadata about a single MET API element.",
-    notes = "Get metadata for a single weather or climate element available in the MET API.",
-    response = classOf[models.ElementResponse],
-    httpMethod = "GET")
-  @ApiResponses(Array(
-    new ApiResponse(code = 400, message = "Invalid parameter value or malformed request."),
-    new ApiResponse(code = 401, message = "Unauthorized client ID."),
-    new ApiResponse(code = 404, message = "No data was found for the list of query Ids."),
-    new ApiResponse(code = 500, message = "Internal server error.")))
-  def getElementById( // scalastyle:ignore public.methods.have.type
-    @ApiParam(value = "The MET API element ID that you want to retrieve metadata for.",
-              example="air_temperature",
-              required = true)
-              id: String,
-    @ApiParam(value = "A comma-separated list of the fields that should be present in the response. If set, only those properties listed here will be visible in the result set; e.g.: id,description will show only those two entries in the data set. The legacyMetNoConvention and cfConvention objects are included or excluded as a block by adding or omitting those two fields",
-              required = false)
-              fields: Option[String],
-    @ApiParam(value = "ISO language/locale of return values.",
-              allowableValues="en-US,nb-NO,nn-NO",
-              defaultValue="en-US",
-              required = false) lang: Option[String],
-    @ApiParam(value = "The output format of the result.",
-              allowableValues = "jsonld",
-              defaultValue = "jsonld",
-              required = true)
-              format: String) = no.met.security.AuthorizedAction {
-    implicit request =>
-    val start = DateTime.now(DateTimeZone.UTC) // start the clock
-    val idList = id split "," map (_ trim) map (_ toLowerCase) toList
-    val fieldList = FieldSpecification.parse(fields)
-    Try {
-      // ensure that the query string contains supported fields only
-      QueryStringUtil.ensureSubset(Set("id", "fields", "lang"), request.queryString.keySet)
-
-      elementService.getElements(idList, List(), List(), fieldList, lang)
-    } match {
-      case Success(data) =>
-        if (data isEmpty) {
-          Error.error(NOT_FOUND, Some("No data elements found for id " + id), None, start)
+          Error.error(NOT_FOUND, Some("No data found for this combination of query parameters"), None, start)
         } else {
           format.toLowerCase() match {
             case "jsonld" => Ok(new JsonFormat().format(start, data)) as "application/vnd.no.met.data.elements-v0+json"

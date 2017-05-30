@@ -43,6 +43,8 @@ class JsonFormat extends BasicJsonFormat {
 
   implicit val legacyMetNoWrites = Json.writes[LegacyMetNoConvention]
 
+  implicit val funcPeriodWrites = Json.writes[FuncPeriod]
+
   implicit val elementWrites = Json.writes[Element]
 
   implicit val elementResponseWrites: Writes[ElementResponse] = (

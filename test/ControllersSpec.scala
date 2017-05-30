@@ -44,170 +44,22 @@ class ControllersSpec extends Specification {
 
   "metapi /elements" should {
 
-    "return a result with no id or code in the route" in new WithApplication(TestUtil.app) {
+    "test empty query string" in new WithApplication(TestUtil.app) {
       val response = route(FakeRequest(GET, "/v0.jsonld")).get
-
       status(response) must equalTo(OK)
-
-      val json = Json.parse(contentAsString(response))
-      (json \ "data").as[JsArray].value.size must equalTo(11)
     }
 
-    "return a result with an id in the route" in new WithApplication(TestUtil.app) {
-      val response = route(FakeRequest(GET, "/v0.jsonld?ids=sum(precipitation_amount%201m)")).get
-
-      status(response) must equalTo(OK)
-
-      val json = Json.parse(contentAsString(response))
-      contentType(response) must beSome.which(_ == "application/vnd.no.met.data.elements-v0+json")
-      (json \ "data").as[JsArray].value.size must equalTo(1)
-    }
-
-    "return a result with a list of ids in the route" in new WithApplication(TestUtil.app) {
-      val response = route(FakeRequest(GET, "/v0.jsonld?ids=air_temperature,sum(precipitation_amount%201M)")).get
-
-      status(response) must equalTo(OK)
-
-      val json = Json.parse(contentAsString(response))
-      (json \ "data").as[JsArray].value.size must equalTo(2)
-    }
-
-    "return nothing for incorrect id" in new WithApplication(TestUtil.app) {
-      val response = route(FakeRequest(GET, "/v0.jsonld?ids=dummy")).get
-
-      status(response) must equalTo(NOT_FOUND)
-    }
-
-    "return a result with a kdvh code in the route" in new WithApplication(TestUtil.app) {
-      val response = route(FakeRequest(GET, "/v0.jsonld?legacyElemCodes=TA")).get
-
-      status(response) must equalTo(OK)
-
-      val json = Json.parse(contentAsString(response))
-      (json \ "data").as[JsArray].value.size must equalTo(1)
-    }
-
-    "return a result with a list of kdvh codes in the route" in new WithApplication(TestUtil.app) {
-      val response = route(FakeRequest(GET, "/v0.jsonld?legacyElemCodes=TA,TAX")).get
-
-      status(response) must equalTo(OK)
-
-      val json = Json.parse(contentAsString(response))
-      (json \ "data").as[JsArray].value.size must equalTo(2)
-    }
-
-    "return nothing for incorrect code" in new WithApplication(TestUtil.app) {
-      val response = route(FakeRequest(GET, "/v0.jsonld?legacyElemCodes=dummy")).get
-
-      status(response) must equalTo(NOT_FOUND)
-    }
-
-    "return a result with a standard name in the route" in new WithApplication(TestUtil.app) {
-      val response = route(FakeRequest(GET, "/v0.jsonld?cfStandardNames=air_temperature")).get
-
-      status(response) must equalTo(OK)
-
-      val json = Json.parse(contentAsString(response))
-      (json \ "data").as[JsArray].value.size must equalTo(3)
-    }
-
-    "return a result with a list of standard names in the route" in new WithApplication(TestUtil.app) {
-      val response = route(FakeRequest(GET, "/v0.jsonld?cfStandardNames=air_temperature,wind_speed")).get
-
-      status(response) must equalTo(OK)
-
-      val json = Json.parse(contentAsString(response))
-      (json \ "data").as[JsArray].value.size must equalTo(4)
-    }
-
-    "return nothing for incorrect standard name" in new WithApplication(TestUtil.app) {
-      val response = route(FakeRequest(GET, "/v0.jsonld?cfStandardNames=dummy")).get
-
-      status(response) must equalTo(NOT_FOUND)
-    }
-
-
-
-    "return correct contentType for getElements" in new WithApplication(TestUtil.app) {
-      val response = route(FakeRequest(GET, "/v0.jsonld?ids=sum(precipitation_amount%201m)")).get
-
-      status(response) must equalTo(OK)
-      contentType(response) must beSome.which(_ == "application/vnd.no.met.data.elements-v0+json")
-    }
-
-    "return error if format is incorrect" in new WithApplication(TestUtil.app) {
-      val response = route(FakeRequest(GET, "/v0.txt?ids=sum(precipitation_amount%201m)")).get
-
+    "test unsupported format" in new WithApplication(TestUtil.app) {
+      val response = route(FakeRequest(GET, "/v0.jsonldx")).get
       status(response) must equalTo(BAD_REQUEST)
     }
 
-    "return a result for getElements with fields (note: no filtering is actually done in mock)" in new WithApplication(TestUtil.app) {
-      val response = route(FakeRequest(GET, "/v0.jsonld?ids=sum(precipitation_amount%201m)")).get
-
-      status(response) must equalTo(OK)
-    }
-
-    "return a result for valid getById" in new WithApplication(TestUtil.app) {
-      val response = route(FakeRequest(GET, "/sum(precipitation_amount%201M)/v0.jsonld")).get
-
-      status(response) must equalTo(OK)
-
-      val json = Json.parse(contentAsString(response))
-      (json \ "data").as[JsArray].value.size must equalTo(1)
-    }
-
-    "return nothing for invalid getById" in new WithApplication(TestUtil.app) {
-      val response = route(FakeRequest(GET, "/dummy/v0.jsonld")).get
-
+    "test malformed version/format" in new WithApplication(TestUtil.app) {
+      val response = route(FakeRequest(GET, "/v(0~jsonldx")).get
       status(response) must equalTo(NOT_FOUND)
     }
 
-    "return correct contentType for getElementById" in new WithApplication(TestUtil.app) {
-      val response = route(FakeRequest(GET, "/sum(precipitation_amount%201m)/v0.jsonld")).get
-
-      status(response) must equalTo(OK)
-      contentType(response) must beSome.which(_ == "application/vnd.no.met.data.elements-v0+json")
-    }
-
-    "return error for incorrect format in getElementById" in new WithApplication(TestUtil.app) {
-      val response = route(FakeRequest(GET, "/sum(precipitation_amount%201m)/v0.txt")).get
-
-      status(response) must equalTo(BAD_REQUEST)
-    }
-
-    "return a result for valid getById with fields (note: no filtering is actually done in mock)" in new WithApplication(TestUtil.app) {
-      val response = route(FakeRequest(GET, "/sum(precipitation_amount%201M)/v0.jsonld?fields=id, description")).get
-
-      status(response) must equalTo(OK)
-    }
-
-    "return error if unsupported field names are specified" in new WithApplication(TestUtil.app) {
-      val response = route(FakeRequest(GET, "/v0.jsonld?foo=bar")).get
-
-      status(response) must equalTo(BAD_REQUEST)
-    }
-
-    "return error if unsupported field names are specified for getById" in new WithApplication(TestUtil.app) {
-      val response = route(FakeRequest(GET, "/dummy/v0.jsonld?foo=bar")).get
-
-      status(response) must equalTo(BAD_REQUEST)
-    }
-
-    "return a cfConvention element that follows standard" in new WithApplication(TestUtil.app) {
-      val response = route(FakeRequest(GET, "/v0.jsonld?ids=sum(precipitation_amount%201m)")).get
-      status(response) must equalTo(OK)
-
-      val json = Json.parse(contentAsString(response))
-      val data = (json \ "data").as[JsArray]
-      data.value.size must equalTo(1)
-
-      val cf = data(0) \ "cfConvention"
-
-      (cf \ "standardName").as[String] must equalTo("precipitation_amount")
-      (cf \ "cellMethod").as[String] must equalTo("time: sum")
-      (cf \ "unit").as[String] must equalTo("kg m-2")
-    }
-
+    // TBD: Add more tests!!!
 
   }
 
