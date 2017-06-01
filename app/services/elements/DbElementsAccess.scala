@@ -91,7 +91,7 @@ class DbElementsAccess extends ElementsAccess {
     }
   }
 
-  private def getQuery: String = {
+  private def getQuery(locale: String): String = {
     s"""
        |SELECT
        |  id,
@@ -109,6 +109,7 @@ class DbElementsAccess extends ElementsAccess {
        |  cfconvention_unit AS cf_unit,
        |  cfconvention_status AS cf_status
        |FROM get_elements_v
+       |WHERE locale='$locale'
          """.stripMargin
   }
 
@@ -168,7 +169,21 @@ class DbElementsAccess extends ElementsAccess {
 
 
     val elems = DB.withConnection("elements") { implicit connection =>
-      val query = getQuery
+
+      val locale = {
+        val suppLangs = Set("en-US", "nb-NO", "nn-NO")
+        qp.lang match {
+          case Some(lang) => {
+            if (!suppLangs.contains(lang)) {
+              throw new BadRequestException("Invalid language in the query parameter: " + lang, Some(s"Supported languages: ${suppLangs.mkString(", ")}"))
+            }
+            lang
+          }
+          case None => "en-US"
+        }
+      }
+
+      val query = getQuery(locale)
 //      Logger.debug(query)
       SQL(query).as(parser *)
     }
