@@ -122,7 +122,7 @@ class DbElementsAccess extends ElementsAccess {
     get[Option[String]]("status") ~
     get[Option[String]]("basename") ~
     get[Option[String]]("category") ~
-    get[Option[Array[String]]]("legacy_elemcodes") ~
+    get[Option[Array[Option[String]]]]("legacy_elemcodes") ~
     get[Option[String]]("legacy_unit") ~
     get[Option[String]]("cf_basename") ~
     get[Option[String]]("cf_cellmethod") ~
@@ -140,9 +140,13 @@ class DbElementsAccess extends ElementsAccess {
         extractCalcMethod(id),
         category,
         if (legacyCodes.nonEmpty) {
-          Some(LegacyMetNoConvention(
-            Some(legacyCodes.get.toSeq.map(_.trim).sorted),
-            legacyUnit))
+          val lcseq = legacyCodes.get.toSeq
+          if (lcseq.exists(lc => lc.isEmpty)) {
+            //Logger.debug(s"undefined legacy code found for element ${name.get}")
+            None
+          } else {
+            Some(LegacyMetNoConvention(Some(lcseq.map(_.get.trim).sorted), legacyUnit))
+          }
         } else {
           None
         },
