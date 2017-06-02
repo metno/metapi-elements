@@ -142,7 +142,7 @@ class DbElementsAccess extends ElementsAccess {
         if (legacyCodes.nonEmpty) {
           val lcseq = legacyCodes.get.toSeq
           if (lcseq.exists(lc => lc.isEmpty)) {
-            //Logger.debug(s"undefined legacy code found for element ${name.get}")
+            //Logger.debug(s"undefined legacy code found for element ${id.get}")
             None
           } else {
             Some(LegacyMetNoConvention(Some(lcseq.map(_.get.trim).sorted), legacyUnit))
