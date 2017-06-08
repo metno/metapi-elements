@@ -165,8 +165,8 @@ class DbElementsAccess extends ElementsAccess {
 
     val fields:Set[String] = FieldSpecification.parse(qp.fields)
     val suppFields = Set(
-      "id", "name", "description", "unit", "codetable", "status", "basename", "calcmethod", "category",
-      "legacyelemcodes", "legacyunit", "cfbasename", "cfcellmethod", "cfunit", "cfstatus")
+      "id", "name", "description", "unit", "codetable", "status", "basename", "calculationmethod", "category",
+      "legacyelementcodes", "legacyunit", "cfbasename", "cfcellmethod", "cfunit", "cfstatus")
     fields.foreach(f => if (!suppFields.contains(f.toLowerCase)) {
       throw new BadRequestException(s"Unsupported field: $f.toLowerCase", Some(s"Supported fields: ${suppFields.mkString(", ")}"))
     })
@@ -217,15 +217,16 @@ class DbElementsAccess extends ElementsAccess {
       .filter(e => matchesWords1(e.status, qp.statuses))
       .filter(e => matchesWords1(e.baseName, qp.baseNames))
       .filter(e => matchesWordsN(
-        Some(e.calcMethod.getOrElse(Seq[FuncPeriod]()).toList.flatMap(fp => List(fp.function.getOrElse(""), fp.period.getOrElse("")))), qp.calcMethods))
+        Some(e.calculationMethod.getOrElse(Seq[FuncPeriod]()).toList.flatMap(fp => List(fp.function.getOrElse(""), fp.period.getOrElse("")))),
+        qp.calculationMethods))
       .filter(e => matchesWords1(e.category, qp.categories))
       .filter(e => if (e.legacyConvention.isEmpty) {
         // keep iff none of the relevant fields are requested
-        qp.legacyElemCodes.getOrElse("").trim.isEmpty &&
+        qp.legacyElementCodes.getOrElse("").trim.isEmpty &&
           qp.legacyUnits.getOrElse("").trim.isEmpty
       } else {
         val lmnc = e.legacyConvention.get
-        matchesWordsN(Some(lmnc.elemCodes.getOrElse(Seq[String]()).toList), qp.legacyElemCodes) &&
+        matchesWordsN(Some(lmnc.elementCodes.getOrElse(Seq[String]()).toList), qp.legacyElementCodes) &&
           matchesWords1(lmnc.unit, qp.legacyUnits)
       })
       .filter(e => if (e.cfConvention.isEmpty) {
@@ -249,14 +250,14 @@ class DbElementsAccess extends ElementsAccess {
         codeTable = if (omitCodeTable) None else e.codeTable,
         status = if (omitStatus) None else e.status,
         baseName = if (omitBaseName) None else e.baseName,
-        calcMethod = if (omitCalcMethod) None else e.calcMethod,
+        calculationMethod = if (omitCalcMethod) None else e.calculationMethod,
         category = if (omitCategory) None else e.category,
         legacyConvention = if (omitLegacyElemCodes && omitLegacyUnit) {
           None // no fields requsted, so omit object
         } else { // at least one field requested
           e.legacyConvention match {
             case Some(lc) => Some(lc.copy( // fields available, so output the requested ones
-              elemCodes = if (omitLegacyElemCodes) None else lc.elemCodes,
+              elementCodes = if (omitLegacyElemCodes) None else lc.elementCodes,
               unit = if (omitLegacyUnit) None else lc.unit
             ))
             case None => None // no fields available, so omit object
@@ -285,7 +286,7 @@ class DbElementsAccess extends ElementsAccess {
         e.codeTable.getOrElse("").toLowerCase,
         e.status.getOrElse("").toLowerCase,
         e.category.getOrElse("").toLowerCase,
-        e.calcMethod match { case Some(cm) if cm.nonEmpty => cm.head.function.getOrElse(""); case _ => "" },
+        e.calculationMethod match { case Some(cm) if cm.nonEmpty => cm.head.function.getOrElse(""); case _ => "" },
         e.cfConvention match { case Some(cfc) => cfc.baseName.getOrElse("").toLowerCase; case None => "" }
         )
       )

@@ -62,7 +62,7 @@ case class Element(
     @(ApiModelProperty @field)(value="If the unit is a *code*, the codetable that describes the codes used.", example="beaufort_scale") codeTable: Option[String],
     @(ApiModelProperty @field)(value="The status of the element; one of 'CF compatible', 'in review', 'MetNo local convention', or 'test'", example="CF compatible") status: Option[String],
     @(ApiModelProperty @field)(value="The base name of the element", example="air_temperature") baseName: Option[String],
-    @(ApiModelProperty @field)(value="The calculation method of the element", example="mean,max") calcMethod: Option[Seq[FuncPeriod]],
+    @(ApiModelProperty @field)(value="The calculation method of the element", example="TBD") calculationMethod: Option[Seq[FuncPeriod]],
     @(ApiModelProperty @field)(value="The category of the element.") category: Option[String],
     @(ApiModelProperty @field)(value="The legacy form of the element.") legacyConvention: Option[LegacyMetNoConvention],
     @(ApiModelProperty @field)(value="The CF convention equivalent of the element (omitted if no such equivalent exists).") cfConvention: Option[CfConvention]
@@ -76,7 +76,7 @@ case class FuncPeriod(
 
 @ApiModel(description="The Met.no legacy element code equivalent(s) of the element.")
 case class LegacyMetNoConvention(
-  @(ApiModelProperty @field)(value="The legacy element code(s) of the element.", example="TA") elemCodes: Option[Seq[String]],
+  @(ApiModelProperty @field)(value="The legacy element code(s) of the element.", example="TA") elementCodes: Option[Seq[String]],
   @(ApiModelProperty @field)(value="The unit of the legacy element code(s).", example="degC") unit: Option[String]
 )
 

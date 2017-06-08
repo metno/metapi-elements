@@ -79,13 +79,13 @@ class ElementsController @Inject()(elementsAccess: ElementsAccess) extends Contr
               baseNames: Option[String],
     @ApiParam(value = "The calculation methods to get metadata for as a comma-separated list of <a href=concepts#searchfilter>search filters</a>.",
               required = false)
-              calcMethods: Option[String],
+              calculationMethods: Option[String],
     @ApiParam(value = "The categories to get metadata for as a comma-separated list of <a href=concepts#searchfilter>search filters</a>.",
               required = false)
               categories: Option[String],
     @ApiParam(value = "The legacy MET Norway element codes to get metadata for as a comma-separated list of <a href=concepts#searchfilter>search filters</a>.",
               required = false)
-              legacyElemCodes: Option[String],
+              legacyElementCodes: Option[String],
     @ApiParam(value = "The legacy MET Norway units to get metadata for as a comma-separated list of <a href=concepts#searchfilter>search filters</a>.",
               required = false)
               legacyUnits: Option[String],
@@ -94,14 +94,14 @@ class ElementsController @Inject()(elementsAccess: ElementsAccess) extends Contr
               cfBaseNames: Option[String],
     @ApiParam(value = "The CF cell methods to get metadata for as a comma-separated list of <a href=concepts#searchfilter>search filters</a>.",
               required = false)
-              cfCellMethod: Option[String],
+              cfCellMethods: Option[String],
     @ApiParam(value = "The CF units to get metadata for as a comma-separated list of <a href=concepts#searchfilter>search filters</a>.",
               required = false)
               cfUnits: Option[String],
     @ApiParam(value = "The CF statuses to get metadata for as a comma-separated list of <a href=concepts#searchfilter>search filters</a>.",
               required = false)
               cfStatuses: Option[String],
-    @ApiParam(value = "The information to return as a comma-separated list of 'id', 'name', 'description', 'unit', 'codeTable', 'status', 'baseName', 'calcMethod', 'category', 'legacyElemCodes', 'legacyUnit', 'cfBaseName', 'cfCellMethod', 'cfUnit', or 'cfStatus'. For example 'id,unit,legacyElemCodes,legacyUnit'. If omitted, all fields are returned.",
+    @ApiParam(value = "The information to return as a comma-separated list of 'id', 'name', 'description', 'unit', 'codeTable', 'status', 'baseName', 'calculationMethod', 'category', 'legacyElementCodes', 'legacyUnit', 'cfBaseName', 'cfCellMethod', 'cfUnit', or 'cfStatus'. For example 'id,unit,legacyElementCodes,legacyUnit'. If omitted, all fields are returned.",
               required = false)
               fields: Option[String],
     @ApiParam(value = "ISO language/locale to be used for search filters and return values.",
@@ -119,12 +119,12 @@ class ElementsController @Inject()(elementsAccess: ElementsAccess) extends Contr
 
     Try  {
       // ensure that the query string contains supported fields only
-      QueryStringUtil.ensureSubset(Set("ids", "names", "descriptions", "units", "codeTables", "statuses", "baseNames", "calcMethods",
-        "categories", "legacyElemCodes", "legacyUnits", "cfBaseNames", "cfCellMethod", "cfUnits", "cfStatuses", "fields", "lang"),
+      QueryStringUtil.ensureSubset(Set("ids", "names", "descriptions", "units", "codeTables", "statuses", "baseNames", "calculationMethods",
+        "categories", "legacyElementCodes", "legacyUnits", "cfBaseNames", "cfCellMethods", "cfUnits", "cfStatuses", "fields", "lang"),
         request.queryString.keySet)
 
-      elementsAccess.elements(ElementsQueryParameters(ids, names, descriptions, units, codeTables, statuses, baseNames, calcMethods,
-        categories, legacyElemCodes, legacyUnits, cfBaseNames, cfCellMethod, cfUnits, cfStatuses, fields, lang))
+      elementsAccess.elements(ElementsQueryParameters(ids, names, descriptions, units, codeTables, statuses, baseNames, calculationMethods,
+        categories, legacyElementCodes, legacyUnits, cfBaseNames, cfCellMethods, cfUnits, cfStatuses, fields, lang))
     } match {
       case Success(data) =>
         if (data isEmpty) {

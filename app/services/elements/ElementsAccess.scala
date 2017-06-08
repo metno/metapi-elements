@@ -36,8 +36,8 @@ import models.Element
   */
 case class ElementsQueryParameters(
   ids: Option[String] = None, names: Option[String] = None, descriptions: Option[String] = None, units: Option[String] = None,
-  codeTables: Option[String] = None, statuses: Option[String], baseNames: Option[String], calcMethods: Option[String],
-  categories: Option[String], legacyElemCodes: Option[String], legacyUnits: Option[String], cfBaseNames: Option[String],
+  codeTables: Option[String] = None, statuses: Option[String], baseNames: Option[String], calculationMethods: Option[String],
+  categories: Option[String], legacyElementCodes: Option[String], legacyUnits: Option[String], cfBaseNames: Option[String],
   cfCellMethods: Option[String], cfUnits: Option[String], cfStatuses: Option[String], fields: Option[String] = None,
   lang: Option[String] = None)
 
