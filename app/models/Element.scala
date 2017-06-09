@@ -61,17 +61,22 @@ case class Element(
     @(ApiModelProperty @field)(value="The default unit, as used for data (UDUNITS notation). *code* if the unit is described using a code table.", example="degC") unit: Option[String],
     @(ApiModelProperty @field)(value="If the unit is a *code*, the codetable that describes the codes used.", example="beaufort_scale") codeTable: Option[String],
     @(ApiModelProperty @field)(value="The status of the element; one of 'CF compatible', 'in review', 'MetNo local convention', or 'test'", example="CF compatible") status: Option[String],
-    @(ApiModelProperty @field)(value="The base name of the element", example="air_temperature") baseName: Option[String],
-    @(ApiModelProperty @field)(value="The calculation method of the element", example="TBD") calculationMethod: Option[Seq[FuncPeriod]],
+    @(ApiModelProperty @field)(value="The base name of the element.", example="air_temperature") baseName: Option[String],
+    @(ApiModelProperty @field)(value="The calculation method of the element.") calculationMethod: Option[CalcMethod],
     @(ApiModelProperty @field)(value="The category of the element.") category: Option[String],
     @(ApiModelProperty @field)(value="The legacy form of the element.") legacyConvention: Option[LegacyMetNoConvention],
     @(ApiModelProperty @field)(value="The CF convention equivalent of the element (omitted if no such equivalent exists).") cfConvention: Option[CfConvention]
 )
 
-@ApiModel(description="A function/period for an element.")
-case class FuncPeriod(
-    @(ApiModelProperty @field)(value="The aggregate function.", example="max") function: Option[String],
-    @(ApiModelProperty @field)(value="The period over which the function applies.", example="PT12H") period: Option[String]
+@ApiModel(description="The calculation method for an element.")
+case class CalcMethod(
+    @(ApiModelProperty @field)(value="The base name of the element", example="wind_speed") baseName: Option[String],
+    @(ApiModelProperty @field)(value="The secondary base name of the element.", example="cloud_area_fraction") secondaryBaseName: Option[String],
+    @(ApiModelProperty @field)(value="The innermost aggregation function.", example="max") function1: Option[String],
+    @(ApiModelProperty @field)(value="The outermost aggregation function.", example="mean") function2: Option[String],
+    @(ApiModelProperty @field)(value="The period over which the innermost aggregation function applies.", example="P1D") period1: Option[String],
+    @(ApiModelProperty @field)(value="The period over which the outermost aggregation function applies.", example="P1M") period2: Option[String],
+    @(ApiModelProperty @field)(value="The threshold applicable to the outermost aggregation function.", example="5.0") threshold2: Option[String]
 )
 
 @ApiModel(description="The Met.no legacy element code equivalent(s) of the element.")

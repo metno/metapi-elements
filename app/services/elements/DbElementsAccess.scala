@@ -74,22 +74,60 @@ class DbElementsAccess extends ElementsAccess {
   }
 
   // Extract the calculation method from an element ID.
-  private def extractCalcMethod(oid: Option[String]): Option[Seq[FuncPeriod]] = {
-    val pattern1 = "^([^\\(]+)\\(\\s*([^\\(\\)]+)\\s+([^\\)]+)\\)\\s*$".r // <function>(<basename> <period>)
-    val pattern2 = "^([^\\(]+)\\(([^\\(]+)\\(\\s*(\\S+)\\s+([^\\)]+)\\)\\s*([^\\)]+)\\)\\s*$".r // <function2>(<function1>(<basename> <period1>) <period2>)
+  // scalastyle:off method.length
+  private def extractCalcMethod(oid: Option[String]): Option[CalcMethod] = {
+    // b  = base name
+    // sb = secondary base name
+    // f1 = innermost function
+    // f2 = outermost function
+    // p1 = innermost period
+    // p2 = outermost period
+    // t2 = outermost threshold
+
+    // b
+    val pattern1 = """^\s*([^\s\(\)]+)\s*$""".r
+
+    // f1(b)
+    val pattern2 = """^([^\(]+)\(\s*([^\s\(\)]+)\)\s*$""".r
+
+    // f1(b p1)
+    val pattern3 = """^([^\(]+)\(\s*([^\s\(\)]+)\s+([^\s\(\)]+)\)\s*$""".r
+
+    // f1(b sb p1)
+    val pattern4 = """^([^\(]+)\(\s*([^\s\(\)]+)\s+([^\s\(\)]+)\s+([^\s\(\)]+)\)\s*$""".r
+
+    // f2(f1(b p1) p2)
+    val pattern5 = """^([^\(]+)\(([^\(]+)\(\s*([^\s\(\)]+)\s+([^\s\(\)]+)\s*\)\s+([^\s\(\)]+)\s*\)\s*$""".r
+
+    // f2(f1(b p1) p2 t2)
+    val pattern6 = """^([^\(]+)\(([^\(]+)\(\s*([^\s\(\)]+)\s+([^\s\(\)]+)\s*\)\s+([^\s\(\)]+)\s+([^\s\(\)]+)\s*\)\s*$""".r
 
     oid match {
-      case Some(id) => id match {
-        case pattern1(f, baseName, p) => Some(Seq(FuncPeriod(Some(f.trim), Some(p.trim))))
-        case pattern2(f2, f1, baseName, p1, p2) => Some(Seq(
-          FuncPeriod(Some(f2.trim), Some(p2.trim)),
-          FuncPeriod(Some(f1.trim), Some(p1.trim))
+      case Some(id) => id match { // note order of matching from most specific to least specific
+        case pattern6(f2, f1, b, p1, p2, t2) => Some(CalcMethod(
+          Some(b.trim), None, Some(f1.trim), Some(f2.trim), Some(p1.trim), Some(p2.trim), Some(t2.trim)
+        ))
+        case pattern5(f2, f1, b, p1, p2) => Some(CalcMethod(
+          Some(b.trim), None, Some(f1.trim), Some(f2.trim), Some(p1.trim), Some(p2.trim), None
+        ))
+        case pattern4(f1, b, sb, p1) => Some(CalcMethod(
+          Some(b.trim), Some(sb.trim), Some(f1.trim), None, Some(p1.trim), None, None
+        ))
+        case pattern3(f1, b, p1) => Some(CalcMethod(
+          Some(b.trim), None, Some(f1.trim), None, Some(p1.trim), None, None
+        ))
+        case pattern2(f1, b) => Some(CalcMethod(
+          Some(b.trim), None, Some(f1.trim), None, None, None, None
+        ))
+        case pattern1(b) => Some(CalcMethod(
+          Some(b.trim), None, None, None, None, None, None
         ))
         case _ => None
       }
       case None => None
     }
   }
+  // scalastyle:on method.length
 
   private def getQuery(locale: String): String = {
     s"""
@@ -217,8 +255,18 @@ class DbElementsAccess extends ElementsAccess {
       .filter(e => matchesWords1(e.status, qp.statuses))
       .filter(e => matchesWords1(e.baseName, qp.baseNames))
       .filter(e => matchesWordsN(
-        Some(e.calculationMethod.getOrElse(Seq[FuncPeriod]()).toList.flatMap(fp => List(fp.function.getOrElse(""), fp.period.getOrElse("")))),
-        qp.calculationMethods))
+        Some(e.calculationMethod match {
+          case Some(cm) => List[String](
+            cm.baseName.getOrElse(""),
+            cm.secondaryBaseName.getOrElse(""),
+            cm.function1.getOrElse(""),
+            cm.function2.getOrElse(""),
+            cm.period1.getOrElse(""),
+            cm.period2.getOrElse(""),
+            cm.threshold2.getOrElse("")
+          )
+          case _ => List[String]()
+        }), qp.calculationMethods))
       .filter(e => matchesWords1(e.category, qp.categories))
       .filter(e => if (e.legacyConvention.isEmpty) {
         // keep iff none of the relevant fields are requested
@@ -286,7 +334,6 @@ class DbElementsAccess extends ElementsAccess {
         e.codeTable.getOrElse("").toLowerCase,
         e.status.getOrElse("").toLowerCase,
         e.category.getOrElse("").toLowerCase,
-        e.calculationMethod match { case Some(cm) if cm.nonEmpty => cm.head.function.getOrElse(""); case _ => "" },
         e.cfConvention match { case Some(cfc) => cfc.baseName.getOrElse("").toLowerCase; case None => "" }
         )
       )
