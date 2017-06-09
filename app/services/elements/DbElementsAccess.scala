@@ -233,7 +233,7 @@ class DbElementsAccess extends ElementsAccess {
         "id", "name", "description", "unit", "codetable", "status", "basename", "calculationmethod", "category",
         "legacyelementcodes", "legacyunit", "cfbasename", "cfcellmethod", "cfunit", "cfstatus")
       fields.foreach(f => if (!suppFields.contains(f.toLowerCase)) {
-        throw new BadRequestException(s"Unsupported field: $f.toLowerCase", Some(s"Supported fields: ${suppFields.mkString(", ")}"))
+        throw new BadRequestException(s"Unsupported field: ${f.toLowerCase}", Some(s"Supported fields: ${suppFields.mkString(", ")}"))
       })
 
 
@@ -391,7 +391,7 @@ class DbElementsAccess extends ElementsAccess {
       val fields: Set[String] = FieldSpecification.parse(qp.fields)
       val suppFields = Set("function", "unit", "description")
       fields.foreach(f => if (!suppFields.contains(f.toLowerCase)) {
-        throw new BadRequestException(s"Unsupported field: $f.toLowerCase", Some(s"Supported fields: ${suppFields.mkString(", ")}"))
+        throw new BadRequestException(s"Unsupported field: ${f.toLowerCase}", Some(s"Supported fields: ${suppFields.mkString(", ")}"))
       })
 
       val functions = DB.withConnection("elements") { implicit connection =>

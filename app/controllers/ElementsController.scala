@@ -150,7 +150,7 @@ class ElementsController @Inject()(elementsAccess: ElementsAccess) extends Contr
 
 
   /**
-    * GET calculation method descriptions from elements-db
+    * GET calculation descriptions of calculation method functions from elements-db
     */
   @ApiOperation(
     value = "Get descriptions of calculation method functions.",
@@ -168,7 +168,7 @@ class ElementsController @Inject()(elementsAccess: ElementsAccess) extends Contr
     @ApiParam(value = "The calculation method functions to get descriptions for as a comma-separated list of <a href=concepts#searchfilter>search filters</a>.",
       required = false)
     functions: Option[String],
-    @ApiParam(value = "The information to return as a comma-separated list of 'method', 'unit', or 'description'. For example 'method,description'. If omitted, all fields are returned.",
+    @ApiParam(value = "The information to return as a comma-separated list of 'function', 'unit', or 'description'. For example 'function,description'. If omitted, all fields are returned.",
       required = false)
     fields: Option[String],
     @ApiParam(value = "ISO language/locale to be used for search filters and return values.",
