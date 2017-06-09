@@ -25,7 +25,7 @@
 
 package services.elements
 
-import models.Element
+import models._
 //import scala.util._
 //import no.met.data._
 //import no.met.geometry._
@@ -41,6 +41,10 @@ case class ElementsQueryParameters(
   cfCellMethods: Option[String], cfUnits: Option[String], cfStatuses: Option[String], fields: Option[String] = None,
   lang: Option[String] = None)
 
+/**
+  * Holds query string parameters from the original request for the calculationMethods endpoint.
+  */
+case class CalcMethodFunctionsQueryParameters(functions: Option[String] = None, fields: Option[String] = None, lang: Option[String] = None)
 
 /**
   * Interface for overall elements access. Implementations of this interface are injected in the controller in either production or
@@ -52,4 +56,10 @@ trait ElementsAccess {
     * Extracts elements based on query parameters.
     */
   def elements(qp: ElementsQueryParameters): List[Element]
+
+  /**
+    * Extracts calculation method functions based on query parameters.
+    */
+  def calcMethodFunctions(qp: CalcMethodFunctionsQueryParameters): List[CalcMethodFunction]
+
 }

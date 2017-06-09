@@ -58,6 +58,10 @@ class MockElementsAccess extends ElementsAccess {
     ))
   }
 
+  override def calcMethodFunctions(qp: CalcMethodFunctionsQueryParameters): List[CalcMethodFunction] = {
+    List(CalcMethodFunction(Some("dummy function"), Some("dummy unit"), Some("dummy description")))
+  }
+
 }
 
 // scalastyle:on

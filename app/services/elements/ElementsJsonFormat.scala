@@ -37,7 +37,7 @@ import models._
 /**
  * Creating a json representation of elements data
  */
-class JsonFormat extends BasicJsonFormat {
+class ElementsJsonFormat extends BasicJsonFormat {
 
   implicit val cfWrites = Json.writes[CfConvention]
 
