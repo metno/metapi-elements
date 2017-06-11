@@ -169,7 +169,7 @@ class DbElementsAccess extends ElementsAccess {
         |  category,
         |  legacymetnoconvention_elemcodes AS legacy_elemcodes,
         |  legacymetnoconvention_unit AS legacy_unit,
-        |  cfconvention_basename AS cf_basename,
+        |  cfconvention_standardname AS cf_standardname,
         |  cfconvention_cellmethod AS cf_cellmethod,
         |  cfconvention_unit AS cf_unit,
         |  cfconvention_status AS cf_status
@@ -189,11 +189,11 @@ class DbElementsAccess extends ElementsAccess {
         get[Option[String]]("category") ~
         get[Option[Array[Option[String]]]]("legacy_elemcodes") ~
         get[Option[String]]("legacy_unit") ~
-        get[Option[String]]("cf_basename") ~
+        get[Option[String]]("cf_standardname") ~
         get[Option[String]]("cf_cellmethod") ~
         get[Option[String]]("cf_unit") ~
         get[Option[String]]("cf_status") map {
-        case id~name~description~unit~codeTable~status~baseName~category~legacyCodes~legacyUnit~cfBaseName~cfCellMethod~cfUnit~cfStatus
+        case id~name~description~unit~codeTable~status~baseName~category~legacyCodes~legacyUnit~cfStandardName~cfCellMethod~cfUnit~cfStatus
         => Element(
           id,
           name,
@@ -215,8 +215,8 @@ class DbElementsAccess extends ElementsAccess {
           } else {
             None
           },
-          if (cfBaseName.nonEmpty) {
-            Some(CfConvention(cfBaseName, cfCellMethod, cfUnit, cfStatus))
+          if (cfStandardName.nonEmpty) {
+            Some(CfConvention(cfStandardName, cfCellMethod, cfUnit, cfStatus))
           } else {
             None
           }
@@ -231,7 +231,7 @@ class DbElementsAccess extends ElementsAccess {
       val fields: Set[String] = FieldSpecification.parse(qp.fields)
       val suppFields = Set(
         "id", "name", "description", "unit", "codetable", "status", "basename", "calculationmethod", "category",
-        "legacyelementcodes", "legacyunit", "cfbasename", "cfcellmethod", "cfunit", "cfstatus")
+        "legacyelementcodes", "legacyunit", "cfstandardname", "cfcellmethod", "cfunit", "cfstatus")
       fields.foreach(f => if (!suppFields.contains(f.toLowerCase)) {
         throw new BadRequestException(s"Unsupported field: ${f.toLowerCase}", Some(s"Supported fields: ${suppFields.mkString(", ")}"))
       })
@@ -255,7 +255,7 @@ class DbElementsAccess extends ElementsAccess {
       val omitCategory = fields.nonEmpty && !fields.contains("category")
       val omitLegacyElemCodes = fields.nonEmpty && !fields.contains("legacyelemcodes")
       val omitLegacyUnit = fields.nonEmpty && !fields.contains("legacyunit")
-      val omitCfBaseName = fields.nonEmpty && !fields.contains("cfbasename")
+      val omitCfStandardName = fields.nonEmpty && !fields.contains("cfstandardname")
       val omitCfCellMethod = fields.nonEmpty && !fields.contains("cfcellmethod")
       val omitCfUnit = fields.nonEmpty && !fields.contains("cfunit")
       val omitCfStatus = fields.nonEmpty && !fields.contains("cfstatus")
@@ -293,13 +293,13 @@ class DbElementsAccess extends ElementsAccess {
         })
         .filter(e => if (e.cfConvention.isEmpty) {
           // keep iff none of the relevant fields are requested
-          qp.cfBaseNames.getOrElse("").trim.isEmpty &&
+          qp.cfStandardNames.getOrElse("").trim.isEmpty &&
             qp.cfCellMethods.getOrElse("").trim.isEmpty &&
             qp.cfUnits.getOrElse("").trim.isEmpty &&
             qp.cfStatuses.getOrElse("").trim.isEmpty
         } else {
           val cfc = e.cfConvention.get
-          MatcherUtil.matchesWords1(cfc.baseName, qp.cfBaseNames) &&
+          MatcherUtil.matchesWords1(cfc.standardName, qp.cfStandardNames) &&
             MatcherUtil.matchesWords1(cfc.cellMethod, qp.cfCellMethods) &&
             MatcherUtil.matchesWords1(cfc.unit, qp.cfUnits) &&
             MatcherUtil.matchesWords1(cfc.status, qp.cfStatuses)
@@ -326,13 +326,13 @@ class DbElementsAccess extends ElementsAccess {
               case None => None // no fields available, so omit object
             }
           },
-          cfConvention = if (omitCfBaseName && omitCfCellMethod && omitCfUnit && omitCfStatus) {
+          cfConvention = if (omitCfStandardName && omitCfCellMethod && omitCfUnit && omitCfStatus) {
             None // no fields requsted, so omit object
           } else {
             // at least one field requested
             e.cfConvention match {
               case Some(cc) => Some(cc.copy(// fields available, so output the requested ones
-                baseName = if (omitCfBaseName) None else cc.baseName,
+                standardName = if (omitCfStandardName) None else cc.standardName,
                 cellMethod = if (omitCfCellMethod) None else cc.cellMethod,
                 unit = if (omitCfUnit) None else cc.unit,
                 status = if (omitCfStatus) None else cc.status
@@ -351,7 +351,7 @@ class DbElementsAccess extends ElementsAccess {
         e.status.getOrElse("").toLowerCase,
         e.category.getOrElse("").toLowerCase,
         e.cfConvention match {
-          case Some(cfc) => cfc.baseName.getOrElse("").toLowerCase;
+          case Some(cfc) => cfc.standardName.getOrElse("").toLowerCase;
           case None => ""
         }
         )

@@ -91,9 +91,9 @@ class ElementsController @Inject()(elementsAccess: ElementsAccess) extends Contr
     @ApiParam(value = "The legacy MET Norway units to get metadata for as a comma-separated list of <a href=concepts#searchfilter>search filters</a>.",
               required = false)
               legacyUnits: Option[String],
-    @ApiParam(value = "The CF base names to get metadata for as a comma-separated list of <a href=concepts#searchfilter>search filters</a>.",
+    @ApiParam(value = "The CF standard names to get metadata for as a comma-separated list of <a href=concepts#searchfilter>search filters</a>.",
               required = false)
-              cfBaseNames: Option[String],
+              cfStandardNames: Option[String],
     @ApiParam(value = "The CF cell methods to get metadata for as a comma-separated list of <a href=concepts#searchfilter>search filters</a>.",
               required = false)
               cfCellMethods: Option[String],
@@ -122,11 +122,11 @@ class ElementsController @Inject()(elementsAccess: ElementsAccess) extends Contr
     Try  {
       // ensure that the query string contains supported fields only
       QueryStringUtil.ensureSubset(Set("ids", "names", "descriptions", "units", "codeTables", "statuses", "baseNames", "calculationMethods",
-        "categories", "legacyElementCodes", "legacyUnits", "cfBaseNames", "cfCellMethods", "cfUnits", "cfStatuses", "fields", "lang"),
+        "categories", "legacyElementCodes", "legacyUnits", "cfStandardNames", "cfCellMethods", "cfUnits", "cfStatuses", "fields", "lang"),
         request.queryString.keySet)
 
       elementsAccess.elements(ElementsQueryParameters(ids, names, descriptions, units, codeTables, statuses, baseNames, calculationMethods,
-        categories, legacyElementCodes, legacyUnits, cfBaseNames, cfCellMethods, cfUnits, cfStatuses, fields, lang))
+        categories, legacyElementCodes, legacyUnits, cfStandardNames, cfCellMethods, cfUnits, cfStatuses, fields, lang))
     } match {
       case Success(data) =>
         if (data isEmpty) {

@@ -87,7 +87,7 @@ case class LegacyMetNoConvention(
 
 @ApiModel(description="The CF convention equivalent of the element.")
 case class CfConvention(
-    @(ApiModelProperty @field)(value="The CF base name of the element.", example="air_temperature") baseName: Option[String],
+    @(ApiModelProperty @field)(value="The CF standard name of the element.", example="air_temperature") standardName: Option[String],
     @(ApiModelProperty @field)(value="The CF cell method(s) for the element, if any.", example="null") cellMethod: Option[String],
     @(ApiModelProperty @field)(value="The unit of the CF element.", example="kelvin") unit: Option[String],
     @(ApiModelProperty @field)(value="The status of the CF name; either a reference to the CF version, Met Norway local standard or test.", example="cf28") status: Option[String]
