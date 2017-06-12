@@ -169,7 +169,7 @@ class DbElementsAccess extends ElementsAccess {
         |  category,
         |  legacymetnoconvention_elemcodes AS legacy_elemcodes,
         |  legacymetnoconvention_unit AS legacy_unit,
-        |  cfconvention_standardname AS cf_standardname,
+        |  cfconvention_basename AS cf_standardname,
         |  cfconvention_cellmethod AS cf_cellmethod,
         |  cfconvention_unit AS cf_unit,
         |  cfconvention_status AS cf_status
