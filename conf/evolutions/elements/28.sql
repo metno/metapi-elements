@@ -100,16 +100,16 @@ UPDATE cf_element SET element_id='over_time(precipitation_type_primary_significa
 UPDATE kdvh_element SET element_id='over_time(precipitation_type_primary_significance P1D)' WHERE element_id='max(timeperiod_weather_type_significance1 P1D)';
 
 --update codetable values
-delete from codetable_entry where codetable_id='weather_symbol' and value=22;
+delete from codetable_entry where codetable_id='weather_symbol' and value='22';
 
 insert into codetable_entry (value, codetable_id, meaning, meaning_locale) 
-values (22, 'weather_symbol','Torden og regn', 'nb-NO');
+values ('22', 'weather_symbol','Torden og regn', 'nb-NO');
 
 insert into codetable_entry (value, codetable_id, meaning, meaning_locale) 
-values (22, 'weather_symbol','TorevÃªr og regn', 'nn-NO');
+values ('22', 'weather_symbol','TorevÃªr og regn', 'nn-NO');
 
 insert into codetable_entry (value, codetable_id, meaning, meaning_locale) 
-values (22, 'weather_symbol','Thunder and rain', 'en-US');
+values ('22', 'weather_symbol','Thunder and rain', 'en-US');
 
 
 # --- !Downs
