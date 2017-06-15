@@ -43,7 +43,7 @@ class MockElementsAccess extends ElementsAccess {
       Some("dummy code table"),
       Some("dummy status"),
       Some("dummy base name"),
-      Some(CalcMethod(None, None, None, None, None, None, None)),
+      Some(CalcMethod(None, None, None, None, None, None, None, None, None, None, None)),
       Some("dummy category"),
       Some(LegacyMetNoConvention(
         Some(Seq("dummy elemCode 1", "dummy elemCode 2")),
@@ -56,10 +56,6 @@ class MockElementsAccess extends ElementsAccess {
         Some("dummy status"))
       )
     ))
-  }
-
-  override def calcMethodFunctions(qp: CalcMethodFunctionsQueryParameters): List[CalcMethodFunction] = {
-    List(CalcMethodFunction(Some("dummy function"), Some("dummy unit"), Some("dummy description")))
   }
 
 }

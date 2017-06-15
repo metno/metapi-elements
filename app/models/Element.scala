@@ -72,11 +72,15 @@ case class Element(
 case class CalcMethod(
     @(ApiModelProperty @field)(value="The base name of the element", example="wind_speed") baseName: Option[String],
     @(ApiModelProperty @field)(value="The secondary base name of the element.", example="cloud_area_fraction") secondaryBaseName: Option[String],
-    @(ApiModelProperty @field)(value="The innermost aggregation function.", example="max") function1: Option[String],
-    @(ApiModelProperty @field)(value="The outermost aggregation function.", example="mean") function2: Option[String],
-    @(ApiModelProperty @field)(value="The period over which the innermost aggregation function applies.", example="P1D") period1: Option[String],
-    @(ApiModelProperty @field)(value="The period over which the outermost aggregation function applies.", example="P1M") period2: Option[String],
-    @(ApiModelProperty @field)(value="The threshold applicable to the outermost aggregation function.", example="5.0") threshold2: Option[String]
+    @(ApiModelProperty @field)(value="The innermost function.", example="max") function1: Option[String],
+    @(ApiModelProperty @field)(value="The outermost function.", example="mean") function2: Option[String],
+    @(ApiModelProperty @field)(value="The period over which the innermost function applies.", example="P1D") period1: Option[String],
+    @(ApiModelProperty @field)(value="The period over which the outermost function applies.", example="P1M") period2: Option[String],
+    @(ApiModelProperty @field)(value="The threshold applicable to the outermost function.", example="5.0") threshold2: Option[String],
+    @(ApiModelProperty @field)(value="The description of the innermost function.") descrFunction1: Option[String],
+    @(ApiModelProperty @field)(value="The description of the outermost function.") descrFunction2: Option[String],
+    @(ApiModelProperty @field)(value="The unit of the innermost function.") unitFunction1: Option[String],
+    @(ApiModelProperty @field)(value="The unit of the outermost function.") unitFunction2: Option[String]
 )
 
 @ApiModel(description="The Met.no legacy element code equivalent(s) of the element.")

@@ -36,15 +36,9 @@ import models._
   */
 case class ElementsQueryParameters(
   ids: Option[String] = None, names: Option[String] = None, descriptions: Option[String] = None, units: Option[String] = None,
-  codeTables: Option[String] = None, statuses: Option[String], baseNames: Option[String], calculationMethods: Option[String],
+  codeTables: Option[String] = None, statuses: Option[String], baseNames: Option[String], calculationMethod: Option[String],
   categories: Option[String], legacyElementCodes: Option[String], legacyUnits: Option[String], cfStandardNames: Option[String],
-  cfCellMethods: Option[String], cfUnits: Option[String], cfStatuses: Option[String], fields: Option[String] = None,
-  lang: Option[String] = None)
-
-/**
-  * Holds query string parameters from the original request for the calculationMethods endpoint.
-  */
-case class CalcMethodFunctionsQueryParameters(functions: Option[String] = None, fields: Option[String] = None, lang: Option[String] = None)
+  cfCellMethods: Option[String], cfUnits: Option[String], cfStatuses: Option[String], fields: Option[String] = None, lang: Option[String] = None)
 
 /**
   * Interface for overall elements access. Implementations of this interface are injected in the controller in either production or
@@ -56,10 +50,5 @@ trait ElementsAccess {
     * Extracts elements based on query parameters.
     */
   def elements(qp: ElementsQueryParameters): List[Element]
-
-  /**
-    * Extracts calculation method functions based on query parameters.
-    */
-  def calcMethodFunctions(qp: CalcMethodFunctionsQueryParameters): List[CalcMethodFunction]
 
 }

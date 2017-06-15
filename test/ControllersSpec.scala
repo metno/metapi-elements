@@ -63,28 +63,6 @@ class ControllersSpec extends Specification {
 
   }
 
-  "metapi /elements/calculationMethodFunctions" should {
-
-    "test empty query string" in new WithApplication(TestUtil.app) {
-      val response = route(FakeRequest(GET, "/calculationMethodFunctions/v0.jsonld")).get
-      status(response) must equalTo(OK)
-    }
-
-    "test unsupported format" in new WithApplication(TestUtil.app) {
-      val response = route(FakeRequest(GET, "/calculationMethodFunctions/v0.jsonldx")).get
-      status(response) must equalTo(BAD_REQUEST)
-    }
-
-    "test malformed version/format" in new WithApplication(TestUtil.app) {
-      val response = route(FakeRequest(GET, "/calculationMethodFunctions/v(0~jsonldx")).get
-      status(response) must equalTo(NOT_FOUND)
-    }
-
-    // TBD: Add more tests!!!
-
-  }
-
-
 }
 
 // scalastyle:on
