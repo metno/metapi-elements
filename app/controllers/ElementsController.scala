@@ -70,11 +70,11 @@ class ElementsController @Inject()(elementsAccess: ElementsAccess) extends Contr
       required = false)
     descriptions: Option[String],
 
-    @ApiParam(value = "The units to get metadata for as a comma-separated list of <a href=concepts#searchfilter>search filters</a>.",
+    @ApiParam(value = "The units to get metadata for as a comma-separated list of <a href=concepts#searchfilter>search filters</a>. <b>Note:</b> when the unit is 'code', a codetable is use.",
       required = false)
     units: Option[String],
 
-    @ApiParam(value = "The code tables to get metadata for as a comma-separated list of <a href=concepts#searchfilter>search filters</a>.",
+    @ApiParam(value = "The code tables to get metadata for as a comma-separated list of <a href=concepts#searchfilter>search filters</a>. <b>Note:</b> When a codetable is in use, the unit is 'code'.",
       required = false)
     codeTables: Option[String],
 
