@@ -41,6 +41,12 @@ case class ElementsQueryParameters(
   cfCellMethods: Option[String], cfUnits: Option[String], cfStatuses: Option[String], fields: Option[String] = None, lang: Option[String] = None)
 
 /**
+  * Holds query string parameters from the original request for the codeTables/ endpoint.
+  */
+case class CodeTablesQueryParameters(ids: Option[String] = None, fields: Option[String] = None, lang: Option[String] = None)
+
+
+/**
   * Interface for overall elements access. Implementations of this interface are injected in the controller in either production or
   * development mode.
   */
@@ -51,4 +57,8 @@ trait ElementsAccess {
     */
   def elements(qp: ElementsQueryParameters): List[Element]
 
+  /**
+    * Extracts code tables based on query parameters.
+    */
+  def codeTables(qp: CodeTablesQueryParameters): List[CodeTable]
 }

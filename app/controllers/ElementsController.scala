@@ -70,7 +70,7 @@ class ElementsController @Inject()(elementsAccess: ElementsAccess) extends Contr
       required = false)
     descriptions: Option[String],
 
-    @ApiParam(value = "The units to get metadata for as a comma-separated list of <a href=concepts#searchfilter>search filters</a>. <b>Note:</b> when the unit is 'code', a codetable is use.",
+    @ApiParam(value = "The units to get metadata for as a comma-separated list of <a href=concepts#searchfilter>search filters</a>. <b>Note:</b> when the unit is 'code', a codetable is in use.",
       required = false)
     units: Option[String],
 
@@ -127,6 +127,7 @@ class ElementsController @Inject()(elementsAccess: ElementsAccess) extends Contr
       defaultValue = "en-US",
       required = false)
     lang: Option[String],
+
     @ApiParam(value = "The output format of the result.",
       allowableValues = "jsonld",
       defaultValue = "jsonld",
@@ -164,6 +165,70 @@ class ElementsController @Inject()(elementsAccess: ElementsAccess) extends Contr
     }
   }
 
+
+  /**
+    * GET code table metadata data from elements-db
+    */
+  @ApiOperation(
+    value = "Get metadata about MET API code tables.",
+    notes = "Get metadata about the code tables available in the MET API. weather and climate elements that are defined for use in the MET API. A code table defines a small number of discrete values for an element. Use the query parameters to filter which code tables to return and what fields to include for each one. Leave the query parameters blank to select **all** elements.",
+    response = classOf[models.ElementResponse],
+    httpMethod = "GET")
+  @ApiResponses(Array(
+    // scalastyle:off magic.number
+    new ApiResponse(code = 400, message = "Invalid parameter value or malformed request."),
+    new ApiResponse(code = 401, message = "Unauthorized client ID."),
+    new ApiResponse(code = 404, message = "No data was found for the list of query Ids."),
+    new ApiResponse(code = 500, message = "Internal server error.")))
+  // scalastyle:on magic.number
+  def getCodeTables( // scalastyle:ignore public.methods.have.type
+    @ApiParam(value = "The code table IDs to get metadata for as a comma-separated list of <a href=concepts#searchfilter>search filters</a>.",
+      required = false)
+    ids: Option[String],
+
+    @ApiParam(value = "Specify header to list only header information, i.e. code table name and description. Leave the parameter empty to list the code table values as well.",
+      required = false)
+    fields: Option[String],
+
+    @ApiParam(value = "ISO language/locale to be used for search filters and return values.",
+      allowableValues = "en-US,nb-NO,nn-NO",
+      defaultValue = "en-US",
+      required = false)
+    lang: Option[String],
+
+    @ApiParam(value = "The output format of the result.",
+      allowableValues = "jsonld",
+      defaultValue = "jsonld",
+      required = true)
+    format: String) = no.met.security.AuthorizedAction { implicit request =>
+
+    val start = DateTime.now(DateTimeZone.UTC) // start the clock
+
+    Try  {
+      // ensure that the query string contains supported fields only
+      QueryStringUtil.ensureSubset(Set("ids", "fields", "lang"), request.queryString.keySet)
+
+      elementsAccess.codeTables(CodeTablesQueryParameters(ids, fields, lang))
+    } match {
+      case Success(data) =>
+        if (data isEmpty) {
+          Error.error(NOT_FOUND, Some("No data found for this combination of query parameters"), None, start)
+        } else {
+          format.toLowerCase() match {
+            case "jsonld" => Ok(new CodeTablesJsonFormat().format(start, data)) as "application/vnd.no.met.data.codetables-v0+json"
+            case x        => Error.error(BAD_REQUEST, Some(s"Invalid output format: $x"), Some("Supported output formats: jsonld"), start)
+          }
+        }
+      case Failure(x: BadRequestException) =>
+        Error.error(BAD_REQUEST, Some(x getLocalizedMessage), x help, start)
+      case Failure(x) => {
+        //$COVERAGE-OFF$
+        Logger.error(x.getLocalizedMessage)
+        Error.error(INTERNAL_SERVER_ERROR, Some("An internal error occurred"), None, start)
+        //$COVERAGE-ON$
+      }
+    }
+  }
 
 }
 

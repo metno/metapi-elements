@@ -58,6 +58,19 @@ class MockElementsAccess extends ElementsAccess {
     ))
   }
 
+  override def codeTables(qp: CodeTablesQueryParameters): List[CodeTable] = {
+    List(CodeTable(
+      "dummy id",
+      Some("dummy description"),
+      Some("dummy additional info"),
+      Some(Seq[CodeTableValue](CodeTableValue(
+        "dummy value",
+        Some("dummy description"),
+        Some("dummy additional info")
+      )))
+    ))
+  }
+
 }
 
 // scalastyle:on

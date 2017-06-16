@@ -97,7 +97,6 @@ class DbElementsAccess extends ElementsAccess {
 
     private case class CalcMethodFunInfo(description: Option[String], unit: Option[String])
 
-
     private def calcMethodFunInfo(
       function: Option[String], level: Int, elementId: Option[String]): Option[CalcMethodFunInfo] = {
       assert((level == 1) || (level == 2)) // 1 = innermost function, 2 = outermost function
@@ -123,9 +122,6 @@ class DbElementsAccess extends ElementsAccess {
         case None => None
       }
     }
-
-
-
 
     // Extract the calculation method from an element ID.
     // scalastyle:off method.length
@@ -604,7 +600,115 @@ class DbElementsAccess extends ElementsAccess {
   }
 
 
+  private object codeTablesExec {
+
+    private def loadCodeTables(locale: String): List[CodeTable] = {
+      val parser: RowParser[CodeTable] = {
+        get[String]("id") ~
+          get[Option[String]]("description") ~
+          get[Option[String]]("additionalInfo") map {
+          case id~description~additionalInfo => CodeTable(id, description, additionalInfo, None)
+        }
+      }
+
+      val query =
+        s"""
+           |SELECT codetable_id AS id,
+           |  description,
+           |  additional_info AS additionalInfo
+           |FROM codetable_description
+           |WHERE description_locale='$locale';
+          """.stripMargin
+
+      DB.withConnection("elements") { implicit connection =>
+        SQL(query).as(parser *)
+      }
+    }
+
+    private def loadCodeTableValueMap(locale: String): Map[String, Seq[CodeTableValue]] = {
+      val parser: RowParser[(String, Seq[CodeTableValue])] = {
+        get[String]("id") ~
+          get[List[String]]("values") ~
+          get[List[Option[String]]]("descriptions") ~
+          get[List[Option[String]]]("additionalInfos") map {
+          case ctid~values~descriptions~additionalInfos => (
+            ctid,
+            (values, descriptions, additionalInfos).zipped.toList.map(
+              (x: (String, Option[String], Option[String])) => CodeTableValue(x._1, x._2, x._3))
+            )
+        }
+      }
+
+      val query =
+        s"""
+           |SELECT codetable_id AS id,
+           |  array_agg(value) AS values,
+           |  array_agg(meaning) AS descriptions,
+           |  array_agg(additional_info) AS additionalInfos
+           |FROM codetable_entry
+           |WHERE meaning_locale='$locale'
+           |GROUP BY codetable_id;
+          """.stripMargin
+
+      val vmap: Map[String, Seq[CodeTableValue]] = DB.withConnection("elements") { implicit connection =>
+        SQL(query).as(parser *).toMap
+      }
+
+      vmap.map(item => (
+        item._1,
+        item._2.sortBy(ctv =>
+          Try(ctv.value.toInt) match {
+            case Success(v) => v // sort by integer value if possible
+            case _ => 0 // otherwise, don't sort
+          })
+        ))
+    }
+
+    // scalastyle:off cyclomatic.complexity
+    // scalastyle:off method.length
+    def apply(qp: CodeTablesQueryParameters): List[CodeTable] = {
+
+      val fields: Set[String] = FieldSpecification.parse(qp.fields)
+      val suppFields = Set("header")
+      val suppFieldsLC = suppFields.map(_.toLowerCase)
+      fields.foreach(f => if (!suppFieldsLC.contains(f.toLowerCase)) {
+        throw new BadRequestException(s"Unsupported field: $f", Some(s"Supported fields: ${suppFields.mkString(", ")}"))
+      })
+
+      val locale = getLocale(qp.lang)
+
+      val codeTables: List[CodeTable] = loadCodeTables(locale)
+      val codeTableValueMap: Map[String, Seq[CodeTableValue]] = loadCodeTableValueMap(locale)
+
+      val ctabs: List[CodeTable] = codeTables.map(ct =>
+        ct.copy(
+          values = if (codeTableValueMap.contains(ct.id)) Some(codeTableValueMap(ct.id)) else None
+        )
+      )
+
+      val omitValues = fields.contains("header")
+
+      ctabs
+        .filter(ct => MatcherUtil.matchesWords1(Some(ct.id), qp.ids))
+        .map(ct => ct.copy(
+          values = if (omitValues) None else ct.values
+        ))
+        .distinct // eliminate duplicates
+        .sortBy(ct => (
+        ct.id.toLowerCase
+        )
+      )
+
+    }
+
+    // scalastyle:on cyclomatic.complexity
+    // scalastyle:on method.length
+
+  }
+
+
   override def elements(qp: ElementsQueryParameters): List[Element] = elementsExec(qp)
+  override def codeTables(qp: CodeTablesQueryParameters): List[CodeTable] = codeTablesExec(qp)
 }
 
 // $COVERAGE-ON$

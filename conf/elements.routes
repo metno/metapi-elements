@@ -4,3 +4,4 @@
 
 # MET API
 GET    /v0.:format    controllers.ElementsController.getElements(ids: Option[String], names: Option[String], descriptions: Option[String], units: Option[String], codeTables: Option[String], statuses: Option[String], baseNames: Option[String], calculationMethod: Option[String], categories: Option[String], legacyElementCodes: Option[String], legacyUnits: Option[String], cfStandardNames: Option[String], cfCellMethods: Option[String], cfUnits: Option[String], cfStatuses: Option[String], fields: Option[String], lang: Option[String], format: String)
+GET    /codeTables/v0.:format    controllers.ElementsController.getCodeTables(ids: Option[String], fields: Option[String], lang: Option[String], format: String)
