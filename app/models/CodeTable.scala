@@ -58,7 +58,8 @@ case class CodeTable(
   @(ApiModelProperty @field)(value="The code table name.", example="beaufort_wind_scale") id: String,
   @(ApiModelProperty @field)(value="The main description.") description: Option[String],
   @(ApiModelProperty @field)(value="Additional info.") additionalInfo: Option[String],
-  @(ApiModelProperty @field)(value="The possible values defined by the code table.") values: Option[Seq[CodeTableValue]]
+  @(ApiModelProperty @field)(value="The number of values.") size: Int,
+  @(ApiModelProperty @field)(value="The values.") values: Option[Seq[CodeTableValue]]
 )
 
 @ApiModel(description="Metadata for a single code table value.")

@@ -63,6 +63,7 @@ class MockElementsAccess extends ElementsAccess {
       "dummy id",
       Some("dummy description"),
       Some("dummy additional info"),
+      1,
       Some(Seq[CodeTableValue](CodeTableValue(
         "dummy value",
         Some("dummy description"),

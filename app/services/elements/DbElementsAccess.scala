@@ -607,7 +607,7 @@ class DbElementsAccess extends ElementsAccess {
         get[String]("id") ~
           get[Option[String]]("description") ~
           get[Option[String]]("additionalInfo") map {
-          case id~description~additionalInfo => CodeTable(id, description, additionalInfo, None)
+          case id~description~additionalInfo => CodeTable(id, description, additionalInfo, -1, None)
         }
       }
 
@@ -691,6 +691,7 @@ class DbElementsAccess extends ElementsAccess {
       ctabs
         .filter(ct => MatcherUtil.matchesWords1(Some(ct.id), qp.ids))
         .map(ct => ct.copy(
+          size = ct.values.getOrElse(Seq[CodeTableValue]()).size,
           values = if (omitValues) None else ct.values
         ))
         .distinct // eliminate duplicates
