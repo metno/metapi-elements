@@ -172,7 +172,7 @@ class ElementsController @Inject()(elementsAccess: ElementsAccess) extends Contr
   @ApiOperation(
     value = "Get metadata about MET API code tables.",
     notes = "Get metadata about the code tables available in the MET API. weather and climate elements that are defined for use in the MET API. A code table defines a small number of discrete values for an element. Use the query parameters to filter which code tables to return and what fields to include for each one. Leave the query parameters blank to select **all** code tables.",
-    response = classOf[models.ElementResponse],
+    response = classOf[models.CodeTableResponse],
     httpMethod = "GET")
   @ApiResponses(Array(
     // scalastyle:off magic.number
