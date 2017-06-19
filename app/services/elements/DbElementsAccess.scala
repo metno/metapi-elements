@@ -93,6 +93,14 @@ class DbElementsAccess extends ElementsAccess {
   }
 
 
+  private object JsonUtils {
+    def toLowerCase(js: JsValue): JsValue = js match {
+      case JsObject(fields) => JsObject(fields.map { case (k, v) => (k.toLowerCase(), toLowerCase(v)) })
+      case x => x
+    }
+  }
+
+
   private object elementsExec {
 
     private case class CalcMethodFunInfo(description: Option[String], unit: Option[String])
@@ -329,7 +337,7 @@ class DbElementsAccess extends ElementsAccess {
     }
 
     private def keyToVal(jsval: JsValue, key: String): Option[String] = {
-      Try((jsval \ key).get) match {
+      Try((JsonUtils.toLowerCase(jsval) \ key.toLowerCase).get) match {
         case Success(x) => Some({
           val pattern = """^[^\"]*\"(.*)\"[^\"]*$""".r
           x.toString match {
