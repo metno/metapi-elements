@@ -55,32 +55,32 @@ extends BasicResponse( context, responseType, apiVersion, license, createdAt, qu
 
 @ApiModel(description="Metadata for a single element.")
 case class Element(
-    @(ApiModelProperty @field)(value="The MET API id of the element.", example="min(air_temperature PT12H)") id: Option[String],
-    @(ApiModelProperty @field)(value="The name of the element.", example="Minimum temperature (12 hours)") name: Option[String],
-    @(ApiModelProperty @field)(value="The description of the element.", example="Lowest observed temperature last 12 hours") description: Option[String],
-    @(ApiModelProperty @field)(value="The default unit, as used for data (UDUNITS notation). *code* if the unit is described using a code table.", example="degC") unit: Option[String],
-    @(ApiModelProperty @field)(value="If the unit is a *code*, the codetable that describes the codes used.", example="beaufort_scale") codeTable: Option[String],
-    @(ApiModelProperty @field)(value="The status of the element; one of 'CF compatible', 'in review', 'MetNo local convention', or 'test'", example="CF compatible") status: Option[String],
-    @(ApiModelProperty @field)(value="The base name of the element.", example="air_temperature") baseName: Option[String],
-    @(ApiModelProperty @field)(value="The calculation method of the element.") calculationMethod: Option[CalcMethod],
-    @(ApiModelProperty @field)(value="The category of the element.") category: Option[String],
-    @(ApiModelProperty @field)(value="The legacy form of the element.") legacyConvention: Option[LegacyMetNoConvention],
-    @(ApiModelProperty @field)(value="The CF convention equivalent of the element (omitted if no such equivalent exists).") cfConvention: Option[CfConvention]
+  @(ApiModelProperty @field)(value="The MET API id of the element.", example="min(air_temperature PT12H)") id: Option[String],
+  @(ApiModelProperty @field)(value="The name of the element.", example="Minimum temperature (12 hours)") name: Option[String],
+  @(ApiModelProperty @field)(value="The description of the element.", example="Lowest observed temperature last 12 hours") description: Option[String],
+  @(ApiModelProperty @field)(value="The default unit, as used for data (UDUNITS notation). *code* if the unit is described using a code table.", example="degC") unit: Option[String],
+  @(ApiModelProperty @field)(value="If the unit is a *code*, the codetable that describes the codes used.", example="beaufort_scale") codeTable: Option[String],
+  @(ApiModelProperty @field)(value="The status of the element; one of 'CF compatible', 'in review', 'MetNo local convention', or 'test'", example="CF compatible") status: Option[String],
+  @(ApiModelProperty @field)(value="The base name of the element.", example="air_temperature") baseName: Option[String],
+  @(ApiModelProperty @field)(value="The calculation method of the element.") calculationMethod: Option[CalcMethod],
+  @(ApiModelProperty @field)(value="The category of the element.") category: Option[String],
+  @(ApiModelProperty @field)(value="The legacy form of the element.") legacyConvention: Option[LegacyMetNoConvention],
+  @(ApiModelProperty @field)(value="The CF convention equivalent of the element (omitted if no such equivalent exists).") cfConvention: Option[CfConvention]
 )
 
 @ApiModel(description="The calculation method for an element.")
 case class CalcMethod(
-    @(ApiModelProperty @field)(value="The base name of the element", example="wind_speed") baseName: Option[String],
-    @(ApiModelProperty @field)(value="The secondary base name of the element.", example="cloud_area_fraction") secondaryBaseName: Option[String],
-    @(ApiModelProperty @field)(value="The innermost function.", example="max") function1: Option[String],
-    @(ApiModelProperty @field)(value="The outermost function.", example="mean") function2: Option[String],
-    @(ApiModelProperty @field)(value="The period over which the innermost function applies.", example="P1D") period1: Option[String],
-    @(ApiModelProperty @field)(value="The period over which the outermost function applies.", example="P1M") period2: Option[String],
-    @(ApiModelProperty @field)(value="The threshold applicable to the outermost function.", example="5.0") threshold2: Option[String],
-    @(ApiModelProperty @field)(value="The description of the innermost function.") descrFunction1: Option[String],
-    @(ApiModelProperty @field)(value="The description of the outermost function.") descrFunction2: Option[String],
-    @(ApiModelProperty @field)(value="The unit of the innermost function.") unitFunction1: Option[String],
-    @(ApiModelProperty @field)(value="The unit of the outermost function.") unitFunction2: Option[String]
+  @(ApiModelProperty @field)(value="The base name of the element", example="wind_speed") baseName: Option[String],
+  @(ApiModelProperty @field)(value="The secondary base name of the element.", example="cloud_area_fraction") secondaryBaseName: Option[String],
+  @(ApiModelProperty @field)(value="The primary method.", example="mean") method: Option[String],
+  @(ApiModelProperty @field)(value="The inner method.", example="max") innerMethod: Option[String],
+  @(ApiModelProperty @field)(value="The period over which the primary method applies.", example="P1M") period: Option[String],
+  @(ApiModelProperty @field)(value="The period over which the inner method applies.", example="P1D") innerPeriod: Option[String],
+  @(ApiModelProperty @field)(value="The threshold applicable to the primary method.", example="5.0") threshold: Option[String],
+  @(ApiModelProperty @field)(value="The description of the primary method.") methodDescription: Option[String],
+  @(ApiModelProperty @field)(value="The description of the inner method.") innerMethodDescription: Option[String],
+  @(ApiModelProperty @field)(value="The unit of the primary method.") methodUnit: Option[String],
+  @(ApiModelProperty @field)(value="The unit of the inner method.") innerMethodUnit: Option[String]
 )
 
 @ApiModel(description="The Met.no legacy element code equivalent(s) of the element.")
@@ -91,10 +91,10 @@ case class LegacyMetNoConvention(
 
 @ApiModel(description="The CF convention equivalent of the element.")
 case class CfConvention(
-    @(ApiModelProperty @field)(value="The CF standard name of the element.", example="air_temperature") standardName: Option[String],
-    @(ApiModelProperty @field)(value="The CF cell method(s) for the element, if any.", example="null") cellMethod: Option[String],
-    @(ApiModelProperty @field)(value="The unit of the CF element.", example="kelvin") unit: Option[String],
-    @(ApiModelProperty @field)(value="The status of the CF name; either a reference to the CF version, Met Norway local standard or test.", example="cf28") status: Option[String]
+  @(ApiModelProperty @field)(value="The CF standard name of the element.", example="air_temperature") standardName: Option[String],
+  @(ApiModelProperty @field)(value="The CF cell method(s) for the element, if any.", example="null") cellMethod: Option[String],
+  @(ApiModelProperty @field)(value="The unit of the CF element.", example="kelvin") unit: Option[String],
+  @(ApiModelProperty @field)(value="The status of the CF name; either a reference to the CF version, Met Norway local standard or test.", example="cf28") status: Option[String]
 )
 
 // scalastyle:on
