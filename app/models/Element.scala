@@ -61,7 +61,6 @@ case class Element(
   @(ApiModelProperty @field)(value="The default unit, as used for data (UDUNITS notation). *code* if the unit is described using a code table.", example="degC") unit: Option[String],
   @(ApiModelProperty @field)(value="If the unit is a *code*, the codetable that describes the codes used.", example="beaufort_scale") codeTable: Option[String],
   @(ApiModelProperty @field)(value="The status of the element; one of 'CF compatible', 'in review', 'MetNo local convention', or 'test'", example="CF compatible") status: Option[String],
-  @(ApiModelProperty @field)(value="The base name of the element.", example="air_temperature") baseName: Option[String],
   @(ApiModelProperty @field)(value="The calculation method of the element.") calculationMethod: Option[CalcMethod],
   @(ApiModelProperty @field)(value="The category of the element.") category: Option[String],
   @(ApiModelProperty @field)(value="The legacy form of the element.") legacyConvention: Option[LegacyMetNoConvention],

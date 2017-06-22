@@ -218,7 +218,6 @@ class DbElementsAccess extends ElementsAccess {
         |  unit,
         |  codetable,
         |  status,
-        |  basename,
         |  category,
         |  legacymetnoconvention_elemcodes AS legacy_elemcodes,
         |  legacymetnoconvention_unit AS legacy_unit,
@@ -238,7 +237,6 @@ class DbElementsAccess extends ElementsAccess {
         get[Option[String]]("unit") ~
         get[Option[String]]("codetable") ~
         get[Option[String]]("status") ~
-        get[Option[String]]("basename") ~
         get[Option[String]]("category") ~
         get[Option[Array[Option[String]]]]("legacy_elemcodes") ~
         get[Option[String]]("legacy_unit") ~
@@ -246,7 +244,7 @@ class DbElementsAccess extends ElementsAccess {
         get[Option[String]]("cf_cellmethod") ~
         get[Option[String]]("cf_unit") ~
         get[Option[String]]("cf_status") map {
-        case id~name~description~unit~codeTable~status~baseName~category~legacyCodes~legacyUnit~cfStandardName~cfCellMethod~cfUnit~cfStatus
+        case id~name~description~unit~codeTable~status~category~legacyCodes~legacyUnit~cfStandardName~cfCellMethod~cfUnit~cfStatus
         => Element(
           id,
           name,
@@ -254,7 +252,6 @@ class DbElementsAccess extends ElementsAccess {
           unit,
           codeTable,
           status,
-          baseName,
           extractCalcMethod(id),
           category,
           if (legacyCodes.nonEmpty) {
@@ -454,7 +451,6 @@ class DbElementsAccess extends ElementsAccess {
         .filter(e => MatcherUtil.matchesWords1(e.unit, qp.units))
         .filter(e => MatcherUtil.matchesWords1(e.codeTable, qp.codeTables))
         .filter(e => MatcherUtil.matchesWords1(e.status, qp.statuses))
-        .filter(e => MatcherUtil.matchesWords1(e.baseName, qp.baseNames))
         .filter(e => if (e.calculationMethod.isEmpty) {
           // keep iff none of the relevant fields are requested
           cmqp.baseNames.getOrElse("").trim.isEmpty &&
@@ -512,7 +508,6 @@ class DbElementsAccess extends ElementsAccess {
           unit = if (omitUnit) None else e.unit,
           codeTable = if (omitCodeTable) None else e.codeTable,
           status = if (omitStatus) None else e.status,
-          baseName = if (omitBaseName) None else e.baseName,
           calculationMethod = if (omitCMBaseName && omitCMSecondaryBaseName && omitCMMethod
             && omitCMInnerMethod && omitCMPeriod && omitCMInnerPeriod && omitCMThreshold && omitCMMethodDescription
             && omitCMInnerMethodDescription && omitCMMethodUnit && omitCMInnerMethodUnit) {
@@ -583,7 +578,6 @@ class DbElementsAccess extends ElementsAccess {
         .distinct // eliminate duplicates
         .sortBy(e => ( // ### max 9 items in this tuple?! TBD: revise this sorting
         e.id.getOrElse("").toLowerCase,
-        e.baseName.getOrElse("").toLowerCase,
         e.name.getOrElse("").toLowerCase,
         e.unit.getOrElse("").toLowerCase,
         e.codeTable.getOrElse("").toLowerCase,

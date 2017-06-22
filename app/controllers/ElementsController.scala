@@ -82,10 +82,6 @@ class ElementsController @Inject()(elementsAccess: ElementsAccess) extends Contr
       required = false)
     statuses: Option[String],
 
-    @ApiParam(value = "The base names to get metadata for as a comma-separated list of <a href=concepts#searchfilter>search filters</a>.",
-      required = false)
-    baseNames: Option[String],
-
     @ApiParam(value = "The <a href=concepts#calculationmethod>calculation method</a> filter as a JSON object consisting of zero or more key-value pairs: \"&lt;key1&gt;\": \"&lt;value1&gt;\", \"&lt;key2&gt;\": \"&lt;value2&gt;\", ... (note that braces around the object may be omitted, like in this case). Each value is a comma-separated list of <a href=concepts#searchfilter>search filters</a>. The following keys are supported: baseNames, secondaryBaseNames, methods, innerMethods, periods, innerPeriods, thresholds, methodDescriptions, innerMethodDescriptions, methodUnits, innerMethodUnits",
       required = false)
     calculationMethod: Option[String],
@@ -138,11 +134,11 @@ class ElementsController @Inject()(elementsAccess: ElementsAccess) extends Contr
 
     Try  {
       // ensure that the query string contains supported fields only
-      QueryStringUtil.ensureSubset(Set("ids", "names", "descriptions", "units", "codeTables", "statuses", "baseNames", "calculationMethod",
+      QueryStringUtil.ensureSubset(Set("ids", "names", "descriptions", "units", "codeTables", "statuses", "calculationMethod",
         "categories", "legacyElementCodes", "legacyUnits", "cfStandardNames", "cfCellMethods", "cfUnits", "cfStatuses", "fields", "lang"),
         request.queryString.keySet)
 
-      elementsAccess.elements(ElementsQueryParameters(ids, names, descriptions, units, codeTables, statuses, baseNames, calculationMethod,
+      elementsAccess.elements(ElementsQueryParameters(ids, names, descriptions, units, codeTables, statuses, calculationMethod,
         categories, legacyElementCodes, legacyUnits, cfStandardNames, cfCellMethods, cfUnits, cfStatuses, fields, lang))
     } match {
       case Success(data) =>
