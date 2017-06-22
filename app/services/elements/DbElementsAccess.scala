@@ -134,7 +134,6 @@ class DbElementsAccess extends ElementsAccess {
     // scalastyle:off method.length
     private def extractCalcMethod(oid: Option[String]): Option[CalcMethod] = {
       // b  = base name
-      // sb = secondary base name
       // m  = method
       // im = inner method
       // p  = period
@@ -149,42 +148,35 @@ class DbElementsAccess extends ElementsAccess {
       val pattern2 =
         """^([^\(]+)\(([^\(]+)\(\s*([^\s\(\)]+)\s+([^\s\(\)]+)\s*\)\s+([^\s\(\)]+)\s*\)\s*$""".r
 
-      // m(b sb p)
-      val pattern3 =
-        """^([^\(]+)\(\s*([^\s\(\)]+)\s+([^\s\(\)]+)\s+([^\s\(\)]+)\)\s*$""".r
-
       // m(b p)
-      val pattern4 =
+      val pattern3 =
         """^([^\(]+)\(\s*([^\s\(\)]+)\s+([^\s\(\)]+)\)\s*$""".r
 
       // m(b)
-      val pattern5 =
+      val pattern4 =
         """^([^\(]+)\(\s*([^\s\(\)]+)\)\s*$""".r
 
       // b
-      val pattern6 =
+      val pattern5 =
         """^\s*([^\s\(\)]+)\s*$""".r
 
       val calcMethod = oid match {
         case Some(id) => id match {
           // note order of matching from most specific to least specific
           case pattern1(m, im, b, ip, p, t) => Some(CalcMethod(
-            Some(b.trim), None, Some(m.trim), Some(im.trim), Some(p.trim), Some(ip.trim), Some(t.trim), None, None, None, None
+            Some(b.trim), Some(m.trim), Some(im.trim), Some(p.trim), Some(ip.trim), Some(t.trim), None, None, None, None
           ))
           case pattern2(m, im, b, ip, p) => Some(CalcMethod(
-            Some(b.trim), None, Some(m.trim), Some(im.trim), Some(p.trim), Some(ip.trim), None, None, None, None, None
+            Some(b.trim), Some(m.trim), Some(im.trim), Some(p.trim), Some(ip.trim), None, None, None, None, None
           ))
-          case pattern3(m, b, sb, p) => Some(CalcMethod(
-            Some(b.trim), Some(sb.trim), Some(m.trim), None, Some(p.trim), None, None, None, None, None, None
+          case pattern3(m, b, p) => Some(CalcMethod(
+            Some(b.trim), Some(m.trim), None, Some(p.trim), None, None, None, None, None, None
           ))
-          case pattern4(m, b, p) => Some(CalcMethod(
-            Some(b.trim), None, Some(m.trim), None, Some(p.trim), None, None, None, None, None, None
+          case pattern4(m, b) => Some(CalcMethod(
+            Some(b.trim), Some(m.trim), None, None, None, None, None, None, None, None
           ))
-          case pattern5(m, b) => Some(CalcMethod(
-            Some(b.trim), None, Some(m.trim), None, None, None, None, None, None, None, None
-          ))
-          case pattern6(b) => Some(CalcMethod(
-            Some(b.trim), None, None, None, None, None, None, None, None, None, None
+          case pattern5(b) => Some(CalcMethod(
+            Some(b.trim), None, None, None, None, None, None, None, None, None
           ))
           case _ => None
         }
@@ -426,7 +418,6 @@ class DbElementsAccess extends ElementsAccess {
       val omitStatus = fields.nonEmpty && !fields.contains("status")
       val omitBaseName = fields.nonEmpty && !fields.contains("basename")
       val omitCMBaseName = fields.nonEmpty && !fields.contains("cmbasename")
-      val omitCMSecondaryBaseName = fields.nonEmpty && !fields.contains("cmsecondarybasename")
       val omitCMMethod = fields.nonEmpty && !fields.contains("cmmethod")
       val omitCMInnerMethod = fields.nonEmpty && !fields.contains("cminnermethod")
       val omitCMPeriod = fields.nonEmpty && !fields.contains("cmperiod")
@@ -454,7 +445,6 @@ class DbElementsAccess extends ElementsAccess {
         .filter(e => if (e.calculationMethod.isEmpty) {
           // keep iff none of the relevant fields are requested
           cmqp.baseNames.getOrElse("").trim.isEmpty &&
-            cmqp.secondaryBaseNames.getOrElse("").trim.isEmpty &&
             cmqp.methods.getOrElse("").trim.isEmpty &&
             cmqp.innerMethods.getOrElse("").trim.isEmpty &&
             cmqp.periods.getOrElse("").trim.isEmpty &&
@@ -467,7 +457,6 @@ class DbElementsAccess extends ElementsAccess {
         } else {
           val cm = e.calculationMethod.get
           MatcherUtil.matchesWords1(cm.baseName, cmqp.baseNames) &&
-            MatcherUtil.matchesWords1(cm.secondaryBaseName, cmqp.secondaryBaseNames) &&
             MatcherUtil.matchesWords1(cm.method, cmqp.methods) &&
             MatcherUtil.matchesWords1(cm.innerMethod, cmqp.innerMethods) &&
             MatcherUtil.matchesWords1(cm.period, cmqp.periods) &&
@@ -508,7 +497,7 @@ class DbElementsAccess extends ElementsAccess {
           unit = if (omitUnit) None else e.unit,
           codeTable = if (omitCodeTable) None else e.codeTable,
           status = if (omitStatus) None else e.status,
-          calculationMethod = if (omitCMBaseName && omitCMSecondaryBaseName && omitCMMethod
+          calculationMethod = if (omitCMBaseName && omitCMMethod
             && omitCMInnerMethod && omitCMPeriod && omitCMInnerPeriod && omitCMThreshold && omitCMMethodDescription
             && omitCMInnerMethodDescription && omitCMMethodUnit && omitCMInnerMethodUnit) {
             None // no fields requsted, so omit object
@@ -518,7 +507,6 @@ class DbElementsAccess extends ElementsAccess {
               e.calculationMethod match {
                 case Some(cm) => Some(cm.copy( // fields available, so output the requested ones
                   baseName = if (omitCMBaseName) None else cm.baseName,
-                  secondaryBaseName = if (omitCMSecondaryBaseName) None else cm.secondaryBaseName,
                   method = if (omitCMMethod) None else cm.method,
                   innerMethod = if (omitCMInnerMethod) None else cm.innerMethod,
                   period = if (omitCMPeriod) None else cm.period,
@@ -533,8 +521,6 @@ class DbElementsAccess extends ElementsAccess {
               }
             } match {
               case Some(cm) if (cm.baseName.nonEmpty
-                || cm.secondaryBaseName.nonEmpty
-                || cm.secondaryBaseName.nonEmpty
                 || cm.method.nonEmpty
                 || cm.innerMethod.nonEmpty
                 || cm.period.nonEmpty

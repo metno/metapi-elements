@@ -42,7 +42,7 @@ class MockElementsAccess extends ElementsAccess {
       Some("dummy unit"),
       Some("dummy code table"),
       Some("dummy status"),
-      Some(CalcMethod(None, None, None, None, None, None, None, None, None, None, None)),
+      Some(CalcMethod(None, None, None, None, None, None, None, None, None, None)),
       Some("dummy category"),
       Some(LegacyMetNoConvention(
         Some(Seq("dummy elemCode 1", "dummy elemCode 2")),

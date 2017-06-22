@@ -70,7 +70,6 @@ case class Element(
 @ApiModel(description="The calculation method for an element.")
 case class CalcMethod(
   @(ApiModelProperty @field)(value="The base name of the element", example="wind_speed") baseName: Option[String],
-  @(ApiModelProperty @field)(value="The secondary base name of the element.", example="cloud_area_fraction") secondaryBaseName: Option[String],
   @(ApiModelProperty @field)(value="The primary method.", example="mean") method: Option[String],
   @(ApiModelProperty @field)(value="The inner method.", example="max") innerMethod: Option[String],
   @(ApiModelProperty @field)(value="The period over which the primary method applies.", example="P1M") period: Option[String],
