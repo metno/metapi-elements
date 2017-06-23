@@ -1,0 +1,435 @@
+# --- !Ups
+
+
+--insert new elements
+insert into element (id, unit) values ('max(snow_temperature PT1H)','degC');
+insert into element (id, unit) values ('min(snow_temperature PT1H)','degC');
+insert into element (id, unit) values ('mean(snow_temperature PT1H)','degC');
+insert into element (id, unit) values ('sea_surface_height','meter');
+insert into element (id, unit) values ('sea_surface_height','meters');
+insert into element (id, unit) values ('sea_surface_primary_wave_spectral_density','m*m/H');
+insert into element (id, unit) values ('snow_temperature','degC');
+insert into element (id, unit) values ('volume_fraction_of_water_in_soil','percent');
+insert into element (id, unit) values ('volume_fraction_of_water_in_soil','prosent');
+
+
+insert into element_name (element_id, name, name_locale) values ('max(snow_temperature PT1H)','Maximum snow temperature','en-US');
+insert into element_name (element_id, name, name_locale) values ('max(snow_temperature PT1H)','Høyeste snøtemperatur','nb-NO');
+insert into element_name (element_id, name, name_locale) values ('max(snow_temperature PT1H)','Høgste snøtemperatur','nn-NO');
+insert into element_name (element_id, name, name_locale) values ('mean(snow_temperature PT1H)','Mean snow temperature','en-US');
+insert into element_name (element_id, name, name_locale) values ('mean(snow_temperature PT1H)','Midlere snøtemperatur','nb-NO');
+insert into element_name (element_id, name, name_locale) values ('mean(snow_temperature PT1H)','Midlere snøtemperatur','nn-NO');
+insert into element_name (element_id, name, name_locale) values ('min(snow_temperature PT1H)','Minuimum snow temperature','en-US');
+insert into element_name (element_id, name, name_locale) values ('min(snow_temperature PT1H)','Laveste snøtemperatur','nb-NO');
+insert into element_name (element_id, name, name_locale) values ('min(snow_temperature PT1H)','Lågste snøtemperatur','nn-NO');
+insert into element_name (element_id, name, name_locale) values ('sea_surface_height','Vannstand','nb-NO');
+insert into element_name (element_id, name, name_locale) values ('sea_surface_height','Vannstand','nn-NO');
+insert into element_name (element_id, name, name_locale) values ('sea_surface_height','Water level','en-US');
+insert into element_name (element_id, name, name_locale) values ('sea_surface_primary_wave_spectral_density','Spectral Density','en-US');
+insert into element_name (element_id, name, name_locale) values ('sea_surface_primary_wave_spectral_density','Spektral tetthet','nb-NO');
+insert into element_name (element_id, name, name_locale) values ('sea_surface_primary_wave_spectral_density','Spektral tettleik','nn-NO');
+insert into element_name (element_id, name, name_locale) values ('snow_temperature','Snow temperature','en-US');
+insert into element_name (element_id, name, name_locale) values ('snow_temperature','Snøtemperatur','nb-NO');
+insert into element_name (element_id, name, name_locale) values ('snow_temperature','Snøtemperatur','nn-NO');
+insert into element_name (element_id, name, name_locale) values ('volume_fraction_of_water_in_soil','	Jordens vanninnhold','nb-NO');
+insert into element_name (element_id, name, name_locale) values ('volume_fraction_of_water_in_soil','Jorda sitt vassinnhald','nn-NO');
+insert into element_name (element_id, name, name_locale) values ('volume_fraction_of_water_in_soil','Soil water','en-US');
+
+
+insert into element_description (element_id, description, description_locale) values ('max(snow_temperature PT1H)','Snow temperature in °C, maximum minute value last hour at different depths','en-US');
+insert into element_description (element_id, description, description_locale) values ('max(snow_temperature PT1H)','Snøtemperatur i °C, maksimum minuttverdi i timen i ulike dybder','nb-NO');
+insert into element_description (element_id, description, description_locale) values ('max(snow_temperature PT1H)','Snøtemperatur i °C, maksimum minuttverdi i timen i ulike djupn','nn-NO');
+insert into element_description (element_id, description, description_locale) values ('mean(snow_temperature PT1H)','Snow temperature in °C, hourly mean value at different depths','en-US');
+insert into element_description (element_id, description, description_locale) values ('mean(snow_temperature PT1H)','Snøtemperatur i °C, timemiddel i ulike dybder','nb-NO');
+insert into element_description (element_id, description, description_locale) values ('mean(snow_temperature PT1H)','Snøtemperatur i °C, timemiddel i ulike djupn','nn-NO');
+insert into element_description (element_id, description, description_locale) values ('min(snow_temperature PT1H)','Snow temperature in °C, minimum minute value last hour at different depths','en-US');
+insert into element_description (element_id, description, description_locale) values ('min(snow_temperature PT1H)','Snøtemperatur i °C, minimum minuttverdi i timen i ulike dybder','nb-NO');
+insert into element_description (element_id, description, description_locale) values ('min(snow_temperature PT1H)','Snøtemperatur i °C, minimum minuttverdi i timen i ulike djupn','nn-NO');
+insert into element_description (element_id, description, description_locale) values ('sea_surface_height','Vannstand relatert til laveste astronomiske tidevann','nb-NO');
+insert into element_description (element_id, description, description_locale) values ('sea_surface_height','Vannstand relatert til laveste astronomiske tidevann','nn-NO');
+insert into element_description (element_id, description, description_locale) values ('sea_surface_height','Water level given relative lower astronomical tide (LAT)','en-US');
+insert into element_description (element_id, description, description_locale) values ('sea_surface_primary_wave_spectral_density','Primary Wave Spectral Density (MIROS)','en-US');
+insert into element_description (element_id, description, description_locale) values ('sea_surface_primary_wave_spectral_density','Primærbølga sin spektrale tettleik (MIROS)','nn-NO');
+insert into element_description (element_id, description, description_locale) values ('sea_surface_primary_wave_spectral_density','Primærbølgens spektral tetthet (MIROS)','nb-NO');
+insert into element_description (element_id, description, description_locale) values ('snow_temperature','Snow temperature in °C, now value in various depths','en-US');
+insert into element_description (element_id, description, description_locale) values ('snow_temperature','Snøtemperatur i °C, nåverdi i ulike dybder','nb-NO');
+insert into element_description (element_id, description, description_locale) values ('snow_temperature','Snøtemperatur i °C, nåverdi i ulike djupn','nn-NO');
+insert into element_description (element_id, description, description_locale) values ('volume_fraction_of_water_in_soil','Jorda sitt vassinnhald i ulike djupn','nn-NO');
+insert into element_description (element_id, description, description_locale) values ('volume_fraction_of_water_in_soil','Jordens vanninnhold i ulike dyder','nb-NO');
+insert into element_description (element_id, description, description_locale) values ('volume_fraction_of_water_in_soil','Soil water at different depths','en-US');
+
+
+insert into kdvh_element (element_id, elem_code,category,unit) values ('max(snow_temperature PT1H)','TSX125','Temperature','degC');
+insert into kdvh_element (element_id, elem_code,category,unit) values ('max(snow_temperature PT1H)','TSX175','Temperature','degC');
+insert into kdvh_element (element_id, elem_code,category,unit) values ('max(snow_temperature PT1H)','TSX25','Temperature','degC');
+insert into kdvh_element (element_id, elem_code,category,unit) values ('max(snow_temperature PT1H)','TSX75','Temperature','degC');
+insert into kdvh_element (element_id, elem_code,category,unit) values ('mean(snow_temperature PT1H)','TSM125','Temperature','degC');
+insert into kdvh_element (element_id, elem_code,category,unit) values ('mean(snow_temperature PT1H)','TSM175','Temperature','degC');
+insert into kdvh_element (element_id, elem_code,category,unit) values ('mean(snow_temperature PT1H)','TSM25','Temperature','degC');
+insert into kdvh_element (element_id, elem_code,category,unit) values ('mean(snow_temperature PT1H)','TSM75','Temperature','degC');
+insert into kdvh_element (element_id, elem_code,category,unit) values ('min(snow_temperature PT1H)','TSN125','Temperature','degC');
+insert into kdvh_element (element_id, elem_code,category,unit) values ('min(snow_temperature PT1H)','TSN175','Temperature','degC');
+insert into kdvh_element (element_id, elem_code,category,unit) values ('min(snow_temperature PT1H)','TSN25','Temperature','degC');
+insert into kdvh_element (element_id, elem_code,category,unit) values ('min(snow_temperature PT1H)','TSN75','Temperature','degC');
+insert into kdvh_element (element_id, elem_code,category,unit) values ('sea_surface_height','X1WL','Water level','meters');
+insert into kdvh_element (element_id, elem_code,category,unit) values ('sea_surface_height','X2WL','Water level','meters');
+insert into kdvh_element (element_id, elem_code,category,unit) values ('sea_surface_primary_wave_spectral_density','X1SDP1','Waves','m*m/H');
+insert into kdvh_element (element_id, elem_code,category,unit) values ('sea_surface_primary_wave_spectral_density','X2SDP1','Waves','m*m/H');
+insert into kdvh_element (element_id, elem_code,category,unit) values ('snow_temperature','TSA125','Temperature','degC');
+insert into kdvh_element (element_id, elem_code,category,unit) values ('snow_temperature','TSA175','Temperature','degC');
+insert into kdvh_element (element_id, elem_code,category,unit) values ('snow_temperature','TSA25','Temperature','degC');
+insert into kdvh_element (element_id, elem_code,category,unit) values ('snow_temperature','TSA75','Temperature','degC');
+insert into kdvh_element (element_id, elem_code,category,unit) values ('volume_fraction_of_water_in_soil','SW10','Water','percent');
+insert into kdvh_element (element_id, elem_code,category,unit) values ('volume_fraction_of_water_in_soil','SW20','Water','percent');
+insert into kdvh_element (element_id, elem_code,category,unit) values ('volume_fraction_of_water_in_soil','SW30','Water','percent');
+insert into kdvh_element (element_id, elem_code,category,unit) values ('volume_fraction_of_water_in_soil','SW40','Water','percent');
+
+
+Insert into ELEMENT_CATEGORY (ELEMENT_ID, CATEGORY, CATEGORY_LOCALE) Values ('mean(snow_temperature PT1H)', 'Temperature', 'en-US');
+Insert into ELEMENT_CATEGORY (ELEMENT_ID, CATEGORY, CATEGORY_LOCALE) Values ('mean(snow_temperature PT1H)', 'Temperatur', 'nb-NO');
+Insert into ELEMENT_CATEGORY (ELEMENT_ID, CATEGORY, CATEGORY_LOCALE) Values ('mean(snow_temperature PT1H)', 'Temperatur', 'nn-NO');
+
+
+
+--creates the tables containing information about elements containing level information
+
+CREATE TABLE sensorlevel (
+  id TEXT NOT NULL,
+  level_unit TEXT NOT NULL
+  
+);
+
+insert into sensorlevel ( id, level_unit) values ('height_above_ground', 'm');
+insert into sensorlevel ( id, level_unit) values ('depth_below_surface', 'cm');
+insert into sensorlevel ( id, level_unit) values ('depth_below_sea_surface', 'm');
+
+
+--combine the sensor levels to the element_id
+
+CREATE TABLE element_sensorlevel (
+  element_id TEXT NOT NULL,
+  sensorlevel_id TEXT NOT NULL,
+  default_level TEXT NOT NULL,
+  level_value TEXT NOT NULL
+);
+
+
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('from_direction_of_max(wind_speed PT1H)', 'height_above_ground', 10, '10');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('from_direction_of_max(wind_speed PT1H)', 'height_above_ground', 10, '2');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('from_direction_of_max(wind_speed_of_gust PT1H)', 'height_above_ground', 10, '10');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('from_direction_of_max(wind_speed_of_gust PT1H)', 'height_above_ground', 10, '2');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('max(snow_temperature PT1H)', 'depth_below_surface', 10, '125');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('max(snow_temperature PT1H)', 'depth_below_surface', 10, '175');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('max(snow_temperature PT1H)', 'depth_below_surface', 10, '25');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('max(snow_temperature PT1H)', 'depth_below_surface', 10, '75');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('max(wind_speed P1D)', 'height_above_ground', 10, '10');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('max(wind_speed P1D)', 'height_above_ground', 10, '2');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('max(wind_speed P1M)', 'height_above_ground', 10, '10');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('max(wind_speed P1M)', 'height_above_ground', 10, '2');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('max(wind_speed PT1H)', 'height_above_ground', 10, '10');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('max(wind_speed PT1H)', 'height_above_ground', 10, '2');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('max(wind_speed_of_gust PT1H)', 'height_above_ground', 10, '10');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('max(wind_speed_of_gust PT1H)', 'height_above_ground', 10, '2');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('mean(snow_temperature PT1H)', 'depth_below_surface', 10, '125');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('mean(snow_temperature PT1H)', 'depth_below_surface', 10, '175');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('mean(snow_temperature PT1H)', 'depth_below_surface', 10, '25');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('mean(snow_temperature PT1H)', 'depth_below_surface', 10, '75');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('mean(soil_temperature PT1H)', 'depth_below_surface', 10, '1');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('mean(soil_temperature PT1H)', 'depth_below_surface', 10, '10');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('mean(soil_temperature PT1H)', 'depth_below_surface', 10, '100');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('mean(soil_temperature PT1H)', 'depth_below_surface', 10, '2');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('mean(soil_temperature PT1H)', 'depth_below_surface', 10, '20');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('mean(soil_temperature PT1H)', 'depth_below_surface', 10, '30');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('mean(soil_temperature PT1H)', 'depth_below_surface', 10, '5');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('mean(soil_temperature PT1H)', 'depth_below_surface', 10, '50');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('mean(soil_temperature PT1H)', 'height_above_ground', 10, '2');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('mean(wind_from_direction PT1H)', 'height_above_ground', 10, '10');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('mean(wind_from_direction PT1H)', 'height_above_ground', 10, '2');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('mean(wind_speed P1D)', 'height_above_ground', 10, '10');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('mean(wind_speed P1D)', 'height_above_ground', 10, '2');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('mean(wind_speed P1M)', 'height_above_ground', 10, '10');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('mean(wind_speed P1M)', 'height_above_ground', 10, '2');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('mean(wind_speed PT1H)', 'height_above_ground', 10, '10');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('mean(wind_speed PT1H)', 'height_above_ground', 10, '2');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('min(snow_temperature PT1H)', 'depth_below_surface', 10, '125');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('min(snow_temperature PT1H)', 'depth_below_surface', 10, '175');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('min(snow_temperature PT1H)', 'depth_below_surface', 10, '25');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('min(snow_temperature PT1H)', 'depth_below_surface', 10, '75');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('min(wind_speed P1D)', 'height_above_ground', 10, '10');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('min(wind_speed P1D)', 'height_above_ground', 10, '2');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('min(wind_speed P1M)', 'height_above_ground', 10, '10');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('min(wind_speed P1M)', 'height_above_ground', 10, '2');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('sea_water_speed', 'depth_below_sea_surface', 10, '147');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('sea_water_speed', 'depth_below_sea_surface', 10, '15');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('sea_water_speed', 'depth_below_sea_surface', 10, '18');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('sea_water_speed', 'depth_below_sea_surface', 10, '30');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('sea_water_speed', 'depth_below_sea_surface', 10, '40');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('sea_water_speed', 'depth_below_sea_surface', 10, '69');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('sea_water_speed', 'depth_below_sea_surface', 10, '75');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('sea_water_speed', 'depth_below_sea_surface', 10, '98');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('sea_water_to_direction', 'depth_below_sea_surface', 10, '147');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('sea_water_to_direction', 'depth_below_sea_surface', 10, '15');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('sea_water_to_direction', 'depth_below_sea_surface', 10, '18');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('sea_water_to_direction', 'depth_below_sea_surface', 10, '30');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('sea_water_to_direction', 'depth_below_sea_surface', 10, '40');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('sea_water_to_direction', 'depth_below_sea_surface', 10, '69');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('sea_water_to_direction', 'depth_below_sea_surface', 10, '75');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('sea_water_to_direction', 'depth_below_sea_surface', 10, '98');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('snow_temperature', 'depth_below_surface', 10, '125');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('snow_temperature', 'depth_below_surface', 10, '175');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('snow_temperature', 'depth_below_surface', 10, '25');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('snow_temperature', 'depth_below_surface', 10, '75');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '0');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '1');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '100');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '1000');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '10000');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '1100');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '120');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '1200');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '1300');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '1400');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '15');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '1500');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '160');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '1750');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '20');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '200');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '2000');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '25');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '250');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '2500');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '30');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '300');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '3000');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '350');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '3500');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '40');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '400');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '4000');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '45');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '450');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '4500');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '5');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '50');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '500');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '5000');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '5250');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '550');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '600');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '6000');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '650');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '670');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '700');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '7000');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '750');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '80');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '800');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '8000');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '850');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '8500');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '900');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '9000');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '95');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '950');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '9500');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '9750');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('soil_temperature', 'depth_below_surface', 10, '10');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('volume_fraction_of_water_in_soil', 'depth_below_surface', 10, '10');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('volume_fraction_of_water_in_soil', 'depth_below_surface', 10, '20');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('volume_fraction_of_water_in_soil', 'depth_below_surface', 10, '30');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('volume_fraction_of_water_in_soil', 'depth_below_surface', 10, '40');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('wind_from_direction', 'height_above_ground', 10, '10');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('wind_from_direction', 'height_above_ground', 10, '2');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('wind_speed', 'height_above_ground', 10, '10');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('wind_speed', 'height_above_ground', 10, '2');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('air_temperature', 'height_above_ground', 2, '10');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('air_temperature', 'height_above_ground', 2, '2');
+insert into element_sensorlevel (element_id, sensorlevel_id, default_level, level_value) values ('air_temperature', 'height_above_ground', 2, '25');
+
+
+
+--combine the old elements to the sensor level alter table kdvh_elements
+ALTER TABLE kdvh_element
+  ADD level_value TEXT;
+
+update kdvh_element set level_value=0 where element_id='soil_temperature' and elem_code='TJ0';
+update kdvh_element set level_value=1 where element_id='mean(soil_temperature PT1H)' and elem_code='TJM1';
+update kdvh_element set level_value=1 where element_id='soil_temperature' and elem_code='TJ1';
+update kdvh_element set level_value=10 where element_id='air_temperature' and elem_code='TA10';
+update kdvh_element set level_value=10 where element_id='from_direction_of_max(wind_speed PT1H)' and elem_code='DX_1';
+update kdvh_element set level_value=10 where element_id='from_direction_of_max(wind_speed PT1H)' and elem_code='X1DX';
+update kdvh_element set level_value=10 where element_id='from_direction_of_max(wind_speed PT1H)' and elem_code='X1DX_1';
+update kdvh_element set level_value=10 where element_id='from_direction_of_max(wind_speed_of_gust PT1H)' and elem_code='DG_1';
+update kdvh_element set level_value=10 where element_id='max(wind_speed P1D)' and elem_code='FFX';
+update kdvh_element set level_value=10 where element_id='max(wind_speed P1M)' and elem_code='FFX';
+update kdvh_element set level_value=10 where element_id='max(wind_speed PT1H)' and elem_code='FX_1';
+update kdvh_element set level_value=10 where element_id='max(wind_speed PT1H)' and elem_code='X1FX';
+update kdvh_element set level_value=10 where element_id='max(wind_speed PT1H)' and elem_code='X1FX_1';
+update kdvh_element set level_value=10 where element_id='max(wind_speed_of_gust PT1H)' and elem_code='FG_1';
+update kdvh_element set level_value=10 where element_id='max(wind_speed_of_gust PT1H)' and elem_code='X1FG_1';
+update kdvh_element set level_value=10 where element_id='mean(soil_temperature PT1H)' and elem_code='TJM10';
+update kdvh_element set level_value=10 where element_id='mean(wind_from_direction PT1H)' and elem_code='DDM';
+update kdvh_element set level_value=10 where element_id='mean(wind_speed P1D)' and elem_code='FFM';
+update kdvh_element set level_value=10 where element_id='mean(wind_speed P1M)' and elem_code='FFM';
+update kdvh_element set level_value=10 where element_id='mean(wind_speed PT1H)' and elem_code='FM';
+update kdvh_element set level_value=10 where element_id='mean(wind_speed PT1H)' and elem_code='X1FM';
+update kdvh_element set level_value=10 where element_id='min(wind_speed P1D)' and elem_code='FFN';
+update kdvh_element set level_value=10 where element_id='min(wind_speed P1M)' and elem_code='FFN';
+update kdvh_element set level_value=10 where element_id='soil_temperature' and elem_code='TJ10';
+update kdvh_element set level_value=10 where element_id='soil_temperature' and elem_code='X1TJM10';
+update kdvh_element set level_value=10 where element_id='volume_fraction_of_water_in_soil' and elem_code='SW10';
+update kdvh_element set level_value=10 where element_id='wind_from_direction' and elem_code='DD';
+update kdvh_element set level_value=10 where element_id='wind_from_direction' and elem_code='DD06';
+update kdvh_element set level_value=10 where element_id='wind_from_direction' and elem_code='DD12';
+update kdvh_element set level_value=10 where element_id='wind_from_direction' and elem_code='DD18';
+update kdvh_element set level_value=10 where element_id='wind_from_direction' and elem_code='X1DD';
+update kdvh_element set level_value=10 where element_id='wind_from_direction' and elem_code='X2DD';
+update kdvh_element set level_value=10 where element_id='wind_speed' and elem_code='FF';
+update kdvh_element set level_value=10 where element_id='wind_speed' and elem_code='X1FF';
+update kdvh_element set level_value=10 where element_id='wind_speed' and elem_code='X2FF';
+update kdvh_element set level_value=100 where element_id='mean(soil_temperature PT1H)' and elem_code='TJM100';
+update kdvh_element set level_value=100 where element_id='soil_temperature' and elem_code='TJ100';
+update kdvh_element set level_value=1000 where element_id='soil_temperature' and elem_code='TJ1000';
+update kdvh_element set level_value=1000 where element_id='soil_temperature' and elem_code='X1TJ1000';
+update kdvh_element set level_value=10000 where element_id='soil_temperature' and elem_code='TJ10000';
+update kdvh_element set level_value=1100 where element_id='soil_temperature' and elem_code='TJ1100';
+update kdvh_element set level_value=1100 where element_id='soil_temperature' and elem_code='X1TJ1100';
+update kdvh_element set level_value=120 where element_id='soil_temperature' and elem_code='TJ120';
+update kdvh_element set level_value=120 where element_id='soil_temperature' and elem_code='X1TJ120';
+update kdvh_element set level_value=1200 where element_id='soil_temperature' and elem_code='TJ1200';
+update kdvh_element set level_value=125 where element_id='max(snow_temperature PT1H)' and elem_code='TSX125';
+update kdvh_element set level_value=125 where element_id='mean(snow_temperature PT1H)' and elem_code='TSM125';
+update kdvh_element set level_value=125 where element_id='min(snow_temperature PT1H)' and elem_code='TSN125';
+update kdvh_element set level_value=125 where element_id='snow_temperature' and elem_code='TSA125';
+update kdvh_element set level_value=1300 where element_id='soil_temperature' and elem_code='TJ1300';
+update kdvh_element set level_value=1300 where element_id='soil_temperature' and elem_code='X1TJ1300';
+update kdvh_element set level_value=1400 where element_id='soil_temperature' and elem_code='TJ1400';
+update kdvh_element set level_value=147 where element_id='sea_water_speed' and elem_code='CV147';
+update kdvh_element set level_value=147 where element_id='sea_water_speed' and elem_code='X1CV147';
+update kdvh_element set level_value=147 where element_id='sea_water_to_direction' and elem_code='CD147';
+update kdvh_element set level_value=147 where element_id='sea_water_to_direction' and elem_code='X1CD147';
+update kdvh_element set level_value=15 where element_id='sea_water_speed' and elem_code='CV15';
+update kdvh_element set level_value=15 where element_id='sea_water_to_direction' and elem_code='CD15';
+update kdvh_element set level_value=15 where element_id='soil_temperature' and elem_code='TJ15';
+update kdvh_element set level_value=1500 where element_id='soil_temperature' and elem_code='TJ1500';
+update kdvh_element set level_value=1500 where element_id='soil_temperature' and elem_code='X1TJ1500';
+update kdvh_element set level_value=160 where element_id='soil_temperature' and elem_code='TJ160';
+update kdvh_element set level_value=160 where element_id='soil_temperature' and elem_code='X1TJ160';
+update kdvh_element set level_value=175 where element_id='max(snow_temperature PT1H)' and elem_code='TSX175';
+update kdvh_element set level_value=175 where element_id='mean(snow_temperature PT1H)' and elem_code='TSM175';
+update kdvh_element set level_value=175 where element_id='min(snow_temperature PT1H)' and elem_code='TSN175';
+update kdvh_element set level_value=175 where element_id='snow_temperature' and elem_code='TSA175';
+update kdvh_element set level_value=1750 where element_id='soil_temperature' and elem_code='TJ1750';
+update kdvh_element set level_value=18 where element_id='sea_water_speed' and elem_code='CV18';
+update kdvh_element set level_value=18 where element_id='sea_water_to_direction' and elem_code='CD18';
+update kdvh_element set level_value=2 where element_id='air_temperature' and elem_code='TA';
+update kdvh_element set level_value=2 where element_id='air_temperature' and elem_code='X1TA';
+update kdvh_element set level_value=2 where element_id='air_temperature' and elem_code='X2TA';
+update kdvh_element set level_value=2 where element_id='air_temperature' and elem_code='X3TA';
+update kdvh_element set level_value=2 where element_id='air_temperature' and elem_code='X4TA';
+update kdvh_element set level_value=2 where element_id='air_temperature' and elem_code='X5TA';
+update kdvh_element set level_value=2 where element_id='air_temperature' and elem_code='X6TA';
+update kdvh_element set level_value=2 where element_id='from_direction_of_max(wind_speed PT1H)' and elem_code='DX2_1';
+update kdvh_element set level_value=2 where element_id='from_direction_of_max(wind_speed_of_gust PT1H)' and elem_code='DG2_1';
+update kdvh_element set level_value=2 where element_id='max(wind_speed P1D)' and elem_code='FF2X';
+update kdvh_element set level_value=2 where element_id='max(wind_speed P1M)' and elem_code='FF2X';
+update kdvh_element set level_value=2 where element_id='max(wind_speed PT1H)' and elem_code='FX2_1';
+update kdvh_element set level_value=2 where element_id='max(wind_speed_of_gust PT1H)' and elem_code='FG2_1';
+update kdvh_element set level_value=2 where element_id='mean(soil_temperature PT1H)' and elem_code='TJM';
+update kdvh_element set level_value=2 where element_id='mean(soil_temperature PT1H)' and elem_code='TJM2';
+update kdvh_element set level_value=2 where element_id='mean(wind_from_direction PT1H)' and elem_code='DDM2';
+update kdvh_element set level_value=2 where element_id='mean(wind_speed P1D)' and elem_code='FF2M';
+update kdvh_element set level_value=2 where element_id='mean(wind_speed P1M)' and elem_code='FF2M';
+update kdvh_element set level_value=2 where element_id='mean(wind_speed PT1H)' and elem_code='FM2';
+update kdvh_element set level_value=2 where element_id='min(wind_speed P1D)' and elem_code='FF2N';
+update kdvh_element set level_value=2 where element_id='min(wind_speed P1M)' and elem_code='FF2N';
+update kdvh_element set level_value=2 where element_id='wind_from_direction' and elem_code='DD2';
+update kdvh_element set level_value=2 where element_id='wind_speed' and elem_code='FF2';
+update kdvh_element set level_value=20 where element_id='mean(soil_temperature PT1H)' and elem_code='TJM20';
+update kdvh_element set level_value=20 where element_id='soil_temperature' and elem_code='TJ20';
+update kdvh_element set level_value=20 where element_id='soil_temperature' and elem_code='X1TJ20';
+update kdvh_element set level_value=20 where element_id='soil_temperature' and elem_code='X1TJM20';
+update kdvh_element set level_value=20 where element_id='volume_fraction_of_water_in_soil' and elem_code='SW20';
+update kdvh_element set level_value=200 where element_id='soil_temperature' and elem_code='TJ200';
+update kdvh_element set level_value=200 where element_id='soil_temperature' and elem_code='X1TJ200';
+update kdvh_element set level_value=2000 where element_id='soil_temperature' and elem_code='TJ2000';
+update kdvh_element set level_value=25 where element_id='air_temperature' and elem_code='TA25';
+update kdvh_element set level_value=25 where element_id='max(snow_temperature PT1H)' and elem_code='TSX25';
+update kdvh_element set level_value=25 where element_id='mean(snow_temperature PT1H)' and elem_code='TSM25';
+update kdvh_element set level_value=25 where element_id='min(snow_temperature PT1H)' and elem_code='TSN25';
+update kdvh_element set level_value=25 where element_id='snow_temperature' and elem_code='TSA25';
+update kdvh_element set level_value=25 where element_id='soil_temperature' and elem_code='TJ25';
+update kdvh_element set level_value=250 where element_id='soil_temperature' and elem_code='TJ250';
+update kdvh_element set level_value=250 where element_id='soil_temperature' and elem_code='X1TJ250';
+update kdvh_element set level_value=2500 where element_id='soil_temperature' and elem_code='TJ2500';
+update kdvh_element set level_value=30 where element_id='mean(soil_temperature PT1H)' and elem_code='TJM30';
+update kdvh_element set level_value=30 where element_id='sea_water_speed' and elem_code='CV30';
+update kdvh_element set level_value=30 where element_id='sea_water_speed' and elem_code='X1CV30';
+update kdvh_element set level_value=30 where element_id='sea_water_to_direction' and elem_code='CD30';
+update kdvh_element set level_value=30 where element_id='sea_water_to_direction' and elem_code='X1CD30';
+update kdvh_element set level_value=30 where element_id='soil_temperature' and elem_code='TJ30';
+update kdvh_element set level_value=30 where element_id='volume_fraction_of_water_in_soil' and elem_code='SW30';
+update kdvh_element set level_value=300 where element_id='soil_temperature' and elem_code='TJ300';
+update kdvh_element set level_value=300 where element_id='soil_temperature' and elem_code='X1TJ300';
+update kdvh_element set level_value=3000 where element_id='soil_temperature' and elem_code='TJ3000';
+update kdvh_element set level_value=350 where element_id='soil_temperature' and elem_code='TJ350';
+update kdvh_element set level_value=350 where element_id='soil_temperature' and elem_code='X1TJ350';
+update kdvh_element set level_value=3500 where element_id='soil_temperature' and elem_code='TJ3500';
+update kdvh_element set level_value=40 where element_id='sea_water_speed' and elem_code='CV40';
+update kdvh_element set level_value=40 where element_id='sea_water_to_direction' and elem_code='CD40';
+update kdvh_element set level_value=40 where element_id='soil_temperature' and elem_code='TJ40';
+update kdvh_element set level_value=40 where element_id='soil_temperature' and elem_code='X1TJ40';
+update kdvh_element set level_value=40 where element_id='volume_fraction_of_water_in_soil' and elem_code='SW40';
+update kdvh_element set level_value=400 where element_id='soil_temperature' and elem_code='TJ400';
+update kdvh_element set level_value=400 where element_id='soil_temperature' and elem_code='X1TJ400';
+update kdvh_element set level_value=4000 where element_id='soil_temperature' and elem_code='TJ4000';
+update kdvh_element set level_value=45 where element_id='soil_temperature' and elem_code='TJ45';
+update kdvh_element set level_value=450 where element_id='soil_temperature' and elem_code='TJ450';
+update kdvh_element set level_value=4500 where element_id='soil_temperature' and elem_code='TJ4500';
+update kdvh_element set level_value=5 where element_id='mean(soil_temperature PT1H)' and elem_code='TJM5';
+update kdvh_element set level_value=5 where element_id='soil_temperature' and elem_code='TJ5';
+update kdvh_element set level_value=50 where element_id='mean(soil_temperature PT1H)' and elem_code='TJM50';
+update kdvh_element set level_value=50 where element_id='soil_temperature' and elem_code='TJ50';
+update kdvh_element set level_value=50 where element_id='soil_temperature' and elem_code='X1TJM50';
+update kdvh_element set level_value=500 where element_id='soil_temperature' and elem_code='TJ500';
+update kdvh_element set level_value=500 where element_id='soil_temperature' and elem_code='X1TJ500';
+update kdvh_element set level_value=5000 where element_id='soil_temperature' and elem_code='TJ5000';
+update kdvh_element set level_value=5250 where element_id='soil_temperature' and elem_code='TJ5250';
+update kdvh_element set level_value=550 where element_id='soil_temperature' and elem_code='TJ550';
+update kdvh_element set level_value=600 where element_id='soil_temperature' and elem_code='TJ600';
+update kdvh_element set level_value=6000 where element_id='soil_temperature' and elem_code='TJ6000';
+update kdvh_element set level_value=650 where element_id='soil_temperature' and elem_code='TJ650';
+update kdvh_element set level_value=670 where element_id='soil_temperature' and elem_code='TJ670';
+update kdvh_element set level_value=69 where element_id='sea_water_speed' and elem_code='CV69';
+update kdvh_element set level_value=69 where element_id='sea_water_to_direction' and elem_code='CD69';
+update kdvh_element set level_value=700 where element_id='soil_temperature' and elem_code='TJ700';
+update kdvh_element set level_value=700 where element_id='soil_temperature' and elem_code='X1TJ700';
+update kdvh_element set level_value=7000 where element_id='soil_temperature' and elem_code='TJ7000';
+update kdvh_element set level_value=75 where element_id='max(snow_temperature PT1H)' and elem_code='TSX75';
+update kdvh_element set level_value=75 where element_id='mean(snow_temperature PT1H)' and elem_code='TSM75';
+update kdvh_element set level_value=75 where element_id='min(snow_temperature PT1H)' and elem_code='TSN75';
+update kdvh_element set level_value=75 where element_id='sea_water_speed' and elem_code='CV75';
+update kdvh_element set level_value=75 where element_id='sea_water_speed' and elem_code='X1CV75';
+update kdvh_element set level_value=75 where element_id='sea_water_to_direction' and elem_code='CD75';
+update kdvh_element set level_value=75 where element_id='sea_water_to_direction' and elem_code='X1CD75';
+update kdvh_element set level_value=75 where element_id='snow_temperature' and elem_code='TSA75';
+update kdvh_element set level_value=750 where element_id='soil_temperature' and elem_code='TJ750';
+update kdvh_element set level_value=80 where element_id='soil_temperature' and elem_code='TJ80';
+update kdvh_element set level_value=80 where element_id='soil_temperature' and elem_code='X1TJ80';
+update kdvh_element set level_value=800 where element_id='soil_temperature' and elem_code='TJ800';
+update kdvh_element set level_value=8000 where element_id='soil_temperature' and elem_code='TJ8000';
+update kdvh_element set level_value=850 where element_id='soil_temperature' and elem_code='TJ850';
+update kdvh_element set level_value=8500 where element_id='soil_temperature' and elem_code='TJ8500';
+update kdvh_element set level_value=900 where element_id='soil_temperature' and elem_code='TJ900';
+update kdvh_element set level_value=900 where element_id='soil_temperature' and elem_code='X1TJ900';
+update kdvh_element set level_value=9000 where element_id='soil_temperature' and elem_code='TJ9000';
+update kdvh_element set level_value=95 where element_id='soil_temperature' and elem_code='TJ95';
+update kdvh_element set level_value=950 where element_id='soil_temperature' and elem_code='TJ950';
+update kdvh_element set level_value=9500 where element_id='soil_temperature' and elem_code='TJ9500';
+update kdvh_element set level_value=9750 where element_id='soil_temperature' and elem_code='TJ9750';
+update kdvh_element set level_value=98 where element_id='sea_water_speed' and elem_code='CV98';
+update kdvh_element set level_value=98 where element_id='sea_water_to_direction' and elem_code='CD98';
+
+
+# --- !Downs
