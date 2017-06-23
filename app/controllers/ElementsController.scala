@@ -82,7 +82,7 @@ class ElementsController @Inject()(elementsAccess: ElementsAccess) extends Contr
       required = false)
     statuses: Option[String],
 
-    @ApiParam(value = "The <a href=concepts#calculationmethod>calculation method</a> filter as a JSON object consisting of zero or more key-value pairs: \"&lt;key1&gt;\": \"&lt;value1&gt;\", \"&lt;key2&gt;\": \"&lt;value2&gt;\", ... (note that braces around the object may be omitted, like in this case). Each value is a comma-separated list of <a href=concepts#searchfilter>search filters</a>. The following keys are supported: baseNames, secondaryBaseNames, methods, innerMethods, periods, innerPeriods, thresholds, methodDescriptions, innerMethodDescriptions, methodUnits, innerMethodUnits",
+    @ApiParam(value = "The <a href=concepts#calculationmethod>calculation method</a> filter as a JSON object consisting of zero or more key-value pairs: \"&lt;key1&gt;\": \"&lt;value1&gt;\", \"&lt;key2&gt;\": \"&lt;value2&gt;\", ... (note that braces around the object may be omitted, like in this case). Each value is a comma-separated list of <a href=concepts#searchfilter>search filters</a>. The following keys are supported: baseNames, methods, innerMethods, periods, innerPeriods, thresholds, methodDescriptions, innerMethodDescriptions, methodUnits, innerMethodUnits",
       required = false)
     calculationMethod: Option[String],
 
@@ -114,7 +114,7 @@ class ElementsController @Inject()(elementsAccess: ElementsAccess) extends Contr
       required = false)
     cfStatuses: Option[String],
 
-    @ApiParam(value = "The information to return as a comma-separated list of id, name, description, unit, codeTable, status, baseName, cmBaseName, cmSecondaryBaseName, cmMethod, cmInnerMethod, cmPeriod, cmInnerPeriod, cmThreshold, cmMethodDescription, cmInnerMethodDescription, cmMethodUnit, cmInnerMethodUnit, category, legacyElementCodes, legacyUnit, cfStandardName, cfCellMethod, cfUnit, or cfStatus. For example 'id,unit,legacyElementCodes,legacyUnit'. If omitted, all fields are returned.",
+    @ApiParam(value = "The information to return as a comma-separated list of id, name, description, unit, codeTable, status, baseName, cmBaseName, cmMethod, cmInnerMethod, cmPeriod, cmInnerPeriod, cmThreshold, cmMethodDescription, cmInnerMethodDescription, cmMethodUnit, cmInnerMethodUnit, category, legacyElementCodes, legacyUnit, cfStandardName, cfCellMethod, cfUnit, or cfStatus. For example 'id,unit,legacyElementCodes,legacyUnit'. If omitted, all fields are returned.",
       required = false)
     fields: Option[String],
 

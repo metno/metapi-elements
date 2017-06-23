@@ -303,7 +303,6 @@ class DbElementsAccess extends ElementsAccess {
 
     private case class CalcMethodQueryParams(
       baseNames: Option[String] = None,
-      secondaryBaseNames: Option[String] = None,
       methods: Option[String] = None,
       innerMethods: Option[String] = None,
       periods: Option[String] = None,
@@ -351,7 +350,7 @@ class DbElementsAccess extends ElementsAccess {
 
               // check for unsupported keys
               val suppKeys = Seq(
-                "baseNames", "secondaryBaseNames", "methods", "innerMethods", "periods", "innerPeriods", "thresholds",
+                "baseNames", "methods", "innerMethods", "periods", "innerPeriods", "thresholds",
                 "methodDescriptions", "innerMethodDescriptions", "methodUnits", "innerMethodUnits")
               val unsuppKeys = allKeys(json).map((s: String) => s.toLowerCase) -- suppKeys.toSet.map((s: String) => s.toLowerCase)
               if (unsuppKeys.nonEmpty) {
@@ -361,7 +360,6 @@ class DbElementsAccess extends ElementsAccess {
 
               CalcMethodQueryParams(
                 baseNames = keyToVal(json, "baseNames"),
-                secondaryBaseNames = keyToVal(json, "secondaryBaseNames"),
                 methods = keyToVal(json, "methods"),
                 innerMethods = keyToVal(json, "innerMethods"),
                 periods = keyToVal(json, "periods"),
@@ -391,7 +389,7 @@ class DbElementsAccess extends ElementsAccess {
 
       val fields: Set[String] = FieldSpecification.parse(qp.fields)
       val suppFields = Set(
-        "id", "name", "description", "unit", "codeTable", "status", "baseName", "cmBaseName", "cmSecondaryBaseName",
+        "id", "name", "description", "unit", "codeTable", "status", "baseName", "cmBaseName",
         "cmMethod", "cmInnerMethod", "cmPeriod", "cmInnerPeriod", "cmThreshold", "cmMethodDescription", "cmInnerMethodDescription",
         "cmMethodUnit", "cmInnerMethodUnit", "category", "legacyElementCodes", "legacyUnit", "cfStandardName", "cfCellMethod",
         "cfUnit", "cfStatus")
