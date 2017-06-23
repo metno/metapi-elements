@@ -59,30 +59,30 @@ insert into element_description (element_id, description, description_locale) va
 insert into element_description (element_id, description, description_locale) values ('volume_fraction_of_water_in_soil','Soil water at different depths','en-US');
 
 
-insert into kdvh_element (element_id, elem_code,category,unit) values ('max(snow_temperature PT1H)','TSX125','Temperature','degC');
-insert into kdvh_element (element_id, elem_code,category,unit) values ('max(snow_temperature PT1H)','TSX175','Temperature','degC');
-insert into kdvh_element (element_id, elem_code,category,unit) values ('max(snow_temperature PT1H)','TSX25','Temperature','degC');
-insert into kdvh_element (element_id, elem_code,category,unit) values ('max(snow_temperature PT1H)','TSX75','Temperature','degC');
-insert into kdvh_element (element_id, elem_code,category,unit) values ('mean(snow_temperature PT1H)','TSM125','Temperature','degC');
-insert into kdvh_element (element_id, elem_code,category,unit) values ('mean(snow_temperature PT1H)','TSM175','Temperature','degC');
-insert into kdvh_element (element_id, elem_code,category,unit) values ('mean(snow_temperature PT1H)','TSM25','Temperature','degC');
-insert into kdvh_element (element_id, elem_code,category,unit) values ('mean(snow_temperature PT1H)','TSM75','Temperature','degC');
-insert into kdvh_element (element_id, elem_code,category,unit) values ('min(snow_temperature PT1H)','TSN125','Temperature','degC');
-insert into kdvh_element (element_id, elem_code,category,unit) values ('min(snow_temperature PT1H)','TSN175','Temperature','degC');
-insert into kdvh_element (element_id, elem_code,category,unit) values ('min(snow_temperature PT1H)','TSN25','Temperature','degC');
-insert into kdvh_element (element_id, elem_code,category,unit) values ('min(snow_temperature PT1H)','TSN75','Temperature','degC');
-insert into kdvh_element (element_id, elem_code,category,unit) values ('sea_surface_height','X1WL','Water level','meters');
-insert into kdvh_element (element_id, elem_code,category,unit) values ('sea_surface_height','X2WL','Water level','meters');
-insert into kdvh_element (element_id, elem_code,category,unit) values ('sea_surface_primary_wave_spectral_density','X1SDP1','Waves','m*m/H');
-insert into kdvh_element (element_id, elem_code,category,unit) values ('sea_surface_primary_wave_spectral_density','X2SDP1','Waves','m*m/H');
-insert into kdvh_element (element_id, elem_code,category,unit) values ('snow_temperature','TSA125','Temperature','degC');
-insert into kdvh_element (element_id, elem_code,category,unit) values ('snow_temperature','TSA175','Temperature','degC');
-insert into kdvh_element (element_id, elem_code,category,unit) values ('snow_temperature','TSA25','Temperature','degC');
-insert into kdvh_element (element_id, elem_code,category,unit) values ('snow_temperature','TSA75','Temperature','degC');
-insert into kdvh_element (element_id, elem_code,category,unit) values ('volume_fraction_of_water_in_soil','SW10','Water','percent');
-insert into kdvh_element (element_id, elem_code,category,unit) values ('volume_fraction_of_water_in_soil','SW20','Water','percent');
-insert into kdvh_element (element_id, elem_code,category,unit) values ('volume_fraction_of_water_in_soil','SW30','Water','percent');
-insert into kdvh_element (element_id, elem_code,category,unit) values ('volume_fraction_of_water_in_soil','SW40','Water','percent');
+insert into kdvh_element (element_id, elem_code,param_id,unit) values ('max(snow_temperature PT1H)','TSX125','237','degC');
+insert into kdvh_element (element_id, elem_code,param_id,unit) values ('max(snow_temperature PT1H)','TSX175','237','degC');
+insert into kdvh_element (element_id, elem_code,param_id,unit) values ('max(snow_temperature PT1H)','TSX25','237','degC');
+insert into kdvh_element (element_id, elem_code,param_id,unit) values ('max(snow_temperature PT1H)','TSX75','237','degC');
+insert into kdvh_element (element_id, elem_code,param_id,unit) values ('mean(snow_temperature PT1H)','TSM125',null,'degC');
+insert into kdvh_element (element_id, elem_code,param_id,unit) values ('mean(snow_temperature PT1H)','TSM175',null,'degC');
+insert into kdvh_element (element_id, elem_code,param_id,unit) values ('mean(snow_temperature PT1H)','TSM25',null,'degC');
+insert into kdvh_element (element_id, elem_code,param_id,unit) values ('mean(snow_temperature PT1H)','TSM75',null,'degC');
+insert into kdvh_element (element_id, elem_code,param_id,unit) values ('min(snow_temperature PT1H)','TSN125','236','degC');
+insert into kdvh_element (element_id, elem_code,param_id,unit) values ('min(snow_temperature PT1H)','TSN175','236','degC');
+insert into kdvh_element (element_id, elem_code,param_id,unit) values ('min(snow_temperature PT1H)','TSN25','236','degC');
+insert into kdvh_element (element_id, elem_code,param_id,unit) values ('min(snow_temperature PT1H)','TSN75','236','degC');
+insert into kdvh_element (element_id, elem_code,param_id,unit) values ('sea_surface_height','X1WL','138','meters');
+insert into kdvh_element (element_id, elem_code,param_id,unit) values ('sea_surface_height','X2WL','138','meters');
+insert into kdvh_element (element_id, elem_code,param_id,unit) values ('sea_surface_primary_wave_spectral_density','X1SDP1',null,'m*m/H');
+insert into kdvh_element (element_id, elem_code,param_id,unit) values ('sea_surface_primary_wave_spectral_density','X2SDP1',null,'m*m/H');
+insert into kdvh_element (element_id, elem_code,param_id,unit) values ('snow_temperature','TSA125','234','degC');
+insert into kdvh_element (element_id, elem_code,param_id,unit) values ('snow_temperature','TSA175','234','degC');
+insert into kdvh_element (element_id, elem_code,param_id,unit) values ('snow_temperature','TSA25','234','degC');
+insert into kdvh_element (element_id, elem_code,param_id,unit) values ('snow_temperature','TSA75','234','degC');
+insert into kdvh_element (element_id, elem_code,param_id,unit) values ('volume_fraction_of_water_in_soil','SW10','340','percent');
+insert into kdvh_element (element_id, elem_code,param_id,unit) values ('volume_fraction_of_water_in_soil','SW20','340','percent');
+insert into kdvh_element (element_id, elem_code,param_id,unit) values ('volume_fraction_of_water_in_soil','SW30','340','percent');
+insert into kdvh_element (element_id, elem_code,param_id,unit) values ('volume_fraction_of_water_in_soil','SW40','340','percent');
 
 
 Insert into ELEMENT_CATEGORY (ELEMENT_ID, CATEGORY, CATEGORY_LOCALE) Values ('mean(snow_temperature PT1H)', 'Temperature', 'en-US');
