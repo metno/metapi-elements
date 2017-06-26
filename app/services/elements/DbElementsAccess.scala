@@ -426,7 +426,7 @@ class DbElementsAccess extends ElementsAccess {
       val omitCMMethodUnit = fields.nonEmpty && !fields.contains("cmmethodunit")
       val omitCMInnerMethodUnit = fields.nonEmpty && !fields.contains("cminnermethodunit")
       val omitCategory = fields.nonEmpty && !fields.contains("category")
-      val omitLegacyElemCodes = fields.nonEmpty && !fields.contains("legacyelemcodes")
+      val omitLegacyElemCodes = fields.nonEmpty && !fields.contains("legacyelementcodes")
       val omitLegacyUnit = fields.nonEmpty && !fields.contains("legacyunit")
       val omitCfStandardName = fields.nonEmpty && !fields.contains("cfstandardname")
       val omitCfCellMethod = fields.nonEmpty && !fields.contains("cfcellmethod")
