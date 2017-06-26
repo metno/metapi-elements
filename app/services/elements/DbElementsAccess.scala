@@ -389,7 +389,7 @@ class DbElementsAccess extends ElementsAccess {
 
       val fields: Set[String] = FieldSpecification.parse(qp.fields)
       val suppFields = Set(
-        "id", "name", "description", "unit", "codeTable", "status", "baseName", "cmBaseName",
+        "id", "name", "description", "unit", "codeTable", "status", "cmBaseName",
         "cmMethod", "cmInnerMethod", "cmPeriod", "cmInnerPeriod", "cmThreshold", "cmMethodDescription", "cmInnerMethodDescription",
         "cmMethodUnit", "cmInnerMethodUnit", "category", "legacyElementCodes", "legacyUnit", "cfStandardName", "cfCellMethod",
         "cfUnit", "cfStatus")
@@ -414,7 +414,6 @@ class DbElementsAccess extends ElementsAccess {
       val omitUnit = fields.nonEmpty && !fields.contains("unit")
       val omitCodeTable = fields.nonEmpty && !fields.contains("codetable")
       val omitStatus = fields.nonEmpty && !fields.contains("status")
-      val omitBaseName = fields.nonEmpty && !fields.contains("basename")
       val omitCMBaseName = fields.nonEmpty && !fields.contains("cmbasename")
       val omitCMMethod = fields.nonEmpty && !fields.contains("cmmethod")
       val omitCMInnerMethod = fields.nonEmpty && !fields.contains("cminnermethod")

@@ -114,7 +114,7 @@ class ElementsController @Inject()(elementsAccess: ElementsAccess) extends Contr
       required = false)
     cfStatuses: Option[String],
 
-    @ApiParam(value = "The information to return as a comma-separated list of id, name, description, unit, codeTable, status, baseName, cmBaseName, cmMethod, cmInnerMethod, cmPeriod, cmInnerPeriod, cmThreshold, cmMethodDescription, cmInnerMethodDescription, cmMethodUnit, cmInnerMethodUnit, category, legacyElementCodes, legacyUnit, cfStandardName, cfCellMethod, cfUnit, or cfStatus. For example 'id,unit,legacyElementCodes,legacyUnit'. If omitted, all fields are returned.",
+    @ApiParam(value = "The information to return as a comma-separated list of id, name, description, unit, codeTable, status, cmBaseName, cmMethod, cmInnerMethod, cmPeriod, cmInnerPeriod, cmThreshold, cmMethodDescription, cmInnerMethodDescription, cmMethodUnit, cmInnerMethodUnit, category, legacyElementCodes, legacyUnit, cfStandardName, cfCellMethod, cfUnit, or cfStatus. For example 'id,unit,legacyElementCodes,legacyUnit'. If omitted, all fields are returned.",
       required = false)
     fields: Option[String],
 
