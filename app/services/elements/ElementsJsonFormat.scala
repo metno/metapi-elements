@@ -45,6 +45,8 @@ class ElementsJsonFormat extends BasicJsonFormat {
 
   implicit val calcMethodWrites = Json.writes[CalcMethod]
 
+  implicit val sensorLevelsWrites = Json.writes[SensorLevels]
+
   implicit val elementWrites = Json.writes[Element]
 
   implicit val elementResponseWrites: Writes[ElementResponse] = (

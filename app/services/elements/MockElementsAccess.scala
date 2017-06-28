@@ -44,6 +44,12 @@ class MockElementsAccess extends ElementsAccess {
       Some("dummy status"),
       Some(CalcMethod(None, None, None, None, None, None, None, None, None, None)),
       Some("dummy category"),
+      Some(SensorLevels(
+        Some("dummy level type"),
+        Some("dummy unit"),
+        Some(-1),
+        Some(Seq(-1, -1)))
+      ),
       Some(LegacyMetNoConvention(
         Some(Seq("dummy elemCode 1", "dummy elemCode 2")),
         Some("dummy unit"))

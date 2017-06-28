@@ -63,6 +63,7 @@ case class Element(
   @(ApiModelProperty @field)(value="The status of the element; one of 'CF compatible', 'in review', 'MetNo local convention', or 'test'", example="CF compatible") status: Option[String],
   @(ApiModelProperty @field)(value="The calculation method of the element.") calculationMethod: Option[CalcMethod],
   @(ApiModelProperty @field)(value="The category of the element.") category: Option[String],
+  @(ApiModelProperty @field)(value="The sensor levels of the element.") sensorLevels: Option[SensorLevels],
   @(ApiModelProperty @field)(value="The legacy form of the element.") legacyConvention: Option[LegacyMetNoConvention],
   @(ApiModelProperty @field)(value="The CF convention equivalent of the element (omitted if no such equivalent exists).") cfConvention: Option[CfConvention]
 )
@@ -79,6 +80,14 @@ case class CalcMethod(
   @(ApiModelProperty @field)(value="The description of the inner method.") innerMethodDescription: Option[String],
   @(ApiModelProperty @field)(value="The unit of the primary method.") methodUnit: Option[String],
   @(ApiModelProperty @field)(value="The unit of the inner method.") innerMethodUnit: Option[String]
+)
+
+@ApiModel(description="The default level and available levels for a specific sensor level type.")
+case class SensorLevels(
+  @(ApiModelProperty @field)(value="The level type.", example="height_above_ground") levelType: Option[String],
+  @(ApiModelProperty @field)(value="The level unit.", example="m") unit: Option[String],
+  @(ApiModelProperty @field)(value="The default level value.") defaultValue: Option[Double],
+  @(ApiModelProperty @field)(value="The level values.") values: Option[Seq[Double]]
 )
 
 @ApiModel(description="The Met.no legacy element code equivalent(s) of the element.")

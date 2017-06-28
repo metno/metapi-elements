@@ -38,7 +38,7 @@ import scala.util.{ Try, Success, Failure }
 import models._
 import no.met.data._
 
-
+// scalastyle:off file.size.limit
 //$COVERAGE-OFF$ Not testing database queries
 
 // ### TBD: Move to util package (used also in records module)
@@ -246,6 +246,7 @@ class DbElementsAccess extends ElementsAccess {
           status,
           extractCalcMethod(id),
           category,
+          None, // sensor levels - filled in later if applicable
           if (legacyCodes.nonEmpty) {
             val lcseq = legacyCodes.get.toSeq
             if (lcseq.exists(lc => lc.isEmpty)) {
@@ -341,7 +342,7 @@ class DbElementsAccess extends ElementsAccess {
       }
     }
 
-    // Parses JSON structure cm and returns a valid CalcMethodQueryParams object. Throws BadRequestException upon error.
+    // Parses and returns a valid CalcMethodQueryParams object from a JSON structure. Throws BadRequestException upon error.
     private def parseCalcMethodQueryParams(calculationMethod: Option[String]): CalcMethodQueryParams = {
       calculationMethod match {
         case Some(cm) => {
@@ -378,6 +379,85 @@ class DbElementsAccess extends ElementsAccess {
       }
     }
 
+    private def loadSensorLevelsMap(): Map[String, SensorLevels] = {
+      val parser: RowParser[(String, SensorLevels)] = {
+        get[String]("element_id") ~
+          get[String]("levelType") ~
+          get[String]("unit") ~
+          get[Double]("defaultValue") ~
+          get[Array[Double]]("values") map {
+          case elementId~levelType~unit~defaultValue~values => (elementId, SensorLevels(Some(levelType), Some(unit), Some(defaultValue), Some(values)))
+        }
+      }
+
+      val query =
+        s"""
+           |SELECT element_id, sensorlevel_id AS levelType, sensorlevel.unit AS unit, default_value as defaultValue, values
+           |FROM element_sensorlevel,sensorlevel WHERE sensorlevel_id=sensorlevel.id;
+          """.stripMargin
+
+      DB.withConnection("elements") { implicit connection =>
+        SQL(query).as(parser *).toMap
+      }
+    }
+
+
+    // scalastyle:off null
+    private var sensorLevelsMap: Map[String, SensorLevels] = null
+    // scalastyle:on null
+
+
+
+    private case class SensorLevelsQueryParams(
+      levelTypes: Option[String] = None,
+      units: Option[String] = None,
+      defaultValues: Option[String] = None,
+      values: Option[String] = None
+    )
+
+    // Parses and returns a valid SensorLevelsQueryParams object from a JSON structure. Throws BadRequestException upon error.
+    private def parseSensorLevelsQueryParams(sensorLevels: Option[String]): SensorLevelsQueryParams = {
+      sensorLevels match {
+        case Some(sl) => {
+          Try(Json.parse(addMissingObjectBraces(sl))) match {
+            case Success(json) => {
+
+              // check for unsupported keys
+              val suppKeys = Seq("levelTypes", "units", "defaultValues", "values")
+              val unsuppKeys = allKeys(json).map((s: String) => s.toLowerCase) -- suppKeys.toSet.map((s: String) => s.toLowerCase)
+              if (unsuppKeys.nonEmpty) {
+                throw new BadRequestException(
+                  s"Unsupported key(s) in JSON structure for sensorLevels: ${unsuppKeys.mkString(", ")}. Supported keys: ${suppKeys.mkString(", ")}")
+              }
+
+              SensorLevelsQueryParams(
+                levelTypes = keyToVal(json, "levelTypes"),
+                units = keyToVal(json, "units"),
+                defaultValues = keyToVal(json, "defaultValues"),
+                values = keyToVal(json, "values")
+              )
+            }
+            case Failure(e) => throw new BadRequestException(s"Failed to parse JSON structure for sensorLevels: ${e.getLocalizedMessage}")
+          }
+        }
+        case None => SensorLevelsQueryParams()
+      }
+    }
+
+    // Returns a double value as a string with any zero fraction removed. E.g. Some(2.1) -> "2.1", while Some("2.0") -> "2" (not "2.0").
+    // A None value results in an empty string: None -> "".
+    private def toStringWithoutZeroFraction(ox: Option[Double]): String = {
+      ox match {
+        case Some(x) => {
+          x.toInt match {
+            case i if i == x => i.toString // remove zero fraction
+            case _ => x.toString // keep non-zero fraction
+          }
+        }
+        case None => ""
+      }
+    }
+
     // scalastyle:off cyclomatic.complexity
     // scalastyle:off method.length
     def apply(qp: ElementsQueryParameters): List[Element] = {
@@ -386,13 +466,15 @@ class DbElementsAccess extends ElementsAccess {
       // among the other parameters in the ElementsQueryParameters object is that the query string of the HTTP GET request has a limit of 22 parameters.
       // This seems be related to a similar restriction to the length of a tuple in the current version of Scala (2.11.6).
       val cmqp: CalcMethodQueryParams = parseCalcMethodQueryParams(qp.calculationMethod)
+      val slqp: SensorLevelsQueryParams = parseSensorLevelsQueryParams(qp.sensorLevels) // ### ditto
+
 
       val fields: Set[String] = FieldSpecification.parse(qp.fields)
       val suppFields = Set(
         "id", "name", "description", "unit", "codeTable", "status", "cmBaseName",
         "cmMethod", "cmInnerMethod", "cmPeriod", "cmInnerPeriod", "cmThreshold", "cmMethodDescription", "cmInnerMethodDescription",
-        "cmMethodUnit", "cmInnerMethodUnit", "category", "legacyElementCodes", "legacyUnit", "cfStandardName", "cfCellMethod",
-        "cfUnit", "cfStatus")
+        "cmMethodUnit", "cmInnerMethodUnit", "category", "sensorLevelType", "sensorLevelUnit", "sensorLevelDefaultValue", "sensorLevelValues",
+        "legacyElementCodes", "legacyUnit", "cfStandardName", "cfCellMethod", "cfUnit", "cfStatus")
       val suppFieldsLC = suppFields.map(_.toLowerCase)
       fields.foreach(f => if (!suppFieldsLC.contains(f.toLowerCase)) {
         throw new BadRequestException(s"Unsupported field: $f", Some(s"Supported fields: ${suppFields.mkString(", ")}"))
@@ -401,6 +483,7 @@ class DbElementsAccess extends ElementsAccess {
       val locale = getLocale(qp.lang)
 
       cmFunInfoMap = loadCMFunInfoMap(locale)
+      sensorLevelsMap = loadSensorLevelsMap()
 
       val elems = DB.withConnection("elements") { implicit connection =>
         val query = getQuery(locale)
@@ -425,6 +508,10 @@ class DbElementsAccess extends ElementsAccess {
       val omitCMMethodUnit = fields.nonEmpty && !fields.contains("cmmethodunit")
       val omitCMInnerMethodUnit = fields.nonEmpty && !fields.contains("cminnermethodunit")
       val omitCategory = fields.nonEmpty && !fields.contains("category")
+      val omitSLType = fields.nonEmpty && !fields.contains("sensorleveltype")
+      val omitSLUnit = fields.nonEmpty && !fields.contains("sensorlevelunit")
+      val omitSLDefaultValue = fields.nonEmpty && !fields.contains("sensorleveldefaultvalue")
+      val omitSLValues = fields.nonEmpty && !fields.contains("sensorlevelvalues")
       val omitLegacyElemCodes = fields.nonEmpty && !fields.contains("legacyelementcodes")
       val omitLegacyUnit = fields.nonEmpty && !fields.contains("legacyunit")
       val omitCfStandardName = fields.nonEmpty && !fields.contains("cfstandardname")
@@ -465,6 +552,23 @@ class DbElementsAccess extends ElementsAccess {
             MatcherUtil.matchesWords1(cm.innerMethodUnit, cmqp.innerMethodUnits)
         })
         .filter(e => MatcherUtil.matchesWords1(e.category, qp.categories))
+        .map(e => Try(sensorLevelsMap(e.id.get)) match { // insert any sensor levels
+          case Success(x) => e.copy(sensorLevels = Some(x)) // set sensor levels
+          case _ => e // leave unmodified
+        })
+        .filter(e => if (e.sensorLevels.isEmpty) {
+          // keep iff none of the relevant fields are requested
+          slqp.levelTypes.getOrElse("").trim.isEmpty &&
+            slqp.units.getOrElse("").trim.isEmpty &&
+            slqp.defaultValues.getOrElse("").trim.isEmpty &&
+            slqp.values.getOrElse("").trim.isEmpty
+        } else {
+          val sl = e.sensorLevels.get
+          MatcherUtil.matchesWords1(sl.levelType, slqp.levelTypes) &&
+            MatcherUtil.matchesWords1(sl.unit, slqp.units) &&
+            MatcherUtil.matchesWords1(Some(toStringWithoutZeroFraction(sl.defaultValue)), slqp.defaultValues) &&
+            MatcherUtil.matchesWordsN(Some(sl.values.toList.map(_.toString)), slqp.values)
+        })
         .filter(e => if (e.legacyConvention.isEmpty) {
           // keep iff none of the relevant fields are requested
           qp.legacyElementCodes.getOrElse("").trim.isEmpty &&
@@ -531,6 +635,28 @@ class DbElementsAccess extends ElementsAccess {
             }
           },
           category = if (omitCategory) None else e.category,
+          sensorLevels = if (omitSLType && omitSLDefaultValue && omitSLValues) {
+            None // no fields requsted, so omit object
+          } else {
+            // at least one field requested
+            {
+              e.sensorLevels match {
+                case Some(sl) => Some(sl.copy( // fields available, so output the requested ones
+                  levelType = if (omitSLType) None else sl.levelType,
+                  unit = if (omitSLUnit) None else sl.unit,
+                  defaultValue = if (omitSLDefaultValue) None else sl.defaultValue,
+                  values = if (omitSLValues) None else sl.values
+                ))
+                case None => None // no fields available, so omit object
+              }
+            } match {
+              case Some(sl) if (sl.levelType.nonEmpty
+                || sl.unit.nonEmpty
+                || sl.defaultValue.nonEmpty
+                || sl.values.nonEmpty) => Some(sl)
+              case _ => None
+            }
+          },
           legacyConvention = if (omitLegacyElemCodes && omitLegacyUnit) {
             None // no fields requsted, so omit object
           } else {
@@ -694,3 +820,5 @@ class DbElementsAccess extends ElementsAccess {
 }
 
 // $COVERAGE-ON$
+
+// scalastyle:on file.size.limit

@@ -90,6 +90,10 @@ class ElementsController @Inject()(elementsAccess: ElementsAccess) extends Contr
       required = false)
     categories: Option[String],
 
+    @ApiParam(value = "The sensor levels filter as a JSON object consisting of zero or more key-value pairs: \"&lt;key1&gt;\": \"&lt;value1&gt;\", \"&lt;key2&gt;\": \"&lt;value2&gt;\", ... (note that braces around the object may be omitted, like in this case). Each value is a comma-separated list of <a href=concepts#searchfilter>search filters</a>. The following keys are supported: levelTypes, units, defaultValues, values",
+      required = false)
+    sensorLevels: Option[String],
+
     @ApiParam(value = "The legacy MET Norway element codes to get metadata for as a comma-separated list of <a href=concepts#searchfilter>search filters</a>.",
       required = false)
     legacyElementCodes: Option[String],
@@ -114,7 +118,7 @@ class ElementsController @Inject()(elementsAccess: ElementsAccess) extends Contr
       required = false)
     cfStatuses: Option[String],
 
-    @ApiParam(value = "The information to return as a comma-separated list of id, name, description, unit, codeTable, status, cmBaseName, cmMethod, cmInnerMethod, cmPeriod, cmInnerPeriod, cmThreshold, cmMethodDescription, cmInnerMethodDescription, cmMethodUnit, cmInnerMethodUnit, category, legacyElementCodes, legacyUnit, cfStandardName, cfCellMethod, cfUnit, or cfStatus. For example 'id,unit,legacyElementCodes,legacyUnit'. If omitted, all fields are returned.",
+    @ApiParam(value = "The information to return as a comma-separated list of id, name, description, unit, codeTable, status, cmBaseName, cmMethod, cmInnerMethod, cmPeriod, cmInnerPeriod, cmThreshold, cmMethodDescription, cmInnerMethodDescription, cmMethodUnit, cmInnerMethodUnit, category, sensorLevelType, sensorLevelUnit, sensorLevelDefaultValue, sensorLevelValues, legacyElementCodes, legacyUnit, cfStandardName, cfCellMethod, cfUnit, or cfStatus. For example 'id,unit,legacyElementCodes,legacyUnit'. If omitted, all fields are returned.",
       required = false)
     fields: Option[String],
 
@@ -135,11 +139,11 @@ class ElementsController @Inject()(elementsAccess: ElementsAccess) extends Contr
     Try  {
       // ensure that the query string contains supported fields only
       QueryStringUtil.ensureSubset(Set("ids", "names", "descriptions", "units", "codeTables", "statuses", "calculationMethod",
-        "categories", "legacyElementCodes", "legacyUnits", "cfStandardNames", "cfCellMethods", "cfUnits", "cfStatuses", "fields", "lang"),
+        "categories", "sensorLevels", "legacyElementCodes", "legacyUnits", "cfStandardNames", "cfCellMethods", "cfUnits", "cfStatuses", "fields", "lang"),
         request.queryString.keySet)
 
       elementsAccess.elements(ElementsQueryParameters(ids, names, descriptions, units, codeTables, statuses, calculationMethod,
-        categories, legacyElementCodes, legacyUnits, cfStandardNames, cfCellMethods, cfUnits, cfStatuses, fields, lang))
+        categories, sensorLevels, legacyElementCodes, legacyUnits, cfStandardNames, cfCellMethods, cfUnits, cfStatuses, fields, lang))
     } match {
       case Success(data) =>
         if (data isEmpty) {
