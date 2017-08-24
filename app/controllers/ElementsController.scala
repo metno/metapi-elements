@@ -94,13 +94,13 @@ class ElementsController @Inject()(elementsAccess: ElementsAccess) extends Contr
       required = false)
     sensorLevels: Option[String],
 
-    @ApiParam(value = "The legacy MET Norway element codes to get metadata for as a comma-separated list of <a href=concepts#searchfilter>search filters</a>.",
+    @ApiParam(value = "The old MET Norway element codes to get metadata for as a comma-separated list of <a href=concepts#searchfilter>search filters</a>.",
       required = false)
-    legacyElementCodes: Option[String],
+    oldElementCodes: Option[String],
 
-    @ApiParam(value = "The legacy MET Norway units to get metadata for as a comma-separated list of <a href=concepts#searchfilter>search filters</a>.",
+    @ApiParam(value = "The old MET Norway units to get metadata for as a comma-separated list of <a href=concepts#searchfilter>search filters</a>.",
       required = false)
-    legacyUnits: Option[String],
+    oldUnits: Option[String],
 
     @ApiParam(value = "The CF standard names to get metadata for as a comma-separated list of <a href=concepts#searchfilter>search filters</a>.",
       required = false)
@@ -118,7 +118,7 @@ class ElementsController @Inject()(elementsAccess: ElementsAccess) extends Contr
       required = false)
     cfStatuses: Option[String],
 
-    @ApiParam(value = "The information to return as a comma-separated list of id, name, description, unit, codeTable, status, cmBaseName, cmMethod, cmInnerMethod, cmPeriod, cmInnerPeriod, cmThreshold, cmMethodDescription, cmInnerMethodDescription, cmMethodUnit, cmInnerMethodUnit, category, sensorLevelType, sensorLevelUnit, sensorLevelDefaultValue, sensorLevelValues, legacyElementCodes, legacyUnit, cfStandardName, cfCellMethod, cfUnit, or cfStatus. For example 'id,unit,legacyElementCodes,legacyUnit'. If omitted, all fields are returned.",
+    @ApiParam(value = "The information to return as a comma-separated list of id, name, description, unit, codeTable, status, cmBaseName, cmMethod, cmInnerMethod, cmPeriod, cmInnerPeriod, cmThreshold, cmMethodDescription, cmInnerMethodDescription, cmMethodUnit, cmInnerMethodUnit, category, sensorLevelType, sensorLevelUnit, sensorLevelDefaultValue, sensorLevelValues, oldElementCodes, oldUnit, cfStandardName, cfCellMethod, cfUnit, or cfStatus. For example 'id,unit,oldElementCodes,oldUnit'. If omitted, all fields are returned.",
       required = false)
     fields: Option[String],
 
@@ -139,11 +139,11 @@ class ElementsController @Inject()(elementsAccess: ElementsAccess) extends Contr
     Try  {
       // ensure that the query string contains supported fields only
       QueryStringUtil.ensureSubset(Set("ids", "names", "descriptions", "units", "codeTables", "statuses", "calculationMethod",
-        "categories", "sensorLevels", "legacyElementCodes", "legacyUnits", "cfStandardNames", "cfCellMethods", "cfUnits", "cfStatuses", "fields", "lang"),
+        "categories", "sensorLevels", "oldElementCodes", "oldUnits", "cfStandardNames", "cfCellMethods", "cfUnits", "cfStatuses", "fields", "lang"),
         request.queryString.keySet)
 
       elementsAccess.elements(ElementsQueryParameters(ids, names, descriptions, units, codeTables, statuses, calculationMethod,
-        categories, sensorLevels, legacyElementCodes, legacyUnits, cfStandardNames, cfCellMethods, cfUnits, cfStatuses, fields, lang))
+        categories, sensorLevels, oldElementCodes, oldUnits, cfStandardNames, cfCellMethods, cfUnits, cfStatuses, fields, lang))
     } match {
       case Success(data) =>
         if (data isEmpty) {

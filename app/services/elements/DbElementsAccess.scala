@@ -211,8 +211,8 @@ class DbElementsAccess extends ElementsAccess {
         |  codetable,
         |  status,
         |  category,
-        |  legacymetnoconvention_elemcodes AS legacy_elemcodes,
-        |  legacymetnoconvention_unit AS legacy_unit,
+        |  legacymetnoconvention_elemcodes AS old_elemcodes,
+        |  legacymetnoconvention_unit AS old_unit,
         |  cfconvention_basename AS cf_standardname,
         |  cfconvention_cellmethod AS cf_cellmethod,
         |  cfconvention_unit AS cf_unit,
@@ -230,13 +230,13 @@ class DbElementsAccess extends ElementsAccess {
         get[Option[String]]("codetable") ~
         get[Option[String]]("status") ~
         get[Option[String]]("category") ~
-        get[Option[Array[Option[String]]]]("legacy_elemcodes") ~
-        get[Option[String]]("legacy_unit") ~
+        get[Option[Array[Option[String]]]]("old_elemcodes") ~
+        get[Option[String]]("old_unit") ~
         get[Option[String]]("cf_standardname") ~
         get[Option[String]]("cf_cellmethod") ~
         get[Option[String]]("cf_unit") ~
         get[Option[String]]("cf_status") map {
-        case id~name~description~unit~codeTable~status~category~legacyCodes~legacyUnit~cfStandardName~cfCellMethod~cfUnit~cfStatus
+        case id~name~description~unit~codeTable~status~category~oldCodes~oldUnit~cfStandardName~cfCellMethod~cfUnit~cfStatus
         => Element(
           id,
           name,
@@ -247,12 +247,12 @@ class DbElementsAccess extends ElementsAccess {
           extractCalcMethod(id),
           category,
           None, // sensor levels - filled in later if applicable
-          if (legacyCodes.nonEmpty) {
-            val lcseq = legacyCodes.get.toSeq
+          if (oldCodes.nonEmpty) {
+            val lcseq = oldCodes.get.toSeq
             if (lcseq.exists(lc => lc.isEmpty)) {
               None
             } else {
-              Some(LegacyMetNoConvention(Some(lcseq.map(_.get.trim).sorted), legacyUnit))
+              Some(OldMetNoConvention(Some(lcseq.map(_.get.trim).sorted), oldUnit))
             }
           } else {
             None
@@ -474,7 +474,7 @@ class DbElementsAccess extends ElementsAccess {
         "id", "name", "description", "unit", "codeTable", "status", "cmBaseName",
         "cmMethod", "cmInnerMethod", "cmPeriod", "cmInnerPeriod", "cmThreshold", "cmMethodDescription", "cmInnerMethodDescription",
         "cmMethodUnit", "cmInnerMethodUnit", "category", "sensorLevelType", "sensorLevelUnit", "sensorLevelDefaultValue", "sensorLevelValues",
-        "legacyElementCodes", "legacyUnit", "cfStandardName", "cfCellMethod", "cfUnit", "cfStatus")
+        "oldElementCodes", "oldUnit", "cfStandardName", "cfCellMethod", "cfUnit", "cfStatus")
       val suppFieldsLC = suppFields.map(_.toLowerCase)
       fields.foreach(f => if (!suppFieldsLC.contains(f.toLowerCase)) {
         throw new BadRequestException(s"Unsupported field: $f", Some(s"Supported fields: ${suppFields.mkString(", ")}"))
@@ -512,8 +512,8 @@ class DbElementsAccess extends ElementsAccess {
       val omitSLUnit = fields.nonEmpty && !fields.contains("sensorlevelunit")
       val omitSLDefaultValue = fields.nonEmpty && !fields.contains("sensorleveldefaultvalue")
       val omitSLValues = fields.nonEmpty && !fields.contains("sensorlevelvalues")
-      val omitLegacyElemCodes = fields.nonEmpty && !fields.contains("legacyelementcodes")
-      val omitLegacyUnit = fields.nonEmpty && !fields.contains("legacyunit")
+      val omitOldElemCodes = fields.nonEmpty && !fields.contains("oldelementcodes")
+      val omitOldUnit = fields.nonEmpty && !fields.contains("oldunit")
       val omitCfStandardName = fields.nonEmpty && !fields.contains("cfstandardname")
       val omitCfCellMethod = fields.nonEmpty && !fields.contains("cfcellmethod")
       val omitCfUnit = fields.nonEmpty && !fields.contains("cfunit")
@@ -569,14 +569,14 @@ class DbElementsAccess extends ElementsAccess {
             MatcherUtil.matchesWords1(Some(toStringWithoutZeroFraction(sl.defaultValue)), slqp.defaultValues) &&
             MatcherUtil.matchesWordsN(Some(sl.values.toList.map(_.toString)), slqp.values)
         })
-        .filter(e => if (e.legacyConvention.isEmpty) {
+        .filter(e => if (e.oldConvention.isEmpty) {
           // keep iff none of the relevant fields are requested
-          qp.legacyElementCodes.getOrElse("").trim.isEmpty &&
-            qp.legacyUnits.getOrElse("").trim.isEmpty
+          qp.oldElementCodes.getOrElse("").trim.isEmpty &&
+            qp.oldUnits.getOrElse("").trim.isEmpty
         } else {
-          val lmnc = e.legacyConvention.get
-          MatcherUtil.matchesWordsN(Some(lmnc.elementCodes.getOrElse(Seq[String]()).toList), qp.legacyElementCodes) &&
-            MatcherUtil.matchesWords1(lmnc.unit, qp.legacyUnits)
+          val lmnc = e.oldConvention.get
+          MatcherUtil.matchesWordsN(Some(lmnc.elementCodes.getOrElse(Seq[String]()).toList), qp.oldElementCodes) &&
+            MatcherUtil.matchesWords1(lmnc.unit, qp.oldUnits)
         })
         .filter(e => if (e.cfConvention.isEmpty) {
           // keep iff none of the relevant fields are requested
@@ -657,14 +657,14 @@ class DbElementsAccess extends ElementsAccess {
               case _ => None
             }
           },
-          legacyConvention = if (omitLegacyElemCodes && omitLegacyUnit) {
+          oldConvention = if (omitOldElemCodes && omitOldUnit) {
             None // no fields requsted, so omit object
           } else {
             // at least one field requested
-            e.legacyConvention match {
+            e.oldConvention match {
               case Some(lc) => Some(lc.copy( // fields available, so output the requested ones
-                elementCodes = if (omitLegacyElemCodes) None else lc.elementCodes,
-                unit = if (omitLegacyUnit) None else lc.unit
+                elementCodes = if (omitOldElemCodes) None else lc.elementCodes,
+                unit = if (omitOldUnit) None else lc.unit
               ))
               case None => None // no fields available, so omit object
             }

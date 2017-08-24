@@ -37,7 +37,7 @@ import models._
 case class ElementsQueryParameters(
   ids: Option[String] = None, names: Option[String] = None, descriptions: Option[String] = None, units: Option[String] = None,
   codeTables: Option[String] = None, statuses: Option[String], calculationMethod: Option[String],
-  categories: Option[String], sensorLevels: Option[String], legacyElementCodes: Option[String], legacyUnits: Option[String], cfStandardNames: Option[String],
+  categories: Option[String], sensorLevels: Option[String], oldElementCodes: Option[String], oldUnits: Option[String], cfStandardNames: Option[String],
   cfCellMethods: Option[String], cfUnits: Option[String], cfStatuses: Option[String], fields: Option[String] = None, lang: Option[String] = None)
 
 /**

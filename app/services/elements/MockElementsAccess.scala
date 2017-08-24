@@ -50,7 +50,7 @@ class MockElementsAccess extends ElementsAccess {
         Some(-1),
         Some(Seq(-1, -1)))
       ),
-      Some(LegacyMetNoConvention(
+      Some(OldMetNoConvention(
         Some(Seq("dummy elemCode 1", "dummy elemCode 2")),
         Some("dummy unit"))
       ),

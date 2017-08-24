@@ -64,7 +64,7 @@ case class Element(
   @(ApiModelProperty @field)(value="The calculation method of the element.") calculationMethod: Option[CalcMethod],
   @(ApiModelProperty @field)(value="The category of the element.") category: Option[String],
   @(ApiModelProperty @field)(value="The sensor levels of the element.") sensorLevels: Option[SensorLevels],
-  @(ApiModelProperty @field)(value="The legacy form of the element.") legacyConvention: Option[LegacyMetNoConvention],
+  @(ApiModelProperty @field)(value="The old form of the element.") oldConvention: Option[OldMetNoConvention],
   @(ApiModelProperty @field)(value="The CF convention equivalent of the element (omitted if no such equivalent exists).") cfConvention: Option[CfConvention]
 )
 
@@ -90,10 +90,10 @@ case class SensorLevels(
   @(ApiModelProperty @field)(value="The level values.") values: Option[Seq[Double]]
 )
 
-@ApiModel(description="The Met.no legacy element code equivalent(s) of the element.")
-case class LegacyMetNoConvention(
-  @(ApiModelProperty @field)(value="The legacy element code(s) of the element.", example="TA") elementCodes: Option[Seq[String]],
-  @(ApiModelProperty @field)(value="The unit of the legacy element code(s).", example="degC") unit: Option[String]
+@ApiModel(description="The Met.no old element code equivalent(s) of the element.")
+case class OldMetNoConvention(
+  @(ApiModelProperty @field)(value="The old element code(s) of the element.", example="TA") elementCodes: Option[Seq[String]],
+  @(ApiModelProperty @field)(value="The unit of the old element code(s).", example="degC") unit: Option[String]
 )
 
 @ApiModel(description="The CF convention equivalent of the element.")

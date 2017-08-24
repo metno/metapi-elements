@@ -41,7 +41,7 @@ class ElementsJsonFormat extends BasicJsonFormat {
 
   implicit val cfWrites = Json.writes[CfConvention]
 
-  implicit val legacyMetNoWrites = Json.writes[LegacyMetNoConvention]
+  implicit val oldMetNoWrites = Json.writes[OldMetNoConvention]
 
   implicit val calcMethodWrites = Json.writes[CalcMethod]
 
