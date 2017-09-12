@@ -1,4 +1,4 @@
---# --- !Ups
+# --- !Ups
 
 -- remove duplicates from cf_element so that we can set element_id as primary key
 DELETE FROM cf_element WHERE element_id='max_wind_speed(wind_from_direction PT20M)';
@@ -14,4 +14,4 @@ INSERT INTO cf_element (standard_name, cell_method, unit, status, element_id) VA
 ALTER TABLE cf_element ADD PRIMARY KEY (element_id);
 
 
---# --- !Downs
+# --- !Downs
